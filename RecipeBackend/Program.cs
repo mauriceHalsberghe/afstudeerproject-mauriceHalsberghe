@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RecipeBackend.Data;
 
 using DotNetEnv;
-Env.Load();
+Env.Load(".env");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,13 @@ var connectionString = $"Host={host};Port={port};Database={db};Username={user};P
 builder.Services.AddDbContext<ApiDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+    
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

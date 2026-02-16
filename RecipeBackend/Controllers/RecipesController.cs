@@ -23,6 +23,19 @@ public class RecipesController : ControllerBase
         return await _context.Recipes.ToListAsync();
     }
 
+    //get by id
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Recipe>> GetRecipe(int id)
+    {
+        var recipe = await _context.Recipes
+            .Include(r => r.Steps)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (recipe == null) return NotFound();
+
+        return recipe;
+    }
+
     // POST: api/recipes
     [HttpPost]
     public async Task<ActionResult<Recipe>> CreateRecipe(Recipe recipe)
