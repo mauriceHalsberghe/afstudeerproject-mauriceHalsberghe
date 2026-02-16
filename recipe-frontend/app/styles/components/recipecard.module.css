@@ -1,0 +1,34 @@
+.card {
+    background-color: var(--white);
+    width: 90vw;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.image {
+    width: 90vw;
+    height: 14rem;
+    object-fit: cover;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.text {
+    padding: 0.5rem 1rem;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.time {
+    color: var(--green-200);
+    font-size: 14px;
+
+    &::before {
+        content: url('/clock.svg');
+        padding-right: 4px;
+        vertical-align: middle;
+    }
+}
+

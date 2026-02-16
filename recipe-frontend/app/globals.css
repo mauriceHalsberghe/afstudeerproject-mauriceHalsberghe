@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  font-family: sans-serif;
+
+  --gray-100: #EDEDED;
+  --gray-200: #A4A4A4;
+  --gray-300: #575757;
+
+  --black: #191919;
+  --white: #F4F4F4;
+
+  --green-100: #60CA86;
+  --green-200: #3A8756;
+  --green-300: #1A3D27;
+
+  --red-100: #BB5252;
+  --red-200: #632C2C;
+}
+
+html {
+  background-color: var(--gray-100);
+  padding: 5vw;
+}
+
+ul {
+  list-style: none;
+}
