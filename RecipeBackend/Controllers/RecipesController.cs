@@ -16,14 +16,12 @@ public class RecipesController : ControllerBase
         _context = context;
     }
 
-    // GET: api/recipes
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
     {
         return await _context.Recipes.ToListAsync();
     }
 
-    //get by id
     [HttpGet("{id}")]
     public async Task<ActionResult<Recipe>> GetRecipe(int id)
     {
@@ -36,7 +34,6 @@ public class RecipesController : ControllerBase
         return recipe;
     }
 
-    // POST: api/recipes
     [HttpPost]
     public async Task<ActionResult<Recipe>> CreateRecipe(Recipe recipe)
     {
