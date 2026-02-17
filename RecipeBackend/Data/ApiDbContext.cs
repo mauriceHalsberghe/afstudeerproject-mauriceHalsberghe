@@ -13,5 +13,6 @@ public class ApiDbContext : DbContext
     public DbSet<IngredientType> IngredientTypes { get; set; }
     public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
     public DbSet<QuantityUnit> QuantityUnits { get; set; }
-
+    public DbSet<Diet> Diets { get; set; }
+    public DbSet<Cuisine> Cuisines { get; set; }
 }
