@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  font-family: sans-serif;
 
   --gray-100: #EDEDED;
   --gray-200: #A4A4A4;
@@ -22,6 +21,8 @@ html {
   background-color: var(--gray-100);
   padding: 5vw;
 }
+
+
 
 ul {
   list-style: none;

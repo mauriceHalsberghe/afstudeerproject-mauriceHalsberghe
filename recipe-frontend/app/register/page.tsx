@@ -7,6 +7,9 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
 
+import AuthStyles from '@/app/styles/pages/auth.module.css';
+import ButtonStyles from '@/app/styles/components/button.module.css';
+
 export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -36,40 +39,61 @@ export default function RegisterPage() {
   }
 
   return (
-    <div>
-      <h1>Register</h1>
+    <div className={AuthStyles.page}>
+        <h1 className={AuthStyles.title}>Welcome to Mealio</h1>
+        <h2 className={AuthStyles.subtitle}>Create an account</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Username"
-          onChange={(e) =>
-            setForm({ ...form, username: e.target.value })
-          }
-        />
+        <form className={AuthStyles.form} onSubmit={handleSubmit}>
 
-        <input
-          placeholder="Email"
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
-        />
+          <div className={AuthStyles.inputs}>
+            <label className={AuthStyles.label} htmlFor="username">
+              Username
+              <input
+                className={AuthStyles.input}
+                required
+                placeholder="Username"
+                id="username"
+                onChange={(e) =>
+                  setForm({ ...form, username: e.target.value })
+                }
+              />
+            </label>
+            
+            <label className={AuthStyles.label} htmlFor="email">
+              Email
+              <input
+                className={AuthStyles.input}
+                type="email"
+                placeholder="Email"
+                id="email"
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value })
+                }
+              />
+            </label>
 
-        <input
-          placeholder="Password"
-          type="password"
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
-        />
+            <label className={AuthStyles.label} htmlFor="password">
+              Password
+              <input
+                className={AuthStyles.input}
+                placeholder="Password"
+                type="password"
+                id="password"
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
+              />
+            </label>
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
+          <button className={ButtonStyles.button} type="submit">Register</button>
+        </form>
 
-      {error && <p>{error}</p>}
+      {error && <p className={AuthStyles.error}>{error}</p>}
 
-      <p>Already an account? <Link href={'./login'}>Log in</Link></p>
+      <p className={AuthStyles.text}>Already an account? <Link className={AuthStyles.link} href={'./login'}>Log in</Link></p>
 
-      <Link href={'./'}>Continue as a Guest</Link>
+      <Link className={AuthStyles.link} href={'./'}>Continue as a Guest</Link>
     </div>
   );
 }

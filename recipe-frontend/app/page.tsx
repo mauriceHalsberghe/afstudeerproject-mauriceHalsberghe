@@ -4,7 +4,7 @@ import RecipeCard from './components/RecipeCard';
 import LogoutButton from "./components/LogoutButton";
 import { useContext, useEffect, useState } from "react";
 
-import HomeStyles from '@/app//styles/home.module.css';
+import HomeStyles from '@/app/styles//pages/home.module.css';
 import { AuthContext } from '@/context/AuthContext';
 import Link from 'next/link';
 
@@ -44,10 +44,10 @@ export default function Home() {
     <div>
       
       {auth?.user ? (
-        <>
-          Logged in as {auth.user.username}
+        <div>
+          <p>Logged in as {auth.user.username}</p>
           <LogoutButton />
-        </>
+        </div>
       ) : (
         <Link href="./login">Login</Link>
       )}
