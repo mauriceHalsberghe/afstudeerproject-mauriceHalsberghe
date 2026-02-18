@@ -5,10 +5,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
+//env
 using DotNetEnv;
 Env.Load(".env");
-
-var builder = WebApplication.CreateBuilder(args);
 
 var host = Environment.GetEnvironmentVariable("DB_HOST");
 var port = Environment.GetEnvironmentVariable("DB_PORT");
@@ -16,6 +15,8 @@ var db = Environment.GetEnvironmentVariable("DB_NAME");
 var user = Environment.GetEnvironmentVariable("DB_USER");
 var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
+//builder
+var builder = WebApplication.CreateBuilder(args);
 var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={password}";
 
 builder.Services.AddDbContext<ApiDbContext>(options =>
@@ -42,6 +43,7 @@ builder.Services.AddCors(options =>
         });
 });
 
+
 builder.Configuration["Jwt:Secret"]   = Environment.GetEnvironmentVariable("JWT_SECRET");
 builder.Configuration["Jwt:Issuer"]   = Environment.GetEnvironmentVariable("JWT_ISSUER");
 builder.Configuration["Jwt:Audience"] = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
@@ -62,13 +64,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
+//app
 var app = builder.Build();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseRouting();
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
@@ -78,8 +78,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseCors("AllowFrontend");
+app.UseAuthentication();
 app.UseAuthorization();
-app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
