@@ -21,7 +21,7 @@ public class ApiDbContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Like> Likes { get; set; }
     public DbSet<Review> Reviews { get; set; }
-
+    public DbSet<UserDiet> UserDiets { get; set; }
     public DbSet<User> Users { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
