@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeBackend.Data;
@@ -16,17 +18,36 @@ public class RecipesController : ControllerBase
         _context = context;
     }
 
-    // GET: api/recipes
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
     {
-        return await _context.Recipes.ToListAsync();
+        var recipe = await _context.Recipes
+            .Include(r => r.RecipeIngredients)
+            .ToListAsync();
+            
+        if (recipe == null) return NotFound();
+
+        return recipe;
     }
 
-    // POST: api/recipes
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Recipe>> GetRecipe(int id)
+    {
+        var recipe = await _context.Recipes
+            .Include(r => r.Steps)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (recipe == null) return NotFound();
+
+        return recipe;
+    }
+
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Recipe>> CreateRecipe(Recipe recipe)
     {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        
         _context.Recipes.Add(recipe);
         await _context.SaveChangesAsync();
         return Ok(recipe);
