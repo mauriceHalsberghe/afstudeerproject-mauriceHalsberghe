@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function LoginPage() {
         auth?.setUser(res);
 
         router.push("/");
-        
+
     } catch (err: unknown) {
     if (err instanceof Error) {
         setError(err.message);
@@ -61,6 +62,10 @@ export default function LoginPage() {
       </form>
 
       {error && <p>{error}</p>}
+
+      <p>No account yet? <Link href={'./register'}>Register</Link></p>
+
+      <Link href={'./'}>Continue as a Guest</Link>
     </div>
   );
 }

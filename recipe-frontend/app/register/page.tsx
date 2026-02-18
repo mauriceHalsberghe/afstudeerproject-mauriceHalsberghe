@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -65,6 +66,10 @@ export default function RegisterPage() {
       </form>
 
       {error && <p>{error}</p>}
+
+      <p>Already an account? <Link href={'./login'}>Log in</Link></p>
+
+      <Link href={'./'}>Continue as a Guest</Link>
     </div>
   );
 }
