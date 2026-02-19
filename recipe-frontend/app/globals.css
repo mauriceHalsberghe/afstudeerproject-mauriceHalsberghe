@@ -1,28 +1,25 @@
 @import "tailwindcss";
 
 :root {
-
-  --gray-100: #EDEDED;
-  --gray-200: #A4A4A4;
+  --gray-100: #ededed;
+  --gray-200: #a4a4a4;
   --gray-300: #575757;
 
   --black: #191919;
-  --white: #F4F4F4;
+  --white: #f4f4f4;
 
-  --green-100: #60CA86;
-  --green-200: #3A8756;
-  --green-300: #1A3D27;
+  --green-100: #60ca86;
+  --green-200: #3a8756;
+  --green-300: #1a3d27;
 
-  --red-100: #BB5252;
-  --red-200: #632C2C;
+  --red-100: #bb5252;
+  --red-200: #632c2c;
 }
 
 html {
   background-color: var(--gray-100);
-  padding: 5vw;
+  padding: 2rem;
 }
-
-
 
 ul {
   list-style: none;
