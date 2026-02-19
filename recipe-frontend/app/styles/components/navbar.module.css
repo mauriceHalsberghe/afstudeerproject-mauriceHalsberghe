@@ -28,6 +28,9 @@
     }
 }
 
+.navitem-current a {
+    color: var(--green-200);
+}
 .navlink {
 
 }
