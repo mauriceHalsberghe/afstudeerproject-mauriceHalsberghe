@@ -20,25 +20,28 @@ type Recipe = {
 export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [mounted, setMounted] = useState(false);
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
-  const fetchRecipes = async () => {
-    try {
-      const res = await fetch('http://localhost:5041/api/recipes');
-      const data: Recipe[] = await res.json();
-      setRecipes(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setMounted(true);
 
-  fetchRecipes();
-}, []);
+    const fetchRecipes = async () => {
+      try {
+        const res = await fetch('http://localhost:5041/api/recipes');
+        const data: Recipe[] = await res.json();
+        setRecipes(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const auth = useContext(AuthContext);
+    fetchRecipes();
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <main className={HomeStyles.home}>
