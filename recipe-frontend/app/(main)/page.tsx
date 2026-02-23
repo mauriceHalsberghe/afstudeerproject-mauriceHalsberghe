@@ -41,7 +41,7 @@ export default function Home() {
     fetchRecipes();
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) return <p>Loading...</p>;
 
   return (
     <main className={HomeStyles.home}>
