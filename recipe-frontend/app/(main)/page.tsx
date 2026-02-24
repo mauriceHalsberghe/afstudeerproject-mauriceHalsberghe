@@ -3,6 +3,7 @@
 import RecipeCard from '../components/RecipeCard';
 import { useEffect, useState } from "react";
 
+import SearchIcon from '@/public/search.svg'
 import HomeStyles from '@/app/styles//pages/home.module.css';
 
 type Diet = {
@@ -30,10 +31,12 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  const [diets, setDiets] = useState<Diet[]>([]);
-  const [cuisines, setCuisines] = useState<Cuisine[]>([]);
+  const [search, setSearch] = useState('');
 
+  const [diets, setDiets] = useState<Diet[]>([]);
   const [selectedDiet, setSelectedDiet] = useState(0);
+  
+  const [cuisines, setCuisines] = useState<Cuisine[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState(0);
 
   const [time, setTime] = useState(15);
@@ -89,11 +92,22 @@ export default function Home() {
     const matchesDiet = selectedDiet === 0 || recipe.diet?.id === selectedDiet;
     const matchesCuisine = selectedCuisine === 0 || recipe.cuisine?.id === selectedCuisine;
     const matchesTime = time === 0 || recipe.time === time;
-    return matchesDiet && matchesCuisine;// && matchesTime;
+    const matchesTitle = search === '' || recipe.title.toLowerCase().includes(search.toLowerCase());
+    return matchesDiet && matchesCuisine && matchesTitle;// && matchesTime;
   });
 
   return (
     <main className={HomeStyles.home}>
+
+      <div className={HomeStyles.search}>
+        <input
+          type='text'
+          placeholder='Search Recipes'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+      </div>
 
       <div className={HomeStyles.filters}>
 
