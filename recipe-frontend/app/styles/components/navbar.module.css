@@ -22,10 +22,12 @@
     align-items: center;
     gap: .5rem;
     color: var(--gray-300);
+    width: 48px;
+}
 
-    svg {
-        transform: scale(1.2);
-    }
+.icon {
+ width: 20px;
+ height: 20px;
 }
 
 .navitem-current a {
