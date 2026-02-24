@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeBackend.Data;
 using RecipeBackend.Models;
+using RecipeBackend.DTOs;
 
 namespace RecipeBackend.Controllers;
 
@@ -18,18 +19,43 @@ public class RecipesController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
+[HttpGet]
+    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
     {
-        var recipe = await _context.Recipes
+        var recipes = await _context.Recipes
             .Include(r => r.RecipeIngredients)
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
+            .Include(r => r.Steps)
+            .Include(r => r.User)
+            .Select(r => new RecipeDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                ImageUrl = r.ImageUrl,
+                Time = r.Time,
+                DietId = r.DietId,
+                CuisineId = r.CuisineId,
+                Diet = r.Diet == null ? null : new DietDto
+                {
+                    Id = r.Diet.Id,
+                    Name = r.Diet.Name
+                },
+                Cuisine = r.Cuisine == null ? null : new CuisineDto
+                {
+                    Id = r.Cuisine.Id,
+                    Name = r.Cuisine.Name
+                },
+                User = r.User == null ? null : new UserSummaryDto
+                {
+                    Id = r.User.Id,
+                    Username = r.User.Username,
+                    Avatar = r.User.Avatar
+                }
+            })
             .ToListAsync();
-            
-        if (recipe == null) return NotFound();
 
-        return recipe;
+        return Ok(recipes);
     }
 
     [HttpGet("{id}")]
