@@ -27,7 +27,7 @@ export default function LoginPage() {
 
         localStorage.setItem("user", JSON.stringify(res));
 
-        auth?.setUser(res);
+        auth?.login(res.user, res.token);
 
         router.push("/");
 

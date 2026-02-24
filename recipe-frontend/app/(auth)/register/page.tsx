@@ -27,8 +27,10 @@ export default function RegisterPage() {
     try {
       const res = await registerUser(form);
       localStorage.setItem("user", JSON.stringify(res));
-      auth?.setUser(res);
-      router.push("/");
+
+      auth?.login(res.user, res.token);
+
+      router.push("/register/preferences");
     } catch (err: unknown) {
         if (err instanceof Error) {
             setError(err.message);
