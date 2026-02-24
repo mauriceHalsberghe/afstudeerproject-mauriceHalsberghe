@@ -19,14 +19,13 @@ public class RecipesController : ControllerBase
         _context = context;
     }
 
-[HttpGet]
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
     {
         var recipes = await _context.Recipes
             .Include(r => r.RecipeIngredients)
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
-            .Include(r => r.Steps)
             .Include(r => r.User)
             .Select(r => new RecipeDto
             {
@@ -63,6 +62,10 @@ public class RecipesController : ControllerBase
     {
         var recipe = await _context.Recipes
             .Include(r => r.Steps)
+            .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+            .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.QuantityUnit)
             .FirstOrDefaultAsync(r => r.Id == id);
 
         if (recipe == null) return NotFound();
