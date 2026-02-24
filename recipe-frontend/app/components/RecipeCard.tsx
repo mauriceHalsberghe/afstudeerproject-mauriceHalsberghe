@@ -2,12 +2,24 @@ import Image from 'next/image';
 
 import RecipeCardStyles from '@/app/styles/components/recipecard.module.css';
 
+type Diet = {
+  id: number;
+  name: string;
+};
+
+type Cuisine = {
+  id: number;
+  name: string;
+};
+
 type Recipe = {
   id: number;
   title: string;
   instructions: string;
   imageUrl: string;
   time: number;
+  diet?: Diet;
+  cuisine?: Cuisine;
 };
 
 type Props = {
@@ -27,6 +39,10 @@ function RecipeCard({ recipe }: Props) {
       <div className={RecipeCardStyles.text}>
         <h2 className={RecipeCardStyles.title}>{recipe.title}</h2>
         <p className={RecipeCardStyles.time}>{recipe.time} min</p>
+        <div className={RecipeCardStyles.tags}>
+          { recipe.diet && <p className={RecipeCardStyles.tag}>{recipe.diet.name}</p>}
+          { recipe.cuisine && <p className={RecipeCardStyles.tag}>{recipe.cuisine.name}</p> }
+        </div>
       </div>
     </div>
   );

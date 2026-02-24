@@ -5,6 +5,15 @@ import { useEffect, useState } from "react";
 
 import HomeStyles from '@/app/styles//pages/home.module.css';
 
+type Diet = {
+  id: number;
+  name: string;
+};
+
+type Cuisine = {
+  id: number;
+  name: string;
+};
 
 type Recipe = {
   id: number;
@@ -12,6 +21,8 @@ type Recipe = {
   instructions: string;
   imageUrl: string;
   time: number;
+  diet?: Diet;
+  cuisine?: Cuisine;
 };
 
 export default function Home() {
