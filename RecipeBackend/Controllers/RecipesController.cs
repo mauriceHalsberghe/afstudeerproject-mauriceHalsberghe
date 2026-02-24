@@ -23,6 +23,8 @@ public class RecipesController : ControllerBase
     {
         var recipe = await _context.Recipes
             .Include(r => r.RecipeIngredients)
+            .Include(r => r.Cuisine)
+            .Include(r => r.Diet)
             .ToListAsync();
             
         if (recipe == null) return NotFound();

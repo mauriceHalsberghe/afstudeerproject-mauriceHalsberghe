@@ -10,6 +10,9 @@ public class Recipe
     public int? DietId { get; set; }
     public int? CuisineId { get; set; }
 
+    public Diet? Diet { get; set; }
+    public Cuisine? Cuisine { get; set; }
+
     public List<Step> Steps { get; set; } = new();
     public List<RecipeIngredient> RecipeIngredients { get; set; } = new();
 
