@@ -8,3 +8,22 @@
     flex-direction: column;
     gap: 1rem;
 }
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.select {
+    padding: 0.25rem 0.5rem;
+    border-radius: 2rem;
+    border: 2px solid var(--green-200);
+    color: var(--green-200);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.option {
+    font-weight: 500;
+}
