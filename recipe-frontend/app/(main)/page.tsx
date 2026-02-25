@@ -1,10 +1,11 @@
 "use client";
 
 import RecipeCard from '../components/RecipeCard';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import SearchIcon from '@/public/search.svg'
 import HomeStyles from '@/app/styles//pages/home.module.css';
+import { AuthContext } from '@/context/AuthContext';
 
 type Diet = {
   id: number;
@@ -27,6 +28,8 @@ type Recipe = {
   title: string;
   imageUrl: string;
   time: number;
+  likeCount: number;
+  isLikedByCurrentUser: boolean;
   diet?: Diet;
   cuisine?: Cuisine;
   user?: User;
@@ -50,49 +53,44 @@ export default function Home() {
   const [time, setTime] = useState(15);
   const displayTime = time === 90 ? "90+" : time;
 
+  const auth = useContext(AuthContext);
+  const loggedUserId = auth?.user?.id
+    
+
+  const fetchRecipes = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:5041/api/recipes?currentUserId=${loggedUserId ?? ''}`);
+      const data: Recipe[] = await res.json();
+      setRecipes(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
-
-    const fetchRecipes = async () => {
+    const fetchMetadata = async () => {
       try {
-        const res = await fetch('http://localhost:5041/api/recipes');
-        const data: Recipe[] = await res.json();
-        setRecipes(data);
+        const [dietRes, cuisineRes] = await Promise.all([
+          fetch('http://localhost:5041/api/diets'),
+          fetch('http://localhost:5041/api/cuisines')
+        ]);
+        setDiets(await dietRes.json());
+        setCuisines(await cuisineRes.json());
       } catch (err) {
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
-
-    const fetchDiets = async () => {
-      try {
-        const res = await fetch('http://localhost:5041/api/diets');
-        const data: Diet[] = await res.json();
-        setDiets(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchCuisines = async () => {
-      try {
-        const res = await fetch('http://localhost:5041/api/cuisines');
-        const data: Cuisine[] = await res.json();
-        setCuisines(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDiets();
-    fetchCuisines();
-    fetchRecipes();
+    fetchMetadata();
   }, []);
+
+  useEffect(() => {
+    if (auth?.loading) return;
+    fetchRecipes();
+  }, [loggedUserId, auth?.loading]);
 
   if (!mounted) return <p>Loading...</p>;
 
