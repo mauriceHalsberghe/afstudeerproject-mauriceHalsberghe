@@ -14,10 +14,26 @@ import ProfileStyles from '@/app/styles/pages/profile.module.css'
 export default function Profile() {
     const auth = useContext(AuthContext);
 
+    console.log(auth);
+
+    if (auth?.loading) {
+        return <main>Loading...</main>;
+    }
+
+    if (!auth?.user) {
+        return (
+            <main className={ProfileStyles.profile}>
+            <h1 className={ProfileStyles.title}>Not logged in</h1>
+            <ProfileIcon className={ProfileStyles.icon} />
+            <Link href="./login" className={ButtonStyles.button}>Login</Link>
+            </main>
+        );
+    }
+
+
     return (
         <main className={ProfileStyles.profile}>
 
-            {auth?.user ? (
                 <div>
                     <div className={ProfileStyles.profileInfo}>
                         <Image width={96} height={96} alt={auth.user.username} src={auth.user.avatar || '/avatar.svg'}/>
@@ -28,13 +44,6 @@ export default function Profile() {
                         <LogoutButton />
                     </div>
                 </div>
-                ) : (
-                <>
-                    <h1 className={ProfileStyles.title}>Not logged in</h1>
-                    <ProfileIcon className={ProfileStyles.icon} />
-                    <Link href="./login" className={ButtonStyles.button}>Login</Link>
-                </>
-            )}
 
         </main>
     )
