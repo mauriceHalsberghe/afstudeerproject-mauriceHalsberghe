@@ -25,7 +25,6 @@ type User = {
 type Recipe = {
   id: number;
   title: string;
-  instructions: string;
   imageUrl: string;
   time: number;
   diet?: Diet;

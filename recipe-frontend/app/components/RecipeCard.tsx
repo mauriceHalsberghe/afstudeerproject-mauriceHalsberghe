@@ -19,11 +19,16 @@ type User = {
   avatar: string;
 };
 
+type Ingredient = {
+  id: number;
+  
+}
+
 type Recipe = {
   id: number;
   title: string;
-  instructions: string;
   imageUrl: string;
+  ingredients: Ingredient[];
   time: number;
   diet?: Diet;
   cuisine?: Cuisine;
