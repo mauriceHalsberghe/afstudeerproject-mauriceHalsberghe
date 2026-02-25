@@ -62,11 +62,13 @@ public class RecipesController : ControllerBase
     {
         var recipe = await _context.Recipes
             .Include(r => r.Steps)
+            .Include(r => r.User)
             .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
             .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.QuantityUnit)
             .FirstOrDefaultAsync(r => r.Id == id);
+            
 
         if (recipe == null) return NotFound();
 
