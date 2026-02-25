@@ -20,7 +20,7 @@ public class RecipesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
+    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes(int currentUserId)
     {
         var recipes = await _context.Recipes
             .Include(r => r.RecipeIngredients)
@@ -50,7 +50,10 @@ public class RecipesController : ControllerBase
                     Id = r.User.Id,
                     Username = r.User.Username,
                     Avatar = r.User.Avatar
-                }
+                },
+                LikeCount = r.Likes.Count(),
+                IsLikedByCurrentUser = r.Likes
+                    .Any(l => l.UserId == currentUserId)
             })
             .ToListAsync();
 
