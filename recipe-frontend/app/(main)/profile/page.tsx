@@ -2,14 +2,14 @@
 
 import { AuthContext } from '@/context/AuthContext';
 import { useContext } from "react";
-import Link from "next/link";
 
 import LogoutButton from "@/app/components/LogoutButton";
 import Image from 'next/image';
-import ProfileIcon from '@/public/profile.svg'
 
 import ButtonStyles from '@/app/styles/components/button.module.css'
 import ProfileStyles from '@/app/styles/pages/profile.module.css'
+
+import EmptyView from '@/app/components/EmptyView';
 
 export default function Profile() {
     const auth = useContext(AuthContext);
@@ -22,11 +22,7 @@ export default function Profile() {
 
     if (!auth?.user) {
         return (
-            <main className={ProfileStyles.profile}>
-            <h1 className={ProfileStyles.title}>Not logged in</h1>
-            <ProfileIcon className={ProfileStyles.icon} />
-            <Link href="./login" className={ButtonStyles.button}>Login</Link>
-            </main>
+            <EmptyView title='Not logged in' btnText='Log In' btnUrl='/login' icon='profile'/>
         );
     }
 

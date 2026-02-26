@@ -7,6 +7,7 @@ import RecipeFilters, {
   RecipeFiltersState,
 } from "@/app/components/RecipeFilters";
 import HomeStyles from "@/app/styles/pages/home.module.css";
+import EmptyView from "@/app/components/EmptyView";
 
 type Diet = {
   id: number;
@@ -82,7 +83,7 @@ export default function LikedRecipes() {
   if (auth?.loading || loading) return <p>Loading your favorites...</p>;
 
   if (!loggedUserId) {
-    return <p>Please log in to see your liked recipes.</p>;
+    return <EmptyView title='Not logged in' text="Log in to see your liked recipes" btnText='Log In' btnUrl='/login' icon="profile" />
   }
 
   const filteredRecipes = recipes.filter((recipe) => {
@@ -114,7 +115,7 @@ export default function LikedRecipes() {
       <RecipeFilters filters={filters} onChange={setFilters} />
 
       {filteredRecipes.length === 0 ? (
-        <p>No liked recipes match your filters</p>
+        <EmptyView title='Not Recipes found' icon="recipe"/>
       ) : (
         <ul className={HomeStyles.recipes}>
             {filteredRecipes.map((recipe) => (
