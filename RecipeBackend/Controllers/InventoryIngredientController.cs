@@ -22,6 +22,7 @@ public class InventoryIngredientController : ControllerBase
         var userInventory = await _context.InventoryIngredients
             .Where(i => i.UserId == userId)
             .Include(i => i.Ingredient)
+            .Include(i => i.QuantityUnit)
             .ToListAsync();
 
         if (!userInventory.Any())
@@ -30,5 +31,28 @@ public class InventoryIngredientController : ControllerBase
         }
 
         return Ok(userInventory);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<InventoryIngredient>> AddInventoryIngredient(CreateInventoryIngredientDto dto)
+    {
+        var ingredientExists = await _context.Ingredients
+            .AnyAsync(i => i.Id == dto.IngredientId);
+
+        if (!ingredientExists)
+            return BadRequest("Ingredient does not exist.");
+
+        var inventoryIngredient = new InventoryIngredient
+        {
+            UserId = dto.UserId,
+            Quantity = dto.Quantity,
+            QuantityUnitId = dto.QuantityUnitId,
+            IngredientId = dto.IngredientId
+        };
+
+        _context.InventoryIngredients.Add(inventoryIngredient);
+        await _context.SaveChangesAsync();
+
+        return Ok(inventoryIngredient);
     }
 }
