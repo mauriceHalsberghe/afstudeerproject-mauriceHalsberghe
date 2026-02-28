@@ -6,6 +6,7 @@ import IngredientSearch from "@/app/components/IngredientSearch";
 
 import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
 import ButtonStyles from '@/app/styles/components/button.module.css';
+import IngredientTypeIcon from "@/app/components/IngredientTypeIcon";
 
 type InventoryIngredient = {
   id: number;
@@ -52,7 +53,12 @@ export default function Ingredients() {
       if (!res.ok) return;
 
       const data: InventoryIngredient[] = await res.json();
-      setIngredients(data);
+
+      const sortedData = data.sort((a, b) =>
+        a.ingredient.name.localeCompare(b.ingredient.name)
+      );
+
+      setIngredients(sortedData);
     } catch (err) {
       console.error(err);
     } finally {
@@ -107,7 +113,10 @@ export default function Ingredients() {
       console.error(err);
     }
 
-    
+    setSelectedIngredient(null);
+    setQuantity(undefined);
+    setSelectedUnitId(undefined);
+
   };
 
   return (
@@ -119,7 +128,10 @@ export default function Ingredients() {
         <div className={IngredientStyles.input}>
           <div className={IngredientStyles.searchWrapper}>
             <IngredientSearch
-              onIngredientChange={((ingredient: number | null )=> setSelectedIngredient(ingredient))}
+              value={selectedIngredient}
+              onIngredientChange={(ingredient: number | null) =>
+                setSelectedIngredient(ingredient)
+              }
             />
           </div>
 
@@ -134,7 +146,7 @@ export default function Ingredients() {
               <input
                 type="number"
                 placeholder="Quantity"
-                value={quantity ?? ""}
+                value={quantity !== undefined && quantity > 0 ? quantity : ""}
                 onChange={(e) => setQuantity(Number(e.target.value))}
               />
             </div>
@@ -163,15 +175,18 @@ export default function Ingredients() {
         <ul className={IngredientStyles.list}>
           {ingredients.map((ingredient) => (
             <li className={IngredientStyles.ingredient} key={ingredient.id}>
-              <div>
-                {ingredient.ingredient.ingredientTypeId}
+
+              <div className={IngredientStyles.ingredientSign}>
+                <IngredientTypeIcon id={ingredient.ingredient.ingredientTypeId} />
                 <p className={IngredientStyles.ingredientName}>{ingredient.ingredient.name}</p>
               </div>
+
               {ingredient.quantity != null && ingredient.quantityUnit && (
                 <p className={IngredientStyles.ingredientQuantity}>
                   {ingredient.quantity} {ingredient.quantityUnit?.shortName ?? ""}
                 </p>
               )}
+
             </li>
           ))}
         </ul>

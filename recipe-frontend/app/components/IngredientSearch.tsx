@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Select from "react-select";
 
-import IngredientSearchStyles from '@/app/styles/components/ingredientsearch.module.css'
+//https://react-select.com/home
+import Select from "react-select";
 
 type Ingredient = {
   id: number;
@@ -17,10 +17,11 @@ export type IngredientOption = {
 };
 
 type Props = {
+  value: number | null;
   onIngredientChange?: (ingredientId: number | null) => void;
 };
 
-export default function IngredientSearch({ onIngredientChange }: Props) {
+export default function IngredientSearch({ value, onIngredientChange }: Props) {
 
   const [ingredients, setIngredients] = useState<IngredientOption[]>([]);
   const [selectedIngredient, setSelectedIngredient] = useState<IngredientOption | null>(null);
@@ -31,7 +32,13 @@ export default function IngredientSearch({ onIngredientChange }: Props) {
         const response = await fetch("http://localhost:5041/api/ingredients");
         const data = await response.json();
 
-        const options = data.map((ingredient: Ingredient) => ({
+        const sortedData = data.sort((a: Ingredient, b: Ingredient) =>
+          a.name.localeCompare(b.name, undefined, {
+            sensitivity: "base",
+          })
+        );
+
+        const options = sortedData.map((ingredient: Ingredient) => ({
           value: ingredient.id,
           label: ingredient.name,
         }));
@@ -45,9 +52,9 @@ export default function IngredientSearch({ onIngredientChange }: Props) {
     fetchIngredients();
   }, []);
 
-  const handleChange = (option: IngredientOption | null) => {
-    setSelectedIngredient(option);
+  const selectedOption = ingredients.find((i) => i.value === value) ?? null;
 
+  const handleChange = (option: IngredientOption | null) => {
     onIngredientChange?.(option?.value ?? null);
   };
   
@@ -55,7 +62,7 @@ export default function IngredientSearch({ onIngredientChange }: Props) {
   return (
     <Select
       instanceId="ingredient-select"
-      value={selectedIngredient}
+      value={selectedOption}
       placeholder='Add Ingredient...'
       onChange={handleChange}
       options={ingredients}
