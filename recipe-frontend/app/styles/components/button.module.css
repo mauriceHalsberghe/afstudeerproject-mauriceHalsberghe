@@ -19,6 +19,17 @@
     }
 }
 
+.disabledButton {
+    background-color: var(--gray-200);
+    color: white;
+    cursor: not-allowed;
+
+    &:active {
+        background-color: var(--gray-200);
+    }
+
+}
+
 .smallButton {
     font-size: 1rem;
     min-width: max-content;

@@ -29,6 +29,7 @@ type Ingredient = {
 
 export default function Ingredients() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const [ingredients, setIngredients] = useState<InventoryIngredient[]>([]);
   const [units, setUnits] = useState<QuantityUnit[]>([]);
@@ -39,6 +40,13 @@ export default function Ingredients() {
 
   const auth = useContext(AuthContext);
   const loggedUserId = auth?.user?.id;
+
+  const isQuantityFilled = quantity !== undefined;
+  const isUnitFilled = selectedUnitId !== undefined;
+
+  const isInvalidQuantity =
+    (isQuantityFilled && !isUnitFilled) ||
+    (!isQuantityFilled && isUnitFilled);
   
 
   const fetchIngredients = async () => {
@@ -93,12 +101,24 @@ export default function Ingredients() {
   const handleAddIngredient = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setError('');
+
+    if (selectedIngredient === null) return;
+
+    if (isInvalidQuantity) {
+      setError("Please fill both quantity and unit, or leave both empty.");
+      return;
+    }
+
     const formData = {
       userId: loggedUserId,
-      quantity,
-      quantityUnitId: selectedUnitId,
+      quantity: isQuantityFilled ? quantity : null,
+      quantityUnitId: isUnitFilled ? selectedUnitId : null,
       ingredientId: selectedIngredient
     };
+
+    console.log(formData);
+    
 
     try {
         await fetch("http://localhost:5041/api/InventoryIngredient", {
@@ -116,58 +136,80 @@ export default function Ingredients() {
     setSelectedIngredient(null);
     setQuantity(undefined);
     setSelectedUnitId(undefined);
-
   };
+
+  useEffect(() => {
+    if (!isInvalidQuantity) {
+      setError("");
+    }
+  }, [quantity, selectedUnitId]);
 
   return (
     <main className={IngredientStyles.page}>
-      <h1 className={IngredientStyles.title}>Ingredient Inventory</h1>
+      <div className={IngredientStyles.header}>
 
-      <form className={IngredientStyles.form} onSubmit={handleAddIngredient}>
+        <h1 className={IngredientStyles.title}>Ingredient Inventory</h1>
 
-        <div className={IngredientStyles.input}>
-          <div className={IngredientStyles.searchWrapper}>
-            <IngredientSearch
-              value={selectedIngredient}
-              onIngredientChange={(ingredient: number | null) =>
-                setSelectedIngredient(ingredient)
-              }
-            />
-          </div>
+        <form className={IngredientStyles.form} onSubmit={handleAddIngredient}>
 
-          <button className={`${ButtonStyles.button} ${ButtonStyles.smallButton}`} type="submit" disabled={selectedIngredient === null}>
-            + Add
-          </button>
-        </div>
-
-        {selectedIngredient !== null && (
-          <div className={IngredientStyles.quantityInput}>
-            <div className={IngredientStyles.quantity}>
-              <input
-                type="number"
-                placeholder="Quantity"
-                value={quantity !== undefined && quantity > 0 ? quantity : ""}
-                onChange={(e) => setQuantity(Number(e.target.value))}
+          <div className={IngredientStyles.input}>
+            <div className={IngredientStyles.searchWrapper}>
+              <IngredientSearch
+                value={selectedIngredient}
+                onIngredientChange={(ingredient: number | null) =>
+                  setSelectedIngredient(ingredient)
+                }
               />
             </div>
 
-            <div className={IngredientStyles.unit}>
-              <select
-                value={selectedUnitId ?? ""}
-                onChange={(e) => setSelectedUnitId(Number(e.target.value))}
-              >
-                <option value="">Select unit</option>
-                {units.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
-                    {unit.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        )}
+            <button
+              className={`${ButtonStyles.button} ${ButtonStyles.smallButton} ${
+                selectedIngredient === null || isInvalidQuantity
+                  ? ButtonStyles.disabledButton
+                  : ""
+              }`}
+              type="submit"
+            >
+              + Add
+            </button>
 
-      </form>
+          </div>
+
+          {selectedIngredient !== null && (
+            <div className={IngredientStyles.quantityInput}>
+              <div className={IngredientStyles.quantity}>
+                <input
+                  type="number"
+                  placeholder="Quantity"
+                  value={quantity ?? ""}
+                  onChange={(e) =>
+                    setQuantity(e.target.value === "" ? undefined : Number(e.target.value))
+                  }
+                />
+              </div>
+
+              <div className={IngredientStyles.unit}>
+                <select
+                  value={selectedUnitId ?? ""}
+                  onChange={(e) =>
+                    setSelectedUnitId(e.target.value === "" ? undefined : Number(e.target.value))
+                  }
+                >
+                  <option value="">Select unit</option>
+                  {units.map((unit) => (
+                    <option key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
+          <p className={IngredientStyles.error}>{error}</p>
+
+        </form>
+      </div>
 
       {loading ? (
         <p>Loading...</p>
