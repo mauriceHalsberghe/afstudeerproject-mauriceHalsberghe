@@ -34,4 +34,23 @@ public class ListIngredientsController : ControllerBase
 
         return Ok(userList);
     }
+
+    [HttpPut("toggle")]
+    public async Task<IActionResult> Toggle(int userId, int listIngredientId)
+    {
+        var item = await _context.ListIngredients
+            .FirstOrDefaultAsync(i => i.Id == listIngredientId && i.UserId == userId);
+
+        if (item == null)
+        {
+            return NotFound("List ingredient not found.");
+        }
+
+        item.Checked = !item.Checked;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(item);
+    }
+    
 }
