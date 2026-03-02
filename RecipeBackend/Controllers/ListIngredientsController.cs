@@ -52,5 +52,29 @@ public class ListIngredientsController : ControllerBase
 
         return Ok(item);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<ListIngredient>> AddListIngredient(CreateListIngredientDto dto)
+    {
+        var ingredientExists = await _context.Ingredients
+            .AnyAsync(i => i.Id == dto.IngredientId);
+
+        if (!ingredientExists)
+            return BadRequest("Ingredient does not exist.");
+
+        var listIngredient = new ListIngredient
+        {
+            UserId = dto.UserId,
+            Quantity = dto.Quantity,
+            QuantityUnitId = dto.QuantityUnitId,
+            IngredientId = dto.IngredientId,
+            Checked = false
+        };
+
+        _context.ListIngredients.Add(listIngredient);
+        await _context.SaveChangesAsync();
+
+        return Ok(listIngredient);
+    }
     
 }
