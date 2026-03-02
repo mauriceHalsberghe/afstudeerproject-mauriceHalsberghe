@@ -116,10 +116,10 @@ export default function Ingredients() {
       <div className={IngredientStyles.header}>
 
         <h1 className={IngredientStyles.title}>Ingredient Inventory</h1>
-          <AddIngredientHeader
-            postUrl="http://localhost:5041/api/InventoryIngredient"
-            onSuccess={fetchIngredients}
-          />
+        <AddIngredientHeader
+          postUrl="http://localhost:5041/api/InventoryIngredient"
+          onSuccess={fetchIngredients}
+        />
         
       </div>
 
