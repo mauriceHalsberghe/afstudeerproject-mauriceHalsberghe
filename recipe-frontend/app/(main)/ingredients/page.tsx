@@ -2,11 +2,11 @@
 
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useState, useEffect } from "react";
-import IngredientSearch from "@/app/components/IngredientSearch";
+
+import IngredientTypeIcon from "@/app/components/IngredientTypeIcon";
+import AddIngredientHeader from "@/app/components/AddIngredientHeader";
 
 import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
-import ButtonStyles from '@/app/styles/components/button.module.css';
-import IngredientTypeIcon from "@/app/components/IngredientTypeIcon";
 
 type InventoryIngredient = {
   id: number;
@@ -35,12 +35,9 @@ type IngredientType = {
 
 export default function Ingredients() {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const [ingredients, setIngredients] = useState<InventoryIngredient[]>([]);
-  const [units, setUnits] = useState<QuantityUnit[]>([]);
 
-  const [selectedIngredient, setSelectedIngredient] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number | undefined>();
   const [selectedUnitId, setSelectedUnitId] = useState<number | undefined>();
 
@@ -83,19 +80,7 @@ export default function Ingredients() {
     }
   };
 
-  const fetchUnits = async () => {
-    try {
-      const res = await fetch("http://localhost:5041/api/QuantityUnits");
-      if (!res.ok) return;
-
-      const data: QuantityUnit[] = await res.json();
-      setUnits(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-    const fetchIngredientTypes = async () => {
+  const fetchIngredientTypes = async () => {
     try {
       const res = await fetch("http://localhost:5041/api/IngredientTypes");
       if (!res.ok) return;
@@ -112,59 +97,12 @@ export default function Ingredients() {
     
     const loadIngredients = async () => {
       await fetchIngredients();
-      await fetchUnits();
       await fetchIngredientTypes();
     };
     
     loadIngredients();
   }, [loggedUserId]);
 
-
-  const handleAddIngredient = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setError('');
-
-    if (selectedIngredient === null) return;
-
-    if (isInvalidQuantity) {
-      setError("Please fill both quantity and unit, or leave both empty.");
-      return;
-    }
-
-    const formData = {
-      userId: loggedUserId,
-      quantity: isQuantityFilled ? quantity : null,
-      quantityUnitId: isUnitFilled ? selectedUnitId : null,
-      ingredientId: selectedIngredient
-    };
-
-    console.log(formData);
-    
-
-    try {
-        await fetch("http://localhost:5041/api/InventoryIngredient", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-        await fetchIngredients();
-    } catch (err) {
-      console.error(err);
-    }
-
-    setSelectedIngredient(null);
-    setQuantity(undefined);
-    setSelectedUnitId(undefined);
-  };
-
-  useEffect(() => {
-    if (!isInvalidQuantity) {
-      setError("");
-    }
-  }, [quantity, selectedUnitId]);
 
   const filteredIngredients = selectedIngredientType
   ? ingredients.filter(
@@ -178,67 +116,11 @@ export default function Ingredients() {
       <div className={IngredientStyles.header}>
 
         <h1 className={IngredientStyles.title}>Ingredient Inventory</h1>
-
-        <form className={IngredientStyles.form} onSubmit={handleAddIngredient}>
-
-          <div className={IngredientStyles.input}>
-            <div className={IngredientStyles.searchWrapper}>
-              <IngredientSearch
-                value={selectedIngredient}
-                onIngredientChange={(ingredient: number | null) =>
-                  setSelectedIngredient(ingredient)
-                }
-              />
-            </div>
-
-            <button
-              className={`${ButtonStyles.button} ${ButtonStyles.smallButton} ${
-                selectedIngredient === null || isInvalidQuantity
-                  ? ButtonStyles.disabledButton
-                  : ""
-              }`}
-              type="submit"
-            >
-              + Add
-            </button>
-
-          </div>
-
-          {selectedIngredient !== null && (
-            <div className={IngredientStyles.quantityInput}>
-              <div className={IngredientStyles.quantity}>
-                <input
-                  type="number"
-                  placeholder="Quantity"
-                  value={quantity ?? ""}
-                  onChange={(e) =>
-                    setQuantity(e.target.value === "" ? undefined : Number(e.target.value))
-                  }
-                />
-              </div>
-
-              <div className={IngredientStyles.select}>
-                <select
-                  value={selectedUnitId ?? ""}
-                  onChange={(e) =>
-                    setSelectedUnitId(e.target.value === "" ? undefined : Number(e.target.value))
-                  }
-                >
-                  <option value="">Select unit</option>
-                  {units.map((unit) => (
-                    <option key={unit.id} value={unit.id}>
-                      {unit.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
-
-          {error && <p className={IngredientStyles.error}>{error}</p>}
-          
-
-        </form>
+        <AddIngredientHeader
+          postUrl="http://localhost:5041/api/InventoryIngredient"
+          onSuccess={fetchIngredients}
+        />
+        
       </div>
 
       <div className={IngredientStyles.main}>
