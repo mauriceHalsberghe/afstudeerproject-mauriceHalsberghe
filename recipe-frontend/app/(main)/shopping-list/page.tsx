@@ -1,8 +1,11 @@
 "use client";
 
-import Checkbox from "@/app/components/Checkbox";
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useEffect, useState } from "react";
+
+import Checkbox from "@/app/components/Checkbox";
+import AddIngredientHeader from "@/app/components/AddIngredientHeader";
+import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
 
 type ListIngredient = {
     id: number;
@@ -37,7 +40,7 @@ export default function ShoppingList() {
     const auth = useContext(AuthContext);
     const loggedUserId = auth?.user?.id;
 
-    const fetchIngredients = async () => {
+    const fetchShoppingList = async () => {
         if (!loggedUserId) return;
 
         setLoading(true);
@@ -66,11 +69,11 @@ export default function ShoppingList() {
     useEffect(() => {
         if (!loggedUserId) return;
         
-        const loadIngredients = async () => {
-        await fetchIngredients();
+        const loadData = async () => {
+        await fetchShoppingList();
         };
         
-        loadIngredients();
+        loadData();
     }, [loggedUserId]);
 
     if (!loggedUserId) {
@@ -82,16 +85,37 @@ export default function ShoppingList() {
     }
 
     return (
-        <div>
-            <h1>Shopping list</h1>
-            {ingredients.map((ingredient) => (
-                <div key={ingredient.id}>
-                    <Checkbox initialChecked={ingredient.checked} listIngredientId={ingredient.id} userId={loggedUserId}/>
-                    {ingredient.ingredient.name}
-                    {ingredient.quantity}
-                    {ingredient.quantityUnit?.shortName}
-                </div>
-            ))}
-        </div>
+        <main className={IngredientStyles.page}>
+
+            <div className={IngredientStyles.header}>
+
+                <h1 className={IngredientStyles.title}>Shopping List</h1>
+                <AddIngredientHeader
+                    postUrl="http://localhost:5041/api/ListIngredients"
+                    onSuccess={fetchShoppingList}
+                />
+                                
+            </div>
+
+            <div className={IngredientStyles.main}>
+
+                <ul className={IngredientStyles.list}>
+                    {ingredients.map((ingredient) => (
+                        <li className={IngredientStyles.ingredient} key={ingredient.id}>
+                            <div className={IngredientStyles.ingredientSign}>
+                                <Checkbox initialChecked={ingredient.checked} listIngredientId={ingredient.id} userId={loggedUserId}/>
+                                {ingredient.ingredient.name}
+                            </div>
+                            {ingredient.quantity != null && ingredient.quantityUnit && (
+                                <p className={IngredientStyles.ingredientQuantity}>
+                                    {ingredient.quantity} {ingredient.quantityUnit?.shortName ?? ""}
+                                </p>
+                            )}
+
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </main>
     )
 }
