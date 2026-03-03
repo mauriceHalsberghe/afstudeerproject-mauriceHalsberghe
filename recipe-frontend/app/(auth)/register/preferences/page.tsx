@@ -122,34 +122,43 @@ export default function RegisterPreferences() {
         }
     };
 
+    const progress = (step / 3) * 100;
 
     return (
         <div className={PrefStyles.page}>
             {auth.user && <h1 className={PrefStyles.title}>Welcome, {auth.user.username}!</h1>}
 
+            <div className={PrefStyles.progress}>
+                <h2 className={PrefStyles.progressSubtitle}>Step {step} of 3</h2>
+                <div className={PrefStyles.progressBar}>
+                    <span style={{ width: `${progress}%` }}></span>
+                </div>
+            </div>
+
             {step === 1 && (
                 <div className={PrefStyles.pageStep}>
-                    <h2 className={PrefStyles.subtitle}>Step 1: Select your diet</h2>
+                    <h3 className={PrefStyles.subtitle}>Select your diet</h3>
 
                     <div className={PrefStyles.list}>
                         {diets.map((diet) => (
                             <div key={diet.id} className={PrefStyles.radio}>
-                                <input id={diet.name} value={diet.id} className={PrefStyles.radioInput} type="radio" checked={selectedDiet === diet.id} onChange={(e) => setSelectedDiet(Number(e.target.value))}/>
+                                <input id={diet.name} value={diet.id} className={PrefStyles.radioInput} type="radio" checked={selectedDiet === diet.id}   onClick={() => setSelectedDiet(selectedDiet === diet.id ? null : diet.id)}/>
                                 <label htmlFor={diet.name} className={PrefStyles.radioLabel}>{diet.name}</label>
                             </div>
                         ))}
                     </div>
 
-
-                    <button className={ButtonStyles.button} onClick={() => setStep(2)}>
-                    Next
-                    </button>
+                    <div className={PrefStyles.buttons}>
+                        <button className={ButtonStyles.button} onClick={() => setStep(2)}>
+                            {selectedDiet === null ? 'Skip' : 'Next'}
+                        </button>
+                    </div>
                 </div>
             )}
 
             {step === 2 && (
                 <div className={PrefStyles.pageStep}>
-                    <h2 className={PrefStyles.subtitle}>Step 2: Select your allergies</h2>
+                    <h2 className={PrefStyles.subtitle}>Select your allergies</h2>
 
                     <div className={PrefStyles.list} >
                         {allergies.map((allergy) => (
@@ -162,6 +171,20 @@ export default function RegisterPreferences() {
                     
                     <div className={PrefStyles.buttons}>
                         <button className={ButtonStyles.button} onClick={() => setStep(1)}>Back</button>
+
+                        <button className={ButtonStyles.button} onClick={() => setStep(3)}>
+                            {selectedAllergies.length < 1 ? 'Skip' : 'Next'}
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {step === 3 && (
+                <div className={PrefStyles.pageStep}>
+                    <h2 className={PrefStyles.subtitle}>Add an avatar</h2>
+
+                    <div className={PrefStyles.buttons}>
+                        <button className={ButtonStyles.button} onClick={() => setStep(2)}>Back</button>
 
                         <button className={ButtonStyles.button} onClick={handleComplete}>
                             Complete
