@@ -1,28 +1,41 @@
 .profile {
     display: flex;
     flex-direction: column;
-    width: fit-content;
-    justify-content: center;
     align-items: center;
-    margin: auto;
-    height: 90vh;
-    gap: 2rem;
-}
-
-.title {
-    width: fit-content;
-    font-size: 1.2rem;
-}
-
-.profileInfo {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
+    margin: 2rem;
     gap: 2rem;
 }
 
 .names {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+}
+
+.avatar {
+    border-radius: 5rem;
+}
+
+.username {
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.email {
+    font-size: 0.9rem;
+    color: var(--gray-300);
+}
+
+.profileInfo {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
