@@ -4,6 +4,8 @@ using RecipeBackend.DTOs;
 using RecipeBackend.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace RecipeBackend.Controllers;
 
@@ -71,4 +73,74 @@ public class UsersController : ControllerBase
 
         return int.Parse(claim.Value);
     }
+
+    [HttpGet("{username}/recipes")]
+    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipesByUsername(
+        string username,
+        int? currentUserId)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+            return NotFound("User not found");
+
+        var recipes = await _context.Recipes
+            .Where(r => r.UserId == user.Id)
+            .Include(r => r.RecipeIngredients)
+            .Include(r => r.Cuisine)
+            .Include(r => r.Diet)
+            .Include(r => r.User)
+            .Select(r => new RecipeDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                ImageUrl = r.ImageUrl,
+                Time = r.Time,
+                DietId = r.DietId,
+                CuisineId = r.CuisineId,
+                Diet = r.Diet == null ? null : new DietDto
+                {
+                    Id = r.Diet.Id,
+                    Name = r.Diet.Name
+                },
+                Cuisine = r.Cuisine == null ? null : new CuisineDto
+                {
+                    Id = r.Cuisine.Id,
+                    Name = r.Cuisine.Name
+                },
+                User = r.User == null ? null : new UserSummaryDto
+                {
+                    Id = r.User.Id,
+                    Username = r.User.Username,
+                    Avatar = r.User.Avatar
+                },
+                LikeCount = r.Likes.Count(),
+                IsLikedByCurrentUser = currentUserId.HasValue &&
+                    r.Likes.Any(l => l.UserId == currentUserId.Value),
+            })
+            .ToListAsync();
+
+        return Ok(recipes);
+    }
+
+    [HttpGet("{username}")]
+    public async Task<ActionResult<UserSummaryDto>> GetUserByUsername(string username)
+    {
+        var user = await _context.Users
+            .Where(u => u.Username == username)
+            .Select(u => new UserSummaryDto
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Avatar = u.Avatar
+            })
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+            return NotFound();
+
+        return Ok(user);
+    }
+    
 }
