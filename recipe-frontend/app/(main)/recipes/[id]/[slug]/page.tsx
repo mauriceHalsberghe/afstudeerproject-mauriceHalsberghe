@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css"
+import Link from "next/link";
 
 type Diet = {
     id: number;
@@ -90,7 +91,7 @@ export default function RecipeDetail() {
                 <h1 className={DetailStyles.title}>{recipe.title}</h1>
                 {
                     recipe.user &&
-                    <div className={DetailStyles.user}>
+                    <Link href={`/users/${recipe.user.username}`} className={DetailStyles.user}>
                         <Image 
                             className={DetailStyles.avatar} 
                             width={24} 
@@ -99,7 +100,7 @@ export default function RecipeDetail() {
                             src={recipe.user.avatar ? `http://localhost:5041/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
                         />
                         <p className={DetailStyles.username}>{recipe.user.username}</p>
-                    </div>
+                    </Link>
                 }
             </div>
             
