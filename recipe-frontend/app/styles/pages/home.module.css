@@ -3,6 +3,21 @@
     padding-bottom: 7rem;
 }
 
+.userTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.title {
+    font-size: 1.2rem;
+}
+
+.avatar {
+    border-radius: 5rem;
+}
+
 .recipes {
     display: flex;
     flex-direction: column;
