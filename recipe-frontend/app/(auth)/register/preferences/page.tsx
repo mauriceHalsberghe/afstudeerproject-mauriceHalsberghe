@@ -208,7 +208,7 @@ export default function RegisterPreferences() {
                 <div className={PrefStyles.pageStep}>
                     <h3 className={PrefStyles.subtitle}>Add an avatar</h3>
 
-                    <AvatarUpload size={192} userId={loggedUserId} username={auth.user.username}/>
+                    <AvatarUpload onUploadSuccess={()=>{}} size={192} userId={loggedUserId} username={auth.user.username}/>
 
                     <div className={PrefStyles.buttons}>
                         <button className={ButtonStyles.button} onClick={() => setStep(2)}>Back</button>

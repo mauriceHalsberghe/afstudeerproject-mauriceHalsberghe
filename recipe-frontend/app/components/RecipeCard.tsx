@@ -57,8 +57,8 @@ function RecipeCard({ recipe, onUnlike }: Props) {
           { recipe.user && 
             <Image 
               className={RecipeCardStyles.avatar} 
-              width={24} 
-              height={24} 
+              width={48} 
+              height={48} 
               alt={recipe.user.username}
               src={recipe.user.avatar ? `http://localhost:5041/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
             />
