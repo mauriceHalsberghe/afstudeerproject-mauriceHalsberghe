@@ -40,12 +40,12 @@ export default function RegisterPreferences() {
     
     useEffect(() => {
         setAllergies([
-            { id: 1, typeId: 0, name: 'Gluten', type: AllergyType.ingredient },
+            { id: 1, typeId: 37, name: 'Gluten', type: AllergyType.ingredient },
             { id: 2, typeId: 3, name: 'Dairy', type: AllergyType.ingredientType },
             { id: 3, typeId: 0, name: 'Peanuts', type: AllergyType.ingredient },
             { id: 4, typeId: 1, name: 'Fish', type: AllergyType.ingredientType },
-            { id: 5, typeId: 0, name: 'Soy', type: AllergyType.ingredient },
-            { id: 6, typeId: 1, name: 'Eggs', type: AllergyType.ingredient },
+            { id: 5, typeId: 49, name: 'Soy', type: AllergyType.ingredient },
+            { id: 6, typeId: 12, name: 'Eggs', type: AllergyType.ingredientType },
             { id: 7, typeId: 1, name: 'Sesame', type: AllergyType.ingredient },
         ]);
 
