@@ -27,6 +27,7 @@ public class RecipesController : ControllerBase
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
             .Include(r => r.User)
+            .Include(r => r.Reviews)
             .Select(r => new RecipeDto
             {
                 Id = r.Id,
@@ -54,6 +55,10 @@ public class RecipesController : ControllerBase
                 LikeCount = r.Likes.Count(),
                 IsLikedByCurrentUser = currentUserId.HasValue && 
                     r.Likes.Any(l => l.UserId == currentUserId.Value),
+                    
+                AverageRating = r.Reviews.Any()
+                    ? r.Reviews.Average(rv => rv.Rating) / 2.0
+                    : (double?)null,
             })
             .ToListAsync();
 
