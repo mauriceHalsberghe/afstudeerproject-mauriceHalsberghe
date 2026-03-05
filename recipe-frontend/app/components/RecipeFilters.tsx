@@ -66,64 +66,68 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter }: Pr
         />
       </div>
 
-      <div className={filtersStyles.filters}>
-        <select
-          value={filters.selectedDiet}
-          onChange={(e) => update({ selectedDiet: Number(e.target.value) })}
-          className={filtersStyles.select}
-        >
-          <option value={0}>All Diets</option>
-          {diets.map((diet) => (
-            <option key={diet.id} value={diet.id}>
-              {diet.name}
-            </option>
-          ))}
-        </select>
+      <div className={filtersStyles.filterWrapper}>
 
-        <select
-          value={filters.selectedCuisine}
-          onChange={(e) => update({ selectedCuisine: Number(e.target.value) })}
-          className={filtersStyles.select}
-        >
-          <option value={0}>All Cuisines</option>
-          {cuisines.map((cuisine) => (
-            <option key={cuisine.id} value={cuisine.id}>
-              {cuisine.name}
-            </option>
-          ))}
-        </select>
+        <div className={filtersStyles.filters}>
+          <select
+            value={filters.selectedDiet}
+            onChange={(e) => update({ selectedDiet: Number(e.target.value) })}
+            className={filtersStyles.select}
+          >
+            <option value={0}>All Diets</option>
+            {diets.map((diet) => (
+              <option key={diet.id} value={diet.id}>
+                {diet.name}
+              </option>
+            ))}
+          </select>
 
-        {/* <div>
-          <p>Time</p>
-          <input
-            type="range"
-            min={5}
-            max={90}
-            step={5}
-            value={filters.time}
-            onChange={(e) => update({ time: Number(e.target.value) })}
-          />
-          <output>{displayTime}</output>
-        </div> */}
-        
-        {onlyUsersFilter && 
+          <select
+            value={filters.selectedCuisine}
+            onChange={(e) => update({ selectedCuisine: Number(e.target.value) })}
+            className={filtersStyles.select}
+          >
+            <option value={0}>All Cuisines</option>
+            {cuisines.map((cuisine) => (
+              <option key={cuisine.id} value={cuisine.id}>
+                {cuisine.name}
+              </option>
+            ))}
+          </select>
 
-          <div className={filtersStyles.checkbox}>
+          {/* <div>
+            <p>Time</p>
             <input
-              type="checkbox"
-              id="usersCheck"
-              className={filtersStyles.checkboxInput}
-              checked={filters.onlyUsers}
-              onChange={(e) => update({ onlyUsers: e.target.checked })}
+              type="range"
+              min={5}
+              max={90}
+              step={5}
+              value={filters.time}
+              onChange={(e) => update({ time: Number(e.target.value) })}
             />
+            <output>{displayTime}</output>
+          </div> */}
+          
+          {onlyUsersFilter && 
 
-            <label className={filtersStyles.checkboxLabel} htmlFor="usersCheck" >
-              User recipes
-            </label>
-          </div>
-        }
+            <div className={filtersStyles.checkbox}>
+              <input
+                type="checkbox"
+                id="usersCheck"
+                className={filtersStyles.checkboxInput}
+                checked={filters.onlyUsers}
+                onChange={(e) => update({ onlyUsers: e.target.checked })}
+              />
 
+              <label className={filtersStyles.checkboxLabel} htmlFor="usersCheck" >
+                User recipes
+              </label>
+            </div>
+          }
+
+        </div>
       </div>
+
     </>
   );
 }

@@ -33,20 +33,41 @@
 .filters {
     display: flex;
     align-items: center;
-    max-width: 500px;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    gap: 1rem;
+    margin: 1rem 0;
 
     &::-webkit-scrollbar {
     display: none;
     }
     
-    gap: 1rem;
-    margin: 1rem 0;
     input {
         width: 110px;
     }
+}
+
+.filterWrapper {
+    position: relative;
+    max-width: 500px;
+}
+
+.filterWrapper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 30px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+
+    background: linear-gradient(
+        to left,
+        var(--gray-100),
+        rgba(255, 0, 0, 0)
+    );
 }
 
 
