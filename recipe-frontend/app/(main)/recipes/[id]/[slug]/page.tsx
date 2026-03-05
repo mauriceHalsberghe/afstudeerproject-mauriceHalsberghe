@@ -67,8 +67,7 @@ export default function RecipeDetail() {
     const auth = useContext(AuthContext);
     const loggedUserId = auth?.user?.id;
 
-    useEffect(() => {
-        const fetchRecipe = async () => {
+    const fetchRecipe = async () => {
         try {
             const res = await fetch(`http://localhost:5041/api/recipes/${recipeId}`);
             const recipeData: Recipe = await res.json();
@@ -78,9 +77,11 @@ export default function RecipeDetail() {
         } finally {
             setLoading(false);
         }
-        };
+    };
+
+    useEffect(() => {
         fetchRecipe();
-    }, []);
+    }, [recipeId]);
 
     if (!recipe) {
         return <p>Recipe not found</p>
@@ -152,7 +153,12 @@ export default function RecipeDetail() {
                     onClick={() => setShowModal(false)}
                 >
                     <div onClick={(e) => e.stopPropagation()}>
-                        <RatingModal userId={loggedUserId} recipeId={recipeId} onClose={() => setShowModal(false)}/>
+                        <RatingModal 
+                            userId={loggedUserId} 
+                            recipeId={recipeId} 
+                            onClose={() => setShowModal(false)}
+                            onRated={fetchRecipe}
+                        />
                     </div>
                 </div>
             }

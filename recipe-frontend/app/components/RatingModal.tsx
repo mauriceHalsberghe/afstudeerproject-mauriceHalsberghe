@@ -8,9 +8,10 @@ type Props = {
   userId: number;
   recipeId: number;
   onClose: () => void;
+  onRated: () => void;
 }
 
-export default function RatingModal({ userId, recipeId, onClose }: Props) {
+export default function RatingModal({ userId, recipeId, onClose, onRated }: Props) {
   const [amount, setAmount] = useState(0);
   const dbValue = amount * 2;
 
@@ -26,7 +27,8 @@ export default function RatingModal({ userId, recipeId, onClose }: Props) {
       if (!response.ok) {
         throw new Error("Failed to submit review")
       }
-
+      
+      onRated();
       onClose();
     } catch (error) {
       console.error("Error submitting review:", error)

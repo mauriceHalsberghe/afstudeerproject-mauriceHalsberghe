@@ -53,7 +53,7 @@
     gap:  4px;   
 }
 
-.ratingAmount {
+.ratingAmount, .rating {
     cursor: pointer;
 }
 
