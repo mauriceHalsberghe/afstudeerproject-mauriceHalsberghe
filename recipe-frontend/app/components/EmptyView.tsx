@@ -30,8 +30,10 @@ export default function EmptyView(view : Props) {
     return (
         <main className={EmptyViewStyles.page}>
             {icon}
-            <h1 className={EmptyViewStyles.title}>{view.title}</h1>
-            {view.text && <p className={EmptyViewStyles.text}>{view.text}</p> }
+            <div className={EmptyViewStyles.textDiv}>
+                <h1 className={EmptyViewStyles.title}>{view.title}</h1>
+                {view.text && <p className={EmptyViewStyles.text}>{view.text}</p> }
+            </div>
             {view.btnText && <Link href="/login" className={ButtonStyles.button}>Login</Link> }
             
         </main>

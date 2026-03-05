@@ -7,6 +7,7 @@ import IngredientTypeIcon from "@/app/components/IngredientTypeIcon";
 import AddIngredientHeader from "@/app/components/AddIngredientHeader";
 
 import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
+import EmptyView from "@/app/components/EmptyView";
 
 type InventoryIngredient = {
   id: number;
@@ -109,6 +110,11 @@ export default function Ingredients() {
       (item) => item.ingredient.ingredientTypeId === selectedIngredientType
     )
   : ingredients;
+
+  if (!loggedUserId) {
+    return <EmptyView title='Not logged in' text="Log in to add ingredients" btnText='Log In' btnUrl='/login' icon="profile" />
+  }
+  
 
   return (
     <main className={IngredientStyles.page}>

@@ -11,6 +11,7 @@ import PrefStyles from "@/app/styles/pages/preferences.module.css";
 import ButtonStyles from "@/app/styles/components/button.module.css";
 
 import PencilIcon from "@/public/edit.svg"
+import EmptyView from "@/app/components/EmptyView";
 
 type Diet = { id: number; name: string };
 
@@ -40,7 +41,10 @@ export default function Preferences() {
     const [oldPreferences, setOldPreferences] = useState<{ diet: number | null; allergies: number[] }>({ diet: null, allergies: [] });
 
     useEffect(() => {
-        if (!auth || !auth.user || !auth.token) return;
+        if (!auth || !auth.user || !auth.token) {
+            setLoading(false);
+        return;
+    }
         const { user, token } = auth;
 
         const fetchData = async () => {
@@ -128,6 +132,8 @@ export default function Preferences() {
             setSaveStatus("error");
         }
     };
+
+    if (!auth || !auth.user || !auth.token) return <EmptyView title='Not logged in' btnText='Log In' btnUrl='/login' icon='profile'/>;
 
     if (loading) return <p>Loading...</p>;
 

@@ -26,7 +26,7 @@ export default function Profile() {
 
     if (!auth?.user) {
         return (
-            <EmptyView title='Not logged in' btnText='Log In' btnUrl='/login' icon='profile'/>
+            <EmptyView title='Not logged in' text='Log in to see profile details' btnText='Log In' btnUrl='/login' icon='profile'/>
         );
     }    
 

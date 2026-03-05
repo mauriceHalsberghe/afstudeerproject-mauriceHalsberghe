@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import Checkbox from "@/app/components/Checkbox";
 import AddIngredientHeader from "@/app/components/AddIngredientHeader";
 import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
+import EmptyView from "@/app/components/EmptyView";
 
 type ListIngredient = {
     id: number;
@@ -88,11 +89,7 @@ export default function ShoppingList() {
     };
 
     if (!loggedUserId) {
-        return (
-            <div>
-                Log in to see shopping list
-            </div>
-        )
+        return <EmptyView title='Not logged in' text="Log in to see your shopping list" btnText='Log In' btnUrl='/login' icon="profile" />
     }
 
     return (

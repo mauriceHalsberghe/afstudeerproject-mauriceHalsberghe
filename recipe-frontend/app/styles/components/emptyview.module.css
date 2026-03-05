@@ -4,7 +4,14 @@
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    margin-top: 20vh;
+    height: calc(100vh - 5rem);
+}
+
+.textDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .title {
@@ -19,5 +26,5 @@
 
 .icon {
   color: var(--gray-200);
-  width: 120px;
+  width: 4rem;
 }

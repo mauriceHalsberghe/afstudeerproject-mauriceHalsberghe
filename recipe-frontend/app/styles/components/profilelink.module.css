@@ -7,11 +7,16 @@
     width: 100%;
     padding: 1rem;
     border-radius: 1rem;
+    transition: background 200ms ease;
 
     svg {
         height: 16px;
         width: 16px;
         color: var(--black);
+    }
+
+    &:active {
+        background-color: var(--gray-200);
     }
 }
 
