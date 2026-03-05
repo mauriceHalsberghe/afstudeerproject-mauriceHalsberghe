@@ -39,14 +39,26 @@
     border-radius: 0.5rem;
 }
 
-.duration {
-    color: var(--green-200);
-
-    &::before {
-        content: url('/clock.svg');
-        padding-right: 4px;
-    }
+.detailData {
+    display: flex;
+    gap: 1rem;
 }
+
+.rating, .duration {
+    color: var(--green-200);
+    font-size: 1rem;
+}
+
+.rating::before {
+    content: url('/star.svg');
+    padding-right: 4px;
+}
+
+.duration::before {
+    content: url('/clock.svg');
+    padding-right: 4px;
+}
+
 
 .subtitle {
     font-weight: 500;

@@ -30,6 +30,7 @@ type Recipe = {
   time: number;
   likeCount: number;
   isLikedByCurrentUser: boolean;
+  averageRating: number;
   diet?: Diet;
   cuisine?: Cuisine;
   user?: User;

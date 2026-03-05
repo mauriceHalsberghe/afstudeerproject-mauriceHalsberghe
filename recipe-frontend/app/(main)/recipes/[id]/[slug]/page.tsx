@@ -30,22 +30,12 @@ type Step = {
     description: string;
 }
 
-type RecipeIngredient = {
-    id: number;
-    quantity: number;
-    quantityUnit?: QuantityUnit;
-    ingredient: Ingredient;
-}
-
-type QuantityUnit = {
-    id: number;
-    name: string;
-    shortName: string;
-}
-
 type Ingredient = {
     id: number;
-    name: string;
+    quantity: number;
+    unit: string;
+    ingredientName: string;
+
 }
 
 type Recipe = {
@@ -57,7 +47,9 @@ type Recipe = {
     cuisine?: Cuisine;
     user?: User;
     steps: Step[];
-    recipeIngredients: RecipeIngredient[];
+    ingredients: Ingredient[];
+    likeCount: number;
+    averageRating?: number;
 };
 
 export default function RecipeDetail() {
@@ -105,21 +97,25 @@ export default function RecipeDetail() {
             
             <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`http://localhost:5041/uploads/recipe-images/${recipe.imageUrl}`}/>
             
-            <p className={DetailStyles.duration}>{recipe.time} min</p>
+            <div className={DetailStyles.detailData}>
+                <p className={DetailStyles.rating}>{recipe.averageRating ? recipe.averageRating : 'No ratings yet'}</p>
+                <p className={DetailStyles.duration}>{recipe.time} min</p>
+            </div>
+    
             
             <h2 className={DetailStyles.subtitle}>Ingredients</h2>
             <ul className={DetailStyles.ingredients}>
-                {recipe.recipeIngredients.map((recipeIngredient) => (
-                    <li className={DetailStyles.ingredient} key={recipeIngredient.id}>
+                {recipe.ingredients.map((ingredient) => (
+                    <li className={DetailStyles.ingredient} key={ingredient.id}>
                         {
-                            recipeIngredient.quantity &&
+                            ingredient.quantity &&
                             <p className={DetailStyles.ingredientAmount}>
-                                {recipeIngredient.quantity}
-                                {recipeIngredient.quantityUnit?.shortName}
+                                {ingredient.quantity}
+                                {ingredient.unit}
                             </p>
                         }
                         <p className={DetailStyles.ingredientName}>
-                            {recipeIngredient.ingredient.name}
+                            {ingredient.ingredientName}
                             </p>
                     </li>
                 ))}
