@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import Checkbox from "@/app/components/Checkbox";
 import AddIngredientHeader from "@/app/components/AddIngredientHeader";
 import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
+import EmptyView from "@/app/components/EmptyView";
 
 type ListIngredient = {
     id: number;
@@ -88,11 +89,7 @@ export default function ShoppingList() {
     };
 
     if (!loggedUserId) {
-        return (
-            <div>
-                Log in to see shopping list
-            </div>
-        )
+        return <EmptyView title='Not logged in' text="Log in to see your shopping list" btnText='Log In' btnUrl='/login' icon="profile" />
     }
 
     return (
@@ -109,6 +106,10 @@ export default function ShoppingList() {
             </div>
 
             <div className={IngredientStyles.main}>
+
+                {uncheckedIngredients.length <= 0 && checkedIngredients.length <= 0 &&
+                    <p className={IngredientStyles.empty}>No ingredients</p>
+                }
 
                 {uncheckedIngredients.length > 0 && (
                     <ul className={IngredientStyles.list}>
@@ -138,9 +139,8 @@ export default function ShoppingList() {
 
                 {checkedIngredients.length > 0 && (
                 <>
-                    <h2 className={IngredientStyles.subtitle}>Checked off</h2>
 
-                    <ul className={IngredientStyles.list}>
+                    <ul className={`${IngredientStyles.list} ${IngredientStyles.checkedList}`}>
                     {checkedIngredients.map((ingredient) => (
                         <li
                             className={`${IngredientStyles.ingredient} ${IngredientStyles.checkedIngredient}`}

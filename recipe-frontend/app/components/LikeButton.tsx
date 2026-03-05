@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import LikeButtonStyles from '@/app/styles/components/likebutton.module.css';
+import ButtonStyles from '@/app/styles/components/button.module.css';
 
 import LikeFilledIcon from '@/public/like_filled.svg';
 import LikeUnfilledIcon from '@/public/like_unfilled.svg';
+import Link from "next/link";
 
 type LikeButtonProps = {
   recipeId: number;
@@ -24,9 +26,11 @@ export default function LikeButton({
   const [liked, setLiked] = useState(initialLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const toggleLike = async () => {
     if (!userId) {
+      setShowModal(true);
       console.log("log in to like");
       return;
     }
@@ -70,15 +74,45 @@ export default function LikeButton({
   };
 
   return (
-    <div className={LikeButtonStyles.like}>
-      <p className={LikeButtonStyles.count}>{likeCount}</p>
-      <button
-        className={LikeButtonStyles.button}
-        onClick={toggleLike}
-        disabled={loading}
-      >
-        {liked ? <LikeFilledIcon /> : <LikeUnfilledIcon />}
-      </button>
-    </div>
+    <>
+  
+      <div className={LikeButtonStyles.like}>
+        <p className={LikeButtonStyles.count}>{likeCount}</p>
+        <button
+          className={LikeButtonStyles.button}
+          onClick={toggleLike}
+          disabled={loading}
+        >
+          {liked ? <LikeFilledIcon /> : <LikeUnfilledIcon />}
+        </button>
+      </div>
+
+      {showModal && (
+        <div
+          className={LikeButtonStyles.modalOverlay}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className={LikeButtonStyles.modal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className={LikeButtonStyles.modalTitle}>Not logged in</h2>
+            <p className={LikeButtonStyles.modalText}>Log in to like recipes</p>
+
+            <div className={LikeButtonStyles.buttons}>
+              <button
+                className={ButtonStyles.secondaryButton}
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+
+              <Link className={ButtonStyles.button} href={'/login'}>Log in</Link>
+            </div>
+
+          </div>
+        </div>
+      )}
+    </>
   );
 }

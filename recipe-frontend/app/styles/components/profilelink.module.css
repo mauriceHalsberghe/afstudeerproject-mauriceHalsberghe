@@ -1,0 +1,37 @@
+.link {
+    background-color: var(--white);
+    color: var(--gray-300);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: background 200ms ease;
+
+    svg {
+        height: 16px;
+        width: 16px;
+        color: var(--black);
+    }
+
+    &:active {
+        background-color: var(--gray-200);
+    }
+}
+
+.text {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    p {
+        color: var(--black);
+    }
+
+    svg {
+        color: var(--gray-300);
+        height: 24px;
+        width: 24px;
+    }
+}

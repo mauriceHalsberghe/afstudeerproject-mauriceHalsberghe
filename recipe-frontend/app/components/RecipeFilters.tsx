@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "@/app/styles/pages/home.module.css";
+import filtersStyles from "@/app/styles/components/recipefilers.module.css";
 
 type Diet = {
   id: number;
@@ -23,10 +23,11 @@ export type RecipeFiltersState = {
 
 type Props = {
   filters: RecipeFiltersState;
+  onlyUsersFilter: boolean;
   onChange: (filters: RecipeFiltersState) => void;
 };
 
-export default function RecipeFilters({ filters, onChange }: Props) {
+export default function RecipeFilters({ filters, onChange, onlyUsersFilter }: Props) {
   const [diets, setDiets] = useState<Diet[]>([]);
   const [cuisines, setCuisines] = useState<Cuisine[]>([]);
 
@@ -56,7 +57,7 @@ export default function RecipeFilters({ filters, onChange }: Props) {
 
   return (
     <>
-      <div className={styles.search}>
+      <div className={filtersStyles.search}>
         <input
           type="text"
           placeholder="Search Recipes"
@@ -65,55 +66,68 @@ export default function RecipeFilters({ filters, onChange }: Props) {
         />
       </div>
 
-      <div className={styles.filters}>
-        <select
-          value={filters.selectedDiet}
-          onChange={(e) => update({ selectedDiet: Number(e.target.value) })}
-          className={styles.select}
-        >
-          <option value={0}>All Diets</option>
-          {diets.map((diet) => (
-            <option key={diet.id} value={diet.id}>
-              {diet.name}
-            </option>
-          ))}
-        </select>
+      <div className={filtersStyles.filterWrapper}>
 
-        <select
-          value={filters.selectedCuisine}
-          onChange={(e) => update({ selectedCuisine: Number(e.target.value) })}
-          className={styles.select}
-        >
-          <option value={0}>All Cuisines</option>
-          {cuisines.map((cuisine) => (
-            <option key={cuisine.id} value={cuisine.id}>
-              {cuisine.name}
-            </option>
-          ))}
-        </select>
+        <div className={filtersStyles.filters}>
+          <select
+            value={filters.selectedDiet}
+            onChange={(e) => update({ selectedDiet: Number(e.target.value) })}
+            className={filtersStyles.select}
+          >
+            <option value={0}>All Diets</option>
+            {diets.map((diet) => (
+              <option key={diet.id} value={diet.id}>
+                {diet.name}
+              </option>
+            ))}
+          </select>
 
-        <div>
-          <p>Time</p>
-          <input
-            type="range"
-            min={5}
-            max={90}
-            step={5}
-            value={filters.time}
-            onChange={(e) => update({ time: Number(e.target.value) })}
-          />
-          <output>{displayTime}</output>
+          <select
+            value={filters.selectedCuisine}
+            onChange={(e) => update({ selectedCuisine: Number(e.target.value) })}
+            className={filtersStyles.select}
+          >
+            <option value={0}>All Cuisines</option>
+            {cuisines.map((cuisine) => (
+              <option key={cuisine.id} value={cuisine.id}>
+                {cuisine.name}
+              </option>
+            ))}
+          </select>
+
+          {/* <div>
+            <p>Time</p>
+            <input
+              type="range"
+              min={5}
+              max={90}
+              step={5}
+              value={filters.time}
+              onChange={(e) => update({ time: Number(e.target.value) })}
+            />
+            <output>{displayTime}</output>
+          </div> */}
+          
+          {onlyUsersFilter && 
+
+            <div className={filtersStyles.checkbox}>
+              <input
+                type="checkbox"
+                id="usersCheck"
+                className={filtersStyles.checkboxInput}
+                checked={filters.onlyUsers}
+                onChange={(e) => update({ onlyUsers: e.target.checked })}
+              />
+
+              <label className={filtersStyles.checkboxLabel} htmlFor="usersCheck" >
+                User recipes
+              </label>
+            </div>
+          }
+
         </div>
-
-        <label>
-          Only user recipes
-          <input
-            type="checkbox"
-            checked={filters.onlyUsers}
-            onChange={(e) => update({ onlyUsers: e.target.checked })}
-          />
-        </label>
       </div>
+
     </>
   );
 }

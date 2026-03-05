@@ -1,12 +1,18 @@
-.button {
+.button , .secondaryButton {
     padding: 0 1.2rem;
     font-size: 1.2rem;
-    width: fit-content;
+    min-width: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     height: 40px;
     border-radius: 2rem;
     color: var(--gray-100);
     background-color: var(--green-200);
     cursor: pointer;
+
+    transition: background-color 0.2s ease;
 
     &:active {
         background-color: var(--green-100);
@@ -16,6 +22,11 @@
         background-color: var(--gray-200);
         color: white;
         cursor: not-allowed;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
     }
 }
 
@@ -33,4 +44,10 @@
 .smallButton {
     font-size: 1rem;
     min-width: max-content;
+}
+
+.secondaryButton {
+    background-color: transparent;
+    color: var(--green-200);
+    border: 2px solid var(--green-200);
 }

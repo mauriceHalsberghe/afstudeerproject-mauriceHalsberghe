@@ -9,6 +9,7 @@ type AuthUser = {
   email: string;
   avatar?: string;
   bio?: string;
+  dietId?: number;
 };
 
 type AuthContextType = {
@@ -17,12 +18,13 @@ type AuthContextType = {
   loading: boolean;
   login: (user: AuthUser, token: string) => void;
   logout: () => void;
+  setUser: (user: AuthUser) => void;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, _setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,8 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+        _setUser(JSON.parse(storedUser));
       }
 
       if (storedToken && storedToken !== "undefined" && storedToken !== "null") {
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (err) {
       console.error("Failed to parse stored user/token", err);
-      setUser(null);
+      _setUser(null);
       setToken(null);
     } finally {
       setLoading(false);
@@ -49,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function login(userData: AuthUser, jwtToken: string) {
-    setUser(userData);
+    _setUser(userData);
     setToken(jwtToken);
 
     localStorage.setItem("user", JSON.stringify(userData));
@@ -60,12 +61,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
 
-    setUser(null);
+    _setUser(null);
     setToken(null);
   }
 
+  function setUser(userData: AuthUser) {
+    _setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

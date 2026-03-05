@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css"
+import Link from "next/link";
+import BackButton from "@/app/components/BackButton";
 
 type Diet = {
     id: number;
@@ -87,20 +89,18 @@ export default function RecipeDetail() {
     return (
         <div className={DetailStyles.page}>
             <div className={DetailStyles.header}>
+                <BackButton url="/" absolute={false}/>
                 <h1 className={DetailStyles.title}>{recipe.title}</h1>
-                {
-                    recipe.user &&
-                    <div className={DetailStyles.user}>
+                { recipe.user ? <Link href={`/users/${recipe.user.username}`} className={DetailStyles.user}>
                         <Image 
                             className={DetailStyles.avatar} 
-                            width={24} 
-                            height={24} 
+                            width={64} 
+                            height={64} 
                             alt={recipe.user.username}
                             src={recipe.user.avatar ? `http://localhost:5041/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
                         />
                         <p className={DetailStyles.username}>{recipe.user.username}</p>
-                    </div>
-                }
+                    </Link> : <div></div> }
             </div>
             
             <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`http://localhost:5041/uploads/recipe-images/${recipe.imageUrl}`}/>
