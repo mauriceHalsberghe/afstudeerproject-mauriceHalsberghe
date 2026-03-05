@@ -117,7 +117,7 @@ public class RecipesController : ControllerBase
                 LikeCount = r.Likes.Count(),
 
                 AverageRating = r.Reviews.Any()
-                    ? r.Reviews.Average(rv => rv.Rating) / 2.0
+                    ? Math.Round(r.Reviews.Average(rv => rv.Rating) / 2.0, 1)
                     : (double?)null
             })
             .FirstOrDefaultAsync();
