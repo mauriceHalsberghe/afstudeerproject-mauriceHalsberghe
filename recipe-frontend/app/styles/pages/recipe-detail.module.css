@@ -45,11 +45,16 @@
     margin-top: 0.5rem;
 }
 
-.rating, .duration {
+.rating, .duration, .ratingAmount {
     color: var(--green-200);
     font-size: 1rem;
     display: flex;
     align-items: center;
+    gap:  4px;   
+}
+
+.ratingAmount {
+    cursor: pointer;
 }
 
 .rating::before,
@@ -58,7 +63,6 @@
     display: inline-block;
     width: 18px;
     height: 18px;
-    margin-right: 4px;
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -70,7 +74,6 @@
 .duration::before {
     background-image: url('/clock.svg');
 }
-
 
 .subtitle {
     font-weight: 500;

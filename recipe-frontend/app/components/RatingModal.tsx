@@ -6,11 +6,11 @@ import ButtonStyles from '@/app/styles/components/button.module.css'
 
 type Props = {
   userId: number;
-  recipeId: number
+  recipeId: number;
+  onClose: () => void;
 }
 
-
-export default function RatingModal({ userId, recipeId }: Props) {
+export default function RatingModal({ userId, recipeId, onClose }: Props) {
   const [amount, setAmount] = useState(0);
   const dbValue = amount * 2;
 
@@ -26,6 +26,8 @@ export default function RatingModal({ userId, recipeId }: Props) {
       if (!response.ok) {
         throw new Error("Failed to submit review")
       }
+
+      onClose();
     } catch (error) {
       console.error("Error submitting review:", error)
     }
@@ -42,8 +44,8 @@ export default function RatingModal({ userId, recipeId }: Props) {
       <RatingStars amount={amount} interactive onRate={setAmount} />
 
       <div className={RatingModalStyles.buttons}>
-        <button className={ButtonStyles.secondaryButton}>Cancel</button>
-        <button className={ButtonStyles.button} onClick={submitReview}>
+        <button className={ButtonStyles.secondaryButton} onClick={onClose}>Cancel</button>
+        <button className={ButtonStyles.button} onClick={submitReview} disabled={amount === 0}>
           Submit
         </button>
       </div>

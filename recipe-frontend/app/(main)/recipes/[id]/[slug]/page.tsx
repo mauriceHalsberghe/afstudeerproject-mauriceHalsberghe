@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css"
 import Link from "next/link";
@@ -10,6 +10,7 @@ import BackButton from "@/app/components/BackButton";
 
 import RatingStars from "@/app/components/RatingStars";
 import RatingModal from "@/app/components/RatingModal";
+import { AuthContext } from "@/context/AuthContext";
 
 type Diet = {
     id: number;
@@ -58,15 +59,18 @@ type Recipe = {
 export default function RecipeDetail() {
     const [loading, setLoading] = useState(true);
     const [recipe, setRecipe] = useState<Recipe | null>(null);
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
 
     const params = useParams();
-    const id = params.id;
+    const recipeId = Number(params.id);
+
+    const auth = useContext(AuthContext);
+    const loggedUserId = auth?.user?.id;
 
     useEffect(() => {
         const fetchRecipe = async () => {
         try {
-            const res = await fetch(`http://localhost:5041/api/recipes/${id}`);
+            const res = await fetch(`http://localhost:5041/api/recipes/${recipeId}`);
             const recipeData: Recipe = await res.json();
             setRecipe(recipeData);
         } catch (err) {
@@ -102,10 +106,13 @@ export default function RecipeDetail() {
             <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`http://localhost:5041/uploads/recipe-images/${recipe.imageUrl}`}/>
             
             <div className={DetailStyles.detailData}>
-                { recipe.averageRating ? 
-                    <RatingStars amount={recipe.averageRating}/> : 
-                    <p className={DetailStyles.rating}>No ratings yet</p>
-                }
+                <div onClick={() => setShowModal(true)}>
+                    { recipe.averageRating ? 
+                    
+                        <div className={DetailStyles.ratingAmount}><RatingStars amount={recipe.averageRating}/><p>{recipe.averageRating}</p></div> : 
+                        <p className={DetailStyles.rating}>No ratings yet</p>
+                    }
+                </div>
                 <p className={DetailStyles.duration}>{recipe.time} min</p>
             </div>
     
@@ -139,9 +146,14 @@ export default function RecipeDetail() {
                 ))}
             </ul>
 
-            {showModal && 
-                <div className={DetailStyles.modalOverlay} onClick={() => setShowModal(false)}>
-                    <RatingModal />
+            {showModal && loggedUserId &&
+                <div 
+                    className={DetailStyles.modalOverlay} 
+                    onClick={() => setShowModal(false)}
+                >
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <RatingModal userId={loggedUserId} recipeId={recipeId} onClose={() => setShowModal(false)}/>
+                    </div>
                 </div>
             }
 

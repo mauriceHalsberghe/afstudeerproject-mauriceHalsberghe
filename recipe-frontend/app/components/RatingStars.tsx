@@ -58,12 +58,11 @@ export default function RatingStars({ amount, interactive = false, onRate }: Pro
 
     return (
         <div
-        ref={containerRef}
-        className={` ${RatingStarsStyles.stars} ${interactive && RatingStarsStyles.starsInteractive} `}
-        style={{cursor: interactive ? "pointer" : "default"}}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
+            ref={containerRef}
+            className={` ${RatingStarsStyles.stars} ${interactive && RatingStarsStyles.starsInteractive} `}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
         >
         {stars}
         </div>
