@@ -139,7 +139,7 @@ export default function Preferences() {
 
     return (
         <div className={PrefStyles.pageProfile}>
-            <BackButton url="/profile"/>
+            <BackButton url="/profile" absolute={true}/>
             <h1 className={PrefStyles.titleProfile}>Preferences</h1>
 
             <div className={PrefStyles.pageStepProfile}>
