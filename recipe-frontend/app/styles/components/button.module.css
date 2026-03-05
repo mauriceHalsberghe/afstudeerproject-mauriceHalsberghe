@@ -1,4 +1,4 @@
-.button {
+.button , .secondaryButton {
     padding: 0 1.2rem;
     font-size: 1.2rem;
     min-width: 5rem;
@@ -44,4 +44,10 @@
 .smallButton {
     font-size: 1rem;
     min-width: max-content;
+}
+
+.secondaryButton {
+    background-color: transparent;
+    color: var(--green-200);
+    border: 2px solid var(--green-200);
 }
