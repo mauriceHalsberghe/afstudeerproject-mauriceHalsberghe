@@ -17,8 +17,27 @@ public class IngredientsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
+    public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients(
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        return await _context.Ingredients.ToListAsync();
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+
+        IQueryable<Ingredient> query = _context.Ingredients;
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            string lowerSearch = search.ToLower();
+            query = query.Where(i => i.Name.ToLower().Contains(lowerSearch));
+        }
+
+        query = query.OrderBy(i => i.Name);
+
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+        var ingredients = await query.ToListAsync();
+        return Ok(ingredients);
     }
 }
