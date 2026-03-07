@@ -70,6 +70,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
 
     e.preventDefault();
     setError("");
+    setSelectedIngredient(null);
 
     if (!loggedUserId) return;
 
@@ -103,7 +104,6 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
       console.error(err);
     }
 
-    setSelectedIngredient(null);
     setQuantity(undefined);
     setSelectedUnitId(undefined);
   };
@@ -113,7 +113,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
     <div className={IngredientStyles.input}>
         <div className={IngredientStyles.searchWrapper}>
         <IngredientSearch
-          value={selectedIngredient?.value ?? null}
+          value={selectedIngredient}
           onIngredientChange={(ingredient) => {
             setSelectedIngredient(ingredient);
             if (error) setError("");

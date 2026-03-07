@@ -17,12 +17,11 @@ export type IngredientOption = {
 };
 
 type Props = {
-  value: number | null;
+  value: IngredientOption | null;
   onIngredientChange?: (ingredient: IngredientOption | null) => void;
 };
 
 export default function IngredientSearch({ value, onIngredientChange }: Props) {
-  const [selectedOption, setSelectedOption] = useState<IngredientOption | null>(null);
 
   const loadOptions: LoadOptions<
     IngredientOption,
@@ -60,10 +59,9 @@ export default function IngredientSearch({ value, onIngredientChange }: Props) {
 
   return (
     <AsyncPaginate
-      value={selectedOption}
+      value={value}
       placeholder="Add Ingredient..."
       onChange={(option) => {
-        setSelectedOption(option);
         onIngredientChange?.(option);
       }}
       loadOptions={loadOptions}
