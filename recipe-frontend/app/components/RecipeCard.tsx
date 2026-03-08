@@ -36,6 +36,7 @@ type Recipe = {
   diet?: Diet;
   cuisine?: Cuisine;
   user?: User;
+  missingIngredientCount?: number | null;
 };
 
 type Props = {
@@ -72,6 +73,12 @@ function RecipeCard({ recipe, onUnlike }: Props) {
               <p className={RecipeCardStyles.rating}>{recipe.averageRating}</p>
             }
             <p className={RecipeCardStyles.time}>{recipe.time} min</p>
+
+            {recipe.missingIngredientCount != null && (
+              recipe.missingIngredientCount === 0
+                ? <p className={RecipeCardStyles.ingredient}>In stock</p>
+                : <p className={RecipeCardStyles.ingredientMissing}>{recipe.missingIngredientCount} missing</p>
+            )}
           </div>
           <div className={RecipeCardStyles.tags}>
             { recipe.diet && <p className={RecipeCardStyles.tag}>{recipe.diet.name}</p>}

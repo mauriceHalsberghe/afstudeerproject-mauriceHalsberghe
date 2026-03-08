@@ -29,24 +29,41 @@
     gap: 1rem
 }
 
-.time, .rating {
+.time, .rating, .ingredient, .ingredientMissing {
     color: var(--green-200);
     font-size: 1rem;
     display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-color: var(--green-200);
+    }
 }
 
 .rating::before {
-    content: url('/star.svg');
-    width: 16px;
-    height: 16px;
-    padding-right: 4px;
+    mask: url('/star.svg') no-repeat center;
+    -webkit-mask: url('/star.svg') no-repeat center;
 }
 
 .time::before {
-    content: url('/clock.svg');
-    padding-right: 4px;
-    width: 16px;
-    height: 16px;
+    mask: url('/clock.svg') no-repeat center;
+    -webkit-mask: url('/clock.svg') no-repeat center;
+}
+
+.ingredient::before {
+    mask: url('/apple.svg') no-repeat center;
+    -webkit-mask: url('/apple.svg') no-repeat center;
+}
+
+.ingredientMissing::before {
+    background-color: var(--red-100);
+    mask: url('/apple.svg') no-repeat center;
+    -webkit-mask: url('/apple.svg') no-repeat center;
 }
 
 .tags {
