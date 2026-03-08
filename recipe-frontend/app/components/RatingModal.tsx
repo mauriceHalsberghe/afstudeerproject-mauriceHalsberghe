@@ -1,3 +1,5 @@
+import { API_URL } from "@/lib/api";
+
 import { useState } from "react"
 import RatingStars from "./RatingStars"
 
@@ -17,7 +19,7 @@ export default function RatingModal({ userId, recipeId, onClose, onRated }: Prop
 
   const submitReview = async () => {
     try {
-      const response = await fetch(`http://localhost:5041/api/Review?userId=${userId}&recipeId=${recipeId}&rating=${dbValue}`, {
+      const response = await fetch(`${API_URL}/api/Review?userId=${userId}&recipeId=${recipeId}&rating=${dbValue}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

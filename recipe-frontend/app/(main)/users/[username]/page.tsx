@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
@@ -38,6 +40,7 @@ type Recipe = {
   diet?: Diet;
   cuisine?: Cuisine;
   user?: User;
+  averageRating: number;
 };
 
 
@@ -53,6 +56,7 @@ export default function Preferences() {
         selectedCuisine: 0,
         time: 15,
         onlyUsers: false,
+        selectedSort: 1
     });
 
     const params = useParams();
@@ -67,8 +71,8 @@ export default function Preferences() {
         const fetchData = async () => {
             try {
                 const [recipesRes, userRes] = await Promise.all([
-                    fetch(`http://localhost:5041/api/users/${username}/recipes?currentUserId=${loggedUserId ?? ""}`),
-                    fetch(`http://localhost:5041/api/users/${username}`),
+                    fetch(`${API_URL}/api/users/${username}/recipes?currentUserId=${loggedUserId ?? ""}`),
+                    fetch(`${API_URL}/api/users/${username}`),
                 ]);
 
                 setRecipes(await recipesRes.json());
@@ -121,7 +125,7 @@ export default function Preferences() {
             <div className={HomeStyles.userTitle}>
                 <Image
                     className={HomeStyles.avatar}
-                    src={profileUser.avatar ? `http://localhost:5041/uploads/avatars/${profileUser.avatar}` : '/avatar.svg'} 
+                    src={profileUser.avatar ? `${API_URL}/uploads/avatars/${profileUser.avatar}` : '/avatar.svg'} 
                     alt={`${profileUser.username} avatar`}
                     width={64}
                     height={64}

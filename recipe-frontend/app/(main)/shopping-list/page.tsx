@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 
@@ -53,7 +55,7 @@ export default function ShoppingList() {
 
         try {
         const res = await fetch(
-            `http://localhost:5041/api/ListIngredients/user/${loggedUserId}`,
+            `${API_URL}/api/ListIngredients/user/${loggedUserId}`,
         );
         if (!res.ok) return;
 
@@ -98,7 +100,7 @@ export default function ShoppingList() {
             quantityUnitId: ingredient.quantityUnit?.id ?? null,
         }));
 
-        const inventoryRes = await fetch("http://localhost:5041/api/InventoryIngredient/move",
+        const inventoryRes = await fetch(`${API_URL}/api/InventoryIngredient/move`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -111,7 +113,7 @@ export default function ShoppingList() {
             return;
         }
 
-        const deleteRes = await fetch("http://localhost:5041/api/ListIngredients/move",
+        const deleteRes = await fetch(`${API_URL}/api/ListIngredients/move`,
             {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
@@ -146,7 +148,7 @@ export default function ShoppingList() {
             <div className={IngredientStyles.header}>
                 <h1 className={IngredientStyles.title}>Shopping List</h1>
                 <AddIngredientHeader
-                    postUrl="http://localhost:5041/api/ListIngredients"
+                    postUrl={`${API_URL}/api/ListIngredients`}
                     onSuccess={fetchShoppingList}
                 />
             </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { AuthContext } from '@/context/AuthContext';
 import { useContext, useState } from "react";
 
@@ -42,7 +44,7 @@ export default function Profile() {
                                     height={256} 
                                     alt={auth.user.username}
                                     className={ProfileStyles.avatar} 
-                                    src={auth.user.avatar ? `http://localhost:5041/uploads/avatars/${auth.user.avatar}` : '/avatar.svg'}
+                                    src={auth.user.avatar ? `${API_URL}/uploads/avatars/${auth.user.avatar}` : '/avatar.svg'}
                                 /> :
                                 <AvatarUpload size={112} userId={auth.user.id} username={auth.user.username} onUploadSuccess={() => setEditing(false)} />
                         }

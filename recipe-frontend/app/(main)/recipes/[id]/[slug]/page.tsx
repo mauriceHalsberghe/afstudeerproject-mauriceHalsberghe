@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -69,7 +71,7 @@ export default function RecipeDetail() {
 
     const fetchRecipe = async () => {
         try {
-            const res = await fetch(`http://localhost:5041/api/recipes/${recipeId}`);
+            const res = await fetch(`${API_URL}/api/recipes/${recipeId}`);
             const recipeData: Recipe = await res.json();
             setRecipe(recipeData);
         } catch (err) {
@@ -98,13 +100,13 @@ export default function RecipeDetail() {
                             width={64} 
                             height={64} 
                             alt={recipe.user.username}
-                            src={recipe.user.avatar ? `http://localhost:5041/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
+                            src={recipe.user.avatar ? `${API_URL}/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
                         />
                         <p className={DetailStyles.username}>{recipe.user.username}</p>
                     </Link> : <div></div> }
             </div>
             
-            <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`http://localhost:5041/uploads/recipe-images/${recipe.imageUrl}`}/>
+            <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`${API_URL}/uploads/recipe-images/${recipe.imageUrl}`}/>
             
             <div className={DetailStyles.detailData}>
                 <div onClick={() => setShowModal(true)}>

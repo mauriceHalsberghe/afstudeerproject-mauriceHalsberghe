@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useState, useEffect } from "react";
 
@@ -63,7 +65,7 @@ export default function Ingredients() {
 
     try {
       const res = await fetch(
-        `http://localhost:5041/api/InventoryIngredient/user/${loggedUserId}`
+        `${API_URL}/api/InventoryIngredient/user/${loggedUserId}`
       );
       if (!res.ok) return;
 
@@ -83,7 +85,7 @@ export default function Ingredients() {
 
   const fetchIngredientTypes = async () => {
     try {
-      const res = await fetch("http://localhost:5041/api/IngredientTypes");
+      const res = await fetch(`${API_URL}/api/IngredientTypes`);
       if (!res.ok) return;
 
       const data: IngredientType[] = await res.json();
@@ -123,7 +125,7 @@ export default function Ingredients() {
 
         <h1 className={IngredientStyles.title}>Ingredient Inventory</h1>
         <AddIngredientHeader
-          postUrl="http://localhost:5041/api/InventoryIngredient"
+          postUrl={`${API_URL}/api/InventoryIngredient`}
           onSuccess={fetchIngredients}
         />
         

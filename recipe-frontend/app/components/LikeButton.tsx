@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useState } from "react";
 import LikeButtonStyles from '@/app/styles/components/likebutton.module.css';
 import ButtonStyles from '@/app/styles/components/button.module.css';
@@ -40,7 +42,7 @@ export default function LikeButton({
 
     try {
       if (!liked) {
-        await fetch("http://localhost:5041/api/likes", {
+        await fetch(`${API_URL}/api/likes`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -55,7 +57,7 @@ export default function LikeButton({
         setLikeCount((prev) => prev + 1);
       } else {
         await fetch(
-          `http://localhost:5041/api/likes?userId=${userId}&recipeId=${recipeId}`,
+          `${API_URL}/api/likes?userId=${userId}&recipeId=${recipeId}`,
           {
             method: "DELETE",
           }

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useState } from "react";
 import { AsyncPaginate, LoadOptions } from "react-select-async-paginate";
 import { GroupBase } from "react-select";
@@ -32,7 +34,7 @@ export default function IngredientSearch({ value, onIngredientChange }: Props) {
     const page = additional.page;
     try {
       const res = await fetch(
-        `http://localhost:5041/api/ingredients?search=${encodeURIComponent(search)}&page=${page}&pageSize=10`
+        `${API_URL}/api/ingredients?search=${encodeURIComponent(search)}&page=${page}&pageSize=10`
       );
       const data: Ingredient[] = await res.json();
 

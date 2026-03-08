@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5041/api/auth";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface AuthData {
   email: string;
@@ -6,7 +6,7 @@ interface AuthData {
 }
 
 export async function registerUser(data: AuthData) {
-  const res = await fetch(`${API_URL}/register`, {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -17,7 +17,7 @@ export async function registerUser(data: AuthData) {
 }
 
 export async function loginUser(data: AuthData) {
-  const res = await fetch(`${API_URL}/login`, {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

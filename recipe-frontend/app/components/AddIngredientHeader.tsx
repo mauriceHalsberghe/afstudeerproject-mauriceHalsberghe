@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import IngredientSearch from "@/app/components/IngredientSearch";
@@ -46,7 +48,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
 
   const fetchUnits = async () => {
     try {
-      const res = await fetch("http://localhost:5041/api/QuantityUnits");
+      const res = await fetch(`${API_URL}/api/QuantityUnits`);
       if (!res.ok) return;
 
       const data: QuantityUnit[] = await res.json();

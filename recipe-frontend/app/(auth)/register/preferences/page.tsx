@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from 'react';
@@ -62,7 +64,7 @@ export default function RegisterPreferences() {
 
         const fetchDiets = async () => {
             try {
-            const res = await fetch('http://localhost:5041/api/diets');
+            const res = await fetch(`${API_URL}/api/diets`);
             const data: Diet[] = await res.json();
             setDiets(data);
             } catch (err) {
@@ -99,7 +101,7 @@ export default function RegisterPreferences() {
             .map(a => a.typeId);
 
         try {
-            const res = await fetch("http://localhost:5041/api/users/preferences", {
+            const res = await fetch(`${API_URL}/api/users/preferences`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -49,11 +51,11 @@ export default function Preferences() {
 
         const fetchData = async () => {
             try {
-                const dietsRes = await fetch("http://localhost:5041/api/diets");
+                const dietsRes = await fetch(`${API_URL}/api/diets`);
                 setDiets(await dietsRes.json());
 
                 const prefRes = await fetch(
-                    `http://localhost:5041/api/users/${user.id}/preferences`,
+                    `${API_URL}/api/users/${user.id}/preferences`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const prefData = await prefRes.json();
@@ -110,7 +112,7 @@ export default function Preferences() {
             .map(a => a.typeId);
 
         try {
-            const res = await fetch("http://localhost:5041/api/users/preferences", {
+            const res = await fetch(`${API_URL}/api/users/preferences`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

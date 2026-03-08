@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import RecipeCard from "@/app/components/RecipeCard";
@@ -66,7 +68,7 @@ export default function LikedRecipes() {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://localhost:5041/api/recipes?currentUserId=${loggedUserId}`
+          `${API_URL}/api/recipes?currentUserId=${loggedUserId}`
         );
         const data: Recipe[] = await res.json();
 
