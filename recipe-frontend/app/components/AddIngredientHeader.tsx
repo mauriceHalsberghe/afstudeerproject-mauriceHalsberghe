@@ -70,7 +70,6 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
 
     e.preventDefault();
     setError("");
-    setSelectedIngredient(null);
 
     if (!loggedUserId) return;
 
@@ -83,7 +82,6 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
       setError("Please fill both quantity and unit, or leave both empty.");
       return;
     }
-
 
     const formData = {
       userId: loggedUserId,
@@ -104,6 +102,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
       console.error(err);
     }
 
+    setSelectedIngredient(null);
     setQuantity(undefined);
     setSelectedUnitId(undefined);
   };
@@ -116,6 +115,8 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
           value={selectedIngredient}
           onIngredientChange={(ingredient) => {
             setSelectedIngredient(ingredient);
+            setQuantity(undefined);
+            setSelectedUnitId(undefined);
             if (error) setError("");
           }}
         />
