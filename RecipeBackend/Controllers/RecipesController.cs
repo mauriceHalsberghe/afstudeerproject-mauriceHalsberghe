@@ -59,6 +59,11 @@ public class RecipesController : ControllerBase
                 AverageRating = r.Reviews.Any()
                     ? Math.Round(r.Reviews.Average(rv => rv.Rating) / 2.0, 1)
                     : (double?)null,
+                MissingIngredientCount = currentUserId.HasValue
+                    ? r.RecipeIngredients
+                        .Count(ri => !_context.InventoryIngredients
+                            .Any(ii => ii.UserId == currentUserId.Value && ii.IngredientId == ri.IngredientId))
+                    : (int?)null,
             })
             .ToListAsync();
 
@@ -118,7 +123,14 @@ public class RecipesController : ControllerBase
 
                 AverageRating = r.Reviews.Any()
                     ? Math.Round(r.Reviews.Average(rv => rv.Rating) / 2.0, 1)
-                    : (double?)null
+                    : (double?)null,
+
+                MissingIngredientCount = currentUserId.HasValue
+                    ? r.RecipeIngredients.Count(recipeIngredient =>
+                        !_context.InventoryIngredients.Any(inventoryIngredient =>
+                            inventoryIngredient.UserId == currentUserId.Value &&
+                            inventoryIngredient.IngredientId == recipeIngredient.IngredientId))
+                    : null
             })
             .FirstOrDefaultAsync();
 

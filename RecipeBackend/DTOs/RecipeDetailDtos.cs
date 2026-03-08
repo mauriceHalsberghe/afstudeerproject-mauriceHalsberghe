@@ -16,6 +16,8 @@ public class RecipeDetailDto
 
     public int LikeCount { get; set; }
     public double? AverageRating { get; set; }
+
+    public int? MissingIngredientCount { get; set; }
 }
 
 public class StepDto
