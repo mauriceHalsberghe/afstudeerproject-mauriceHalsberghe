@@ -219,8 +219,8 @@ export default function ShoppingList() {
             {checkedIngredients.length > 0 && (
                 <div className={IngredientStyles.ingredientAdd}>
                     <p>
-                        Done shopping? Add {checkedIngredients.length} items to your
-                        inventory.
+                        Done shopping? Add {checkedIngredients.length} {checkedIngredients.length > 1 ? 'items' : 'item'} to your
+                        inventory
                     </p>
                     <button
                         onClick={sendIngredientsToInventory}
