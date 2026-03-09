@@ -89,7 +89,12 @@ export default function Ingredients() {
       if (!res.ok) return;
 
       const data: IngredientType[] = await res.json();
-      setIngredientTypes(data);
+
+      const sortedData = data.sort((a, b) => 
+        a.name.localeCompare(b.name)
+      );
+
+      setIngredientTypes(sortedData);
     } catch (err) {
       console.error(err);
     }
@@ -112,6 +117,15 @@ export default function Ingredients() {
       (item) => item.ingredient.ingredientTypeId === selectedIngredientType
     )
   : ingredients;
+
+  const groupedIngredients = ingredientTypes
+    .map((type) => ({
+      type,
+      items: filteredIngredients.filter(
+        (item) => item.ingredient.ingredientTypeId === type.id
+      ),
+    }))
+    .filter((group) => group.items.length > 0);
 
   if (!loggedUserId) {
     return <EmptyView title='Not logged in' text="Log in to add ingredients" btnText='Log In' btnUrl='/login' icon="profile" />
@@ -155,24 +169,34 @@ export default function Ingredients() {
         ) : filteredIngredients.length === 0 ? (
           <EmptyView title='No ingredients yet' text='Add ingredients so you always know what’s in your kitchen.' icon="ingredient" />
         ) : (
-          <ul className={IngredientStyles.list}>
-            {filteredIngredients.map((ingredient) => (
-              <li className={IngredientStyles.ingredient} key={ingredient.id}>
+          
+          <div className={IngredientStyles.groupedList}>
+            {groupedIngredients.map(({ type, items }) => (
+              <div key={type.id} className={IngredientStyles.group}>
+                <h2 className={IngredientStyles.groupTitle}>
+                  {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
+                </h2>
+                <ul className={IngredientStyles.list}>
+                  {items.map((ingredient) => (
+                    <li className={IngredientStyles.ingredient} key={ingredient.id}>
 
-                <div className={IngredientStyles.ingredientSign}>
-                  <IngredientTypeIcon id={ingredient.ingredient.ingredientTypeId} />
-                  <p className={IngredientStyles.ingredientName}>{ingredient.ingredient.name}</p>
-                </div>
+                      <div className={IngredientStyles.ingredientSign}>
+                        <IngredientTypeIcon id={ingredient.ingredient.ingredientTypeId} />
+                        <p className={IngredientStyles.ingredientName}>{ingredient.ingredient.name}</p>
+                      </div>
 
-                {ingredient.quantity != null && ingredient.quantityUnit && (
-                  <p className={IngredientStyles.ingredientQuantity}>
-                    {ingredient.quantity} {ingredient.quantityUnit?.shortName ?? ""}
-                  </p>
-                )}
+                      {ingredient.quantity != null && ingredient.quantityUnit && (
+                        <p className={IngredientStyles.ingredientQuantity}>
+                          {ingredient.quantity} {ingredient.quantityUnit?.shortName ?? ""}
+                        </p>
+                      )}
 
-              </li>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
 
