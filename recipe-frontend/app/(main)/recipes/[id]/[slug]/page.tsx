@@ -14,6 +14,10 @@ import RatingStars from "@/app/components/RatingStars";
 import RatingModal from "@/app/components/RatingModal";
 import { AuthContext } from "@/context/AuthContext";
 
+import Checkmark from '@/public/ingredient_stock.svg'
+import Cross from '@/public/ingredient_not_stock.svg'
+import Cart from '@/public/ingredient_cart.svg'
+
 type Diet = {
     id: number;
     name: string;
@@ -41,8 +45,8 @@ type Ingredient = {
     quantity: number;
     unit: string;
     ingredientName: string;
-
-}
+    isInInventory?: boolean;
+};
 
 type Recipe = {
     id: number;
@@ -71,7 +75,11 @@ export default function RecipeDetail() {
 
     const fetchRecipe = async () => {
         try {
-            const res = await fetch(`${API_URL}/api/recipes/${recipeId}`);
+            let url = `${API_URL}/api/recipes/${recipeId}`;
+            if (loggedUserId) {
+                url = `${API_URL}/api/recipes/${recipeId}?currentUserId=${loggedUserId}`
+            }
+            const res = await fetch(url);
             const recipeData: Recipe = await res.json();
             setRecipe(recipeData);
         } catch (err) {
@@ -83,7 +91,7 @@ export default function RecipeDetail() {
 
     useEffect(() => {
         fetchRecipe();
-    }, [recipeId]);
+    }, [recipeId, loggedUserId]);
 
     if (!recipe) {
         return <p>Recipe not found</p>
@@ -124,6 +132,12 @@ export default function RecipeDetail() {
             <ul className={DetailStyles.ingredients}>
                 {recipe.ingredients.map((ingredient) => (
                     <li className={DetailStyles.ingredient} key={ingredient.id}>
+                        {ingredient.isInInventory !== undefined && (
+                            <span className={DetailStyles.ingredientIcon}>
+                                {ingredient.isInInventory ? <Checkmark/> : <Cross />}
+                            </span>
+                        )}
+
                         {
                             ingredient.quantity &&
                             <p className={DetailStyles.ingredientAmount}>
@@ -133,8 +147,7 @@ export default function RecipeDetail() {
                         }
                         <p className={DetailStyles.ingredientName}>
                             {ingredient.ingredientName}
-                            </p>
-
+                        </p>
                     </li>
                 ))}
             </ul>
