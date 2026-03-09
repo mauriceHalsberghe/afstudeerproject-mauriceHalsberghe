@@ -1,16 +1,24 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css"
+import RatingModalStyles from "@/app/styles/components/ratingmodal.module.css"
+
 import Link from "next/link";
 import BackButton from "@/app/components/BackButton";
 
 import RatingStars from "@/app/components/RatingStars";
 import RatingModal from "@/app/components/RatingModal";
 import { AuthContext } from "@/context/AuthContext";
+
+import Checkmark from '@/public/ingredient_stock.svg'
+import Cross from '@/public/ingredient_not_stock.svg'
+import Cart from '@/public/ingredient_cart.svg'
 
 type Diet = {
     id: number;
@@ -39,8 +47,8 @@ type Ingredient = {
     quantity: number;
     unit: string;
     ingredientName: string;
-
-}
+    isInInventory?: boolean;
+};
 
 type Recipe = {
     id: number;
@@ -69,7 +77,11 @@ export default function RecipeDetail() {
 
     const fetchRecipe = async () => {
         try {
-            const res = await fetch(`http://localhost:5041/api/recipes/${recipeId}`);
+            let url = `${API_URL}/api/recipes/${recipeId}`;
+            if (loggedUserId) {
+                url = `${API_URL}/api/recipes/${recipeId}?currentUserId=${loggedUserId}`
+            }
+            const res = await fetch(url);
             const recipeData: Recipe = await res.json();
             setRecipe(recipeData);
         } catch (err) {
@@ -81,7 +93,7 @@ export default function RecipeDetail() {
 
     useEffect(() => {
         fetchRecipe();
-    }, [recipeId]);
+    }, [recipeId, loggedUserId]);
 
     if (!recipe) {
         return <p>Recipe not found</p>
@@ -98,13 +110,13 @@ export default function RecipeDetail() {
                             width={64} 
                             height={64} 
                             alt={recipe.user.username}
-                            src={recipe.user.avatar ? `http://localhost:5041/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
+                            src={recipe.user.avatar ? `${API_URL}/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
                         />
                         <p className={DetailStyles.username}>{recipe.user.username}</p>
                     </Link> : <div></div> }
             </div>
             
-            <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`http://localhost:5041/uploads/recipe-images/${recipe.imageUrl}`}/>
+            <Image className={DetailStyles.image} width={360} height={200} alt={recipe.title} src={`${API_URL}/uploads/recipe-images/${recipe.imageUrl}`}/>
             
             <div className={DetailStyles.detailData}>
                 <div onClick={() => setShowModal(true)}>
@@ -122,6 +134,12 @@ export default function RecipeDetail() {
             <ul className={DetailStyles.ingredients}>
                 {recipe.ingredients.map((ingredient) => (
                     <li className={DetailStyles.ingredient} key={ingredient.id}>
+                        {ingredient.isInInventory !== undefined && (
+                            <span className={DetailStyles.ingredientIcon}>
+                                {ingredient.isInInventory ? <Checkmark/> : <Cross />}
+                            </span>
+                        )}
+
                         {
                             ingredient.quantity &&
                             <p className={DetailStyles.ingredientAmount}>
@@ -131,8 +149,7 @@ export default function RecipeDetail() {
                         }
                         <p className={DetailStyles.ingredientName}>
                             {ingredient.ingredientName}
-                            </p>
-
+                        </p>
                     </li>
                 ))}
             </ul>
@@ -149,7 +166,7 @@ export default function RecipeDetail() {
 
             {showModal && loggedUserId &&
                 <div 
-                    className={DetailStyles.modalOverlay} 
+                    className={RatingModalStyles.modalOverlay} 
                     onClick={() => setShowModal(false)}
                 >
                     <div onClick={(e) => e.stopPropagation()}>

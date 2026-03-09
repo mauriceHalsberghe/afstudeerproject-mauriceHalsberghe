@@ -1,3 +1,5 @@
+import { API_URL } from "@/lib/api";
+
 import { useEffect, useState } from "react";
 
 import CheckboxChecked from '@/public/checkbox_checked.svg';
@@ -37,7 +39,7 @@ export default function Checkbox({ initialChecked, userId, listIngredientId, onC
 
         try {
             const response = await fetch(
-                `http://localhost:5041/api/ListIngredients/toggle?userId=${userId}&listIngredientId=${listIngredientId}`,
+                `${API_URL}/api/ListIngredients/toggle?userId=${userId}&listIngredientId=${listIngredientId}`,
                 {
                     method: "PUT",
                     headers: {

@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import Image from "next/image";
 import { useState, useEffect, useContext } from "react";
 
@@ -21,11 +23,11 @@ export default function AvatarUpload({ userId, username, size, onUploadSuccess }
     const [uploaded, setUploaded] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:5041/api/users/${username}`)
+        fetch(`${API_URL}/api/users/${username}`)
         .then((res) => res.json())
         .then((data) => {
             if (data.avatar) {
-            setAvatarUrl(`http://localhost:5041/uploads/avatars/${data.avatar}`);
+            setAvatarUrl(`${API_URL}/uploads/avatars/${data.avatar}`);
             }
         });
     }, [userId]);
@@ -38,7 +40,7 @@ export default function AvatarUpload({ userId, username, size, onUploadSuccess }
         formData.append("file", file);
 
         const response = await fetch(
-            `http://localhost:5041/api/users/${userId}/avatar`,
+            `${API_URL}/api/users/${userId}/avatar`,
             {
                 method: "POST",
                 body: formData,
@@ -48,7 +50,7 @@ export default function AvatarUpload({ userId, username, size, onUploadSuccess }
         const data = await response.json();
 
         if (data.avatarUrl) {
-            const newAvatarUrl = `http://localhost:5041/uploads/avatars/${data.avatarUrl}`;
+            const newAvatarUrl = `${API_URL}/uploads/avatars/${data.avatarUrl}`;
             setAvatarUrl(newAvatarUrl);
 
             if (user && setUser) {

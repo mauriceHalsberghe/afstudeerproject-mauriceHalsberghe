@@ -1,4 +1,14 @@
 .checkbox {
     cursor: pointer;
-    transition: "opacity 0.2s"
+    transition: "opacity 0.2s";
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
 }

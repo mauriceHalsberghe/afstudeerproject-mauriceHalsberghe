@@ -34,12 +34,14 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var url = Environment.GetEnvironmentVariable("APP_URL");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins($"{url}")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });

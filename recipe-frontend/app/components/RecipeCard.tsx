@@ -1,3 +1,5 @@
+import { API_URL } from "@/lib/api";
+
 import Image from 'next/image';
 
 import RecipeCardStyles from '@/app/styles/components/recipecard.module.css';
@@ -34,6 +36,7 @@ type Recipe = {
   diet?: Diet;
   cuisine?: Cuisine;
   user?: User;
+  missingIngredientCount?: number | null;
 };
 
 type Props = {
@@ -51,7 +54,7 @@ function RecipeCard({ recipe, onUnlike }: Props) {
           className={RecipeCardStyles.image}
           width={400}
           height={200}
-          src={`http://localhost:5041/uploads/recipe-images/${recipe.imageUrl}`}
+          src={`${API_URL}/uploads/recipe-images/${recipe.imageUrl}`}
           alt={recipe.title}
         />
         <div className={RecipeCardStyles.text}>
@@ -61,7 +64,7 @@ function RecipeCard({ recipe, onUnlike }: Props) {
               width={48} 
               height={48} 
               alt={recipe.user.username}
-              src={recipe.user.avatar ? `http://localhost:5041/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
+              src={recipe.user.avatar ? `${API_URL}/uploads/avatars/${recipe.user.avatar}` : '/avatar.svg'} 
             />
           }
           <h2 className={RecipeCardStyles.title}>{recipe.title}</h2>
@@ -70,6 +73,12 @@ function RecipeCard({ recipe, onUnlike }: Props) {
               <p className={RecipeCardStyles.rating}>{recipe.averageRating}</p>
             }
             <p className={RecipeCardStyles.time}>{recipe.time} min</p>
+
+            {recipe.missingIngredientCount != null && (
+              recipe.missingIngredientCount === 0
+                ? <p className={RecipeCardStyles.ingredient}>In stock</p>
+                : <p className={RecipeCardStyles.ingredientMissing}>{recipe.missingIngredientCount} missing</p>
+            )}
           </div>
           <div className={RecipeCardStyles.tags}>
             { recipe.diet && <p className={RecipeCardStyles.tag}>{recipe.diet.name}</p>}

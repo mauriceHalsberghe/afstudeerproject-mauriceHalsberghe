@@ -55,4 +55,70 @@ public class InventoryIngredientController : ControllerBase
 
         return Ok(inventoryIngredient);
     }
+
+    [HttpPost("move")]
+    public async Task<IActionResult> AddMoveInventoryIngredients(List<CreateInventoryIngredientDto> dtos)
+    {
+        var ingredientIds = dtos.Select(d => d.IngredientId).ToList();
+
+        var validIds = await _context.Ingredients
+            .Where(i => ingredientIds.Contains(i.Id))
+            .Select(i => i.Id)
+            .ToListAsync();
+
+        var invalidIds = ingredientIds.Except(validIds).ToList();
+        if (invalidIds.Any())
+            return BadRequest("error");
+
+        var newItems = dtos.Select(dto => new InventoryIngredient
+        {
+            UserId = dto.UserId,
+            IngredientId = dto.IngredientId,
+            Quantity = dto.Quantity,
+            QuantityUnitId = dto.QuantityUnitId
+        }).ToList();
+
+        _context.InventoryIngredients.AddRange(newItems);
+        await _context.SaveChangesAsync();
+
+        return Ok(newItems);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateInventoryIngredient(int id, UpdateInventoryIngredientDto dto)
+    {
+        var item = await _context.InventoryIngredients
+            .Include(i => i.Ingredient)
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        if (item == null)
+            return NotFound("Inventory ingredient not found.");
+
+        if (!string.IsNullOrWhiteSpace(dto.IngredientName) &&
+            !string.Equals(item.Ingredient.Name, dto.IngredientName, StringComparison.OrdinalIgnoreCase))
+        {
+            item.Ingredient.Name = dto.IngredientName;
+        }
+
+        item.Quantity = dto.Quantity;
+        item.QuantityUnitId = dto.QuantityUnitId;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(item);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteInventoryIngredient(int id)
+    {
+        var item = await _context.InventoryIngredients.FindAsync(id);
+
+        if (item == null)
+            return NotFound("Inventory ingredient not found.");
+
+        _context.InventoryIngredients.Remove(item);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }

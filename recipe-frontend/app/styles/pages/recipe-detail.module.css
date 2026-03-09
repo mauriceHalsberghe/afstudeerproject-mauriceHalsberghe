@@ -1,5 +1,6 @@
 .page {
     padding: 1rem;
+    margin-bottom: 8rem;
 }
 
 .header {
@@ -85,19 +86,24 @@
     padding-left: 1rem;
     display: flex;
     flex-direction: column;
-    gap: .25rem
+    gap: .5rem
 }
 
 .ingredient {
     display: flex;
     gap: 0.25rem;
+    align-items: center;
+}
+
+.ingredientIcon {
+    margin-right: 0.25rem;
 }
 
 .steps {
     padding-left: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .step {
@@ -112,14 +118,4 @@
     font-size: 1.1rem;
     text-align: center;
     border-radius: 2rem;
-}
-
-.modalOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
 }

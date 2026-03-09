@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import IngredientSearch from "@/app/components/IngredientSearch";
@@ -7,10 +9,18 @@ import IngredientSearch from "@/app/components/IngredientSearch";
 import IngredientStyles from "@/app/styles/pages/ingredients.module.css";
 import ButtonStyles from "@/app/styles/components/button.module.css";
 
+import { IngredientOption } from "@/app/components/IngredientSearch";
+
 type QuantityUnit = {
   id: number;
   name: string;
   shortName: string;
+};
+
+type Ingredient = {
+  id: number;
+  name: string;
+  alwaysInStock: boolean;
 };
 
 type Props = {
@@ -22,7 +32,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
   const auth = useContext(AuthContext);
   const loggedUserId = auth?.user?.id;
 
-  const [selectedIngredient, setSelectedIngredient] = useState<number | null>(null);
+  const [selectedIngredient, setSelectedIngredient] = useState<IngredientOption | null>(null);
   const [quantity, setQuantity] = useState<number | undefined>();
   const [selectedUnitId, setSelectedUnitId] = useState<number | undefined>();
 
@@ -38,7 +48,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
 
   const fetchUnits = async () => {
     try {
-      const res = await fetch("http://localhost:5041/api/QuantityUnits");
+      const res = await fetch(`${API_URL}/api/QuantityUnits`);
       if (!res.ok) return;
 
       const data: QuantityUnit[] = await res.json();
@@ -59,10 +69,16 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
   }, [loggedUserId]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
     setError("");
 
-    if (!loggedUserId || selectedIngredient === null) return;
+    if (!loggedUserId) return;
+
+    if (selectedIngredient === null) {
+      setError("Please select an ingredient.");
+      return;
+    }
 
     if (isInvalidQuantity) {
       setError("Please fill both quantity and unit, or leave both empty.");
@@ -71,7 +87,7 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
 
     const formData = {
       userId: loggedUserId,
-      ingredientId: selectedIngredient,
+      ingredientId: selectedIngredient?.value,
       quantity: isQuantityFilled ? quantity : null,
       quantityUnitId: isUnitFilled ? selectedUnitId : null,
     };
@@ -98,8 +114,13 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
     <div className={IngredientStyles.input}>
         <div className={IngredientStyles.searchWrapper}>
         <IngredientSearch
-            value={selectedIngredient}
-            onIngredientChange={(id) => setSelectedIngredient(id)}
+          value={selectedIngredient}
+          onIngredientChange={(ingredient) => {
+            setSelectedIngredient(ingredient);
+            setQuantity(undefined);
+            setSelectedUnitId(undefined);
+            if (error) setError("");
+          }}
         />
         </div>
 
@@ -115,37 +136,35 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
         </button>
     </div>
 
-    {selectedIngredient !== null && (
+    {selectedIngredient && !selectedIngredient.alwaysInStock && (
         <div className={IngredientStyles.quantityInput}>
         <div className={IngredientStyles.quantity}>
             <input
-            type="number"
-            placeholder="Quantity"
-            value={quantity ?? ""}
-            onChange={(e) =>
-                setQuantity(
-                e.target.value === "" ? undefined : Number(e.target.value)
-                )
-            }
+              type="number"
+              placeholder="Quantity"
+              value={quantity ?? ""}
+              onChange={(e) => {
+                setQuantity(e.target.value === "" ? undefined : Number(e.target.value));
+                if (error) setError("");
+              }}
             />
         </div>
 
         <div className={IngredientStyles.select}>
-            <select
+          <select
             value={selectedUnitId ?? ""}
-            onChange={(e) =>
-                setSelectedUnitId(
-                e.target.value === "" ? undefined : Number(e.target.value)
-                )
-            }
-            >
+            onChange={(e) => {
+              setSelectedUnitId(e.target.value === "" ? undefined : Number(e.target.value));
+              if (error) setError("");
+            }}
+          >
             <option value="">Select unit</option>
             {units.map((unit) => (
-                <option key={unit.id} value={unit.id}>
+              <option key={unit.id} value={unit.id}>
                 {unit.name}
-                </option>
+              </option>
             ))}
-            </select>
+          </select>
         </div>
         </div>
     )}

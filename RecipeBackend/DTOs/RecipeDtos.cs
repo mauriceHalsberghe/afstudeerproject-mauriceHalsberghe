@@ -17,6 +17,8 @@ public class RecipeDto
     public bool IsLikedByCurrentUser { get; set; }
     public double? AverageRating { get; set; }
 
+    public int? MissingIngredientCount { get; set; }
+
 }
 
 public class UserSummaryDto

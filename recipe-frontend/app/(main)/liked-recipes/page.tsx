@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import RecipeCard from "@/app/components/RecipeCard";
@@ -35,6 +37,7 @@ type Recipe = {
   diet?: Diet;
   cuisine?: Cuisine;
   user?: User;
+  averageRating: number;
 };
 
 export default function LikedRecipes() {
@@ -47,6 +50,7 @@ export default function LikedRecipes() {
     selectedCuisine: 0,
     time: 15,
     onlyUsers: false,
+    selectedSort: 1,
   });
 
   const auth = useContext(AuthContext);
@@ -64,7 +68,7 @@ export default function LikedRecipes() {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://localhost:5041/api/recipes?currentUserId=${loggedUserId}`
+          `${API_URL}/api/recipes?currentUserId=${loggedUserId}`
         );
         const data: Recipe[] = await res.json();
 
@@ -115,7 +119,7 @@ export default function LikedRecipes() {
       <RecipeFilters filters={filters} onChange={setFilters} onlyUsersFilter={true} />
 
       {filteredRecipes.length === 0 ? (
-        <EmptyView title='Not Recipes found' icon="recipe"/>
+        <EmptyView title='No Recipes found' text="Start exploring recipes and save the ones you love" btnText="Browse recipes" btnUrl="/" icon="recipe"/>
       ) : (
         <ul className={HomeStyles.recipes}>
             {filteredRecipes.map((recipe) => (

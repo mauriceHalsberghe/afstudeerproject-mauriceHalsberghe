@@ -1,5 +1,7 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
+
 import { useEffect, useState } from "react";
 import filtersStyles from "@/app/styles/components/recipefilers.module.css";
 
@@ -38,8 +40,8 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter }: Pr
     const fetchMetadata = async () => {
       try {
         const [dietRes, cuisineRes] = await Promise.all([
-          fetch("http://localhost:5041/api/diets"),
-          fetch("http://localhost:5041/api/cuisines"),
+          fetch(`${API_URL}/api/diets`),
+          fetch(`${API_URL}/api/cuisines`),
         ]);
 
         setDiets(await dietRes.json());
