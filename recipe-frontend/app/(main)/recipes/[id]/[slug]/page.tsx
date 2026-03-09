@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css"
+import RatingModalStyles from "@/app/styles/components/ratingmodal.module.css"
+
 import Link from "next/link";
 import BackButton from "@/app/components/BackButton";
 
@@ -164,7 +166,7 @@ export default function RecipeDetail() {
 
             {showModal && loggedUserId &&
                 <div 
-                    className={DetailStyles.modalOverlay} 
+                    className={RatingModalStyles.modalOverlay} 
                     onClick={() => setShowModal(false)}
                 >
                     <div onClick={(e) => e.stopPropagation()}>
