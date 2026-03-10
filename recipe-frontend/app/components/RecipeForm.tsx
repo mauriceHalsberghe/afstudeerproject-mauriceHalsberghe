@@ -81,6 +81,8 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
     const [cuisines, setCuisines] = useState<Cuisine[]>([]);
     const [internalError, setInternalError] = useState("");    
 
+    const [step, setStep] = useState(1);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -150,129 +152,159 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
 
     return (
         <form className={AddRecipeStyles.form} onSubmit={handleSubmit}>
-            <div className={AddRecipeStyles.divs}>
-                <label className={AddRecipeStyles.label}>
-                    Recipe title
-                    <input
-                        type="text"
-                        required
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Title..."
-                        className={AddRecipeStyles.input}
-                    />
-                </label>
+            
+            {step === 1 &&
 
-                <label className={AddRecipeStyles.labelDuration}>
-                    Duration (min)
-                    <input
-                        type="number"
-                        value={time}
-                        required
-                        onChange={(e) => setTime(e.target.value)}
-                        placeholder="Duration"
-                        className={AddRecipeStyles.input}
-                    />
-                </label>
-            </div>
-
-            <label className={AddRecipeStyles.imageUpload}>
-                Add image
-                <input type="file" accept="image/*" onChange={handleFileChange} />
-                <div className={`${AddRecipeStyles.image} ${!uploaded && AddRecipeStyles.showUpload}`}>
-                    <Image src={`${API_URL}/uploads/recipe-images/${imageUrl}`} width={500} height={300} alt="Recipe image" />
-                    {!uploaded && <UploadIcon className={AddRecipeStyles.uploadIcon} style={{ width: 100, height: 100 }} />}
-                </div>
-            </label>
-
-            <div className={AddRecipeStyles.divs}>
-                <label className={AddRecipeStyles.label}>
-                    Diet
-                    <select
-                        value={dietId ?? ""}
-                        className={AddRecipeStyles.select}
-                        onChange={(e) => setDietId(e.target.value === "" ? undefined : Number(e.target.value))}
-                    >
-                        <option value="">Select diet</option>
-                        {diets.map((diet) => (
-                            <option key={diet.id} value={diet.id}>{diet.name}</option>
-                        ))}
-                    </select>
-                </label>
-
-                <label className={AddRecipeStyles.label}>
-                    Cuisine
-                    <select
-                        value={cuisineId ?? ""}
-                        className={AddRecipeStyles.select}
-                        onChange={(e) => setCuisineId(e.target.value === "" ? undefined : Number(e.target.value))}
-                    >
-                        <option value="">Select cuisine</option>
-                        {cuisines.map((cuisine) => (
-                            <option key={cuisine.id} value={cuisine.id}>{cuisine.name}</option>
-                        ))}
-                    </select>
-                </label>
-            </div>
-
-            <div className={AddRecipeStyles.ingredients}>
-                <label className={AddRecipeStyles.label}>Ingredients</label>
-                {ingredients.map((ing) => (
-                    <div key={ing.id} className={AddRecipeStyles.ingredient}>
-                        <IngredientSearch
-                            value={ing.ingredient}
-                            placeholder="Select Ingredient"
-                            onIngredientChange={(option) => updateIngredient(ing.id, option)}
+            <>
+                <div className={AddRecipeStyles.divs}>
+                    <label className={AddRecipeStyles.label}>
+                        Recipe title
+                        <input
+                            type="text"
+                            required
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Title..."
+                            className={AddRecipeStyles.input}
                         />
+                    </label>
+
+                    <label className={AddRecipeStyles.labelDuration}>
+                        Duration (min)
                         <input
                             type="number"
-                            placeholder="Quantity"
-                            className={AddRecipeStyles.quantityInput}
-                            value={ing.quantity ?? ""}
-                            onChange={(e) => updateQuantity(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
+                            value={time}
+                            required
+                            onChange={(e) => setTime(e.target.value)}
+                            placeholder="Duration"
+                            className={AddRecipeStyles.input}
                         />
+                    </label>
+                </div>
+
+                <label className={AddRecipeStyles.imageUpload}>
+                    Add image
+                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                    <div className={`${AddRecipeStyles.image} ${!uploaded && AddRecipeStyles.showUpload}`}>
+                        <Image src={`${API_URL}/uploads/recipe-images/${imageUrl}`} width={500} height={300} alt="Recipe image" />
+                        {!uploaded && <UploadIcon className={AddRecipeStyles.uploadIcon} style={{ width: 100, height: 100 }} />}
+                    </div>
+                </label>
+
+                <div className={AddRecipeStyles.divs}>
+                    <label className={AddRecipeStyles.label}>
+                        Diet
                         <select
-                            value={ing.unitId ?? ""}
-                            disabled={!units.length}
+                            value={dietId ?? ""}
                             className={AddRecipeStyles.select}
-                            onChange={(e) => updateUnit(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
+                            onChange={(e) => setDietId(e.target.value === "" ? undefined : Number(e.target.value))}
                         >
-                            <option value="">Select unit</option>
-                            {units.map((unit) => (
-                                <option key={unit.id} value={unit.id}>{unit.name}</option>
+                            <option value="">Select diet</option>
+                            {diets.map((diet) => (
+                                <option key={diet.id} value={diet.id}>{diet.name}</option>
                             ))}
                         </select>
-                    </div>
-                ))}
-                <div className={AddRecipeStyles.divs}>
-                    <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeIngredient} disabled={ingredients.length <= 1}>- Remove ingredient</button>
-                    <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addIngredient}>+ Add ingredient</button>
-                </div>
-            </div>
+                    </label>
 
-            <div className={AddRecipeStyles.steps}>
-                <label className={AddRecipeStyles.label}>Steps</label>
-                {steps.map((step, index) => (
-                    <div key={step.id} className={AddRecipeStyles.step}>
-                        <span className={AddRecipeStyles.stepNumber}>{index + 1}</span>
-                        <textarea
-                            value={step.description}
-                            className={AddRecipeStyles.stepInput}
-                            onChange={(e) => updateStep(step.id, e.target.value)}
-                            placeholder={`Step ${index + 1}`}
-                            rows={2}
-                        />
-                    </div>
-                ))}
-                <div className={AddRecipeStyles.divs}>
-                    <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeStep} disabled={steps.length <= 1}>- Remove step...</button>
-                    <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addStep}>+ Add step...</button>
+                    <label className={AddRecipeStyles.label}>
+                        Cuisine
+                        <select
+                            value={cuisineId ?? ""}
+                            className={AddRecipeStyles.select}
+                            onChange={(e) => setCuisineId(e.target.value === "" ? undefined : Number(e.target.value))}
+                        >
+                            <option value="">Select cuisine</option>
+                            {cuisines.map((cuisine) => (
+                                <option key={cuisine.id} value={cuisine.id}>{cuisine.name}</option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
-            </div>
+
+                <div className={AddRecipeStyles.divs}>
+                    <button className={ButtonStyles.button} onClick={() => setStep(2)}>Next</button>
+                </div>
+            </>
+            
+            }
+
+            {step === 2 && 
+                <>
+                    <div className={AddRecipeStyles.ingredients}>
+                        <label className={AddRecipeStyles.label}>Ingredients</label>
+                        {ingredients.map((ing) => (
+                            <div key={ing.id} className={AddRecipeStyles.ingredient}>
+                                <IngredientSearch
+                                    value={ing.ingredient}
+                                    placeholder="Select Ingredient"
+                                    onIngredientChange={(option) => updateIngredient(ing.id, option)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Quantity"
+                                    className={AddRecipeStyles.quantityInput}
+                                    value={ing.quantity ?? ""}
+                                    onChange={(e) => updateQuantity(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
+                                />
+                                <select
+                                    value={ing.unitId ?? ""}
+                                    disabled={!units.length}
+                                    className={AddRecipeStyles.select}
+                                    onChange={(e) => updateUnit(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
+                                >
+                                    <option value="">Select unit</option>
+                                    {units.map((unit) => (
+                                        <option key={unit.id} value={unit.id}>{unit.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        ))}
+                        <div className={AddRecipeStyles.divs}>
+                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeIngredient} disabled={ingredients.length <= 1}>- Remove ingredient</button>
+                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addIngredient}>+ Add ingredient</button>
+                        </div>
+                    </div>
+
+                    <div className={AddRecipeStyles.divs}>
+                        <button className={ButtonStyles.button} onClick={() => setStep(1)}>Previous</button>
+                        <button className={ButtonStyles.button} onClick={() => setStep(3)}>Next</button>
+                    </div>
+                </>
+            }
+
+            {step === 3 && 
+
+                <>
+                    <div className={AddRecipeStyles.steps}>
+                        <label className={AddRecipeStyles.label}>Steps</label>
+                        {steps.map((step, index) => (
+                            <div key={step.id} className={AddRecipeStyles.step}>
+                                <span className={AddRecipeStyles.stepNumber}>{index + 1}</span>
+                                <textarea
+                                    value={step.description}
+                                    className={AddRecipeStyles.stepInput}
+                                    onChange={(e) => updateStep(step.id, e.target.value)}
+                                    placeholder={`Step ${index + 1}`}
+                                    rows={2}
+                                />
+                            </div>
+                        ))}
+                        <div className={AddRecipeStyles.divs}>
+                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeStep} disabled={steps.length <= 1}>- Remove step...</button>
+                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addStep}>+ Add step...</button>
+                        </div>
+                    </div>
+
+                    <div className={AddRecipeStyles.divs}>
+                        <button className={ButtonStyles.button} onClick={() => setStep(2)}>Previous</button>
+                        <button className={ButtonStyles.button} type="submit">{submitLabel}</button>
+                    </div>
+                </>
+
+            }
 
             {displayError && <p>{displayError}</p>}
 
-            <button className={ButtonStyles.button} type="submit">{submitLabel}</button>
         </form>
     );
 }
