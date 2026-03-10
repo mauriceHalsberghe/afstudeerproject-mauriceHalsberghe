@@ -7,6 +7,7 @@ import { AuthContext } from "@/context/AuthContext";
 import IngredientSearch, { IngredientOption } from "@/app/components/IngredientSearch";
 
 import ButtonStyles from "@/app/styles/components/button.module.css";
+import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
 
 type QuantityUnit = {
     id: number;
@@ -81,6 +82,7 @@ export default function AddRecipe() {
         setIngredients((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
     const updateIngredient = (id: number, ingredient: IngredientOption | null) =>
         setIngredients((prev) => prev.map((i) => (i.id === id ? { ...i, ingredient, quantity: undefined, unitId: undefined } : i)));
+
     const updateQuantity = (id: number, quantity: number | undefined) =>
         setIngredients((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
     const updateUnit = (id: number, unitId: number | undefined) =>
@@ -155,110 +157,130 @@ export default function AddRecipe() {
     };
 
     return (
-        <main>
-            <h1>Create a recipe</h1>
+        <main className={AddRecipeStyles.page}>
+            <h1 className={AddRecipeStyles.title}>Create a recipe</h1>
 
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Recipe title
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </label>
+            <form className={AddRecipeStyles.form} onSubmit={handleSubmit}>
 
-                <label>
-                    Duration (minutes)
-                    <input
-                        type="number"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                    />
-                </label>
+                <div className={AddRecipeStyles.divs}>
+                    <label className={AddRecipeStyles.label}>
+                        Recipe title
+                        <input
+                            type="text"
+                            required
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Title..."
+                            className={AddRecipeStyles.input}
+                        />
+                    </label>
 
-                <label>
-                    Diet
-                    <select
-                        value={dietId ?? ""}
-                        onChange={(e) => setDietId(e.target.value === "" ? undefined : Number(e.target.value))}
-                    >
-                        <option value="">Select diet</option>
-                        {diets.map((diet) => (
-                            <option key={diet.id} value={diet.id}>{diet.name}</option>
-                        ))}
-                    </select>
-                </label>
+                    <label className={AddRecipeStyles.labelDuration}>
+                        Duration (min)
+                        <input
+                            type="number"
+                            value={time}
+                            required
+                            onChange={(e) => setTime(e.target.value)}
+                            placeholder="Duration"
+                            className={AddRecipeStyles.input}
+                        />
+                    </label>
 
-                <label>
-                    Cuisine
-                    <select
-                        value={cuisineId ?? ""}
-                        onChange={(e) => setCuisineId(e.target.value === "" ? undefined : Number(e.target.value))}
-                    >
-                        <option value="">Select cuisine</option>
-                        {cuisines.map((cuisine) => (
-                            <option key={cuisine.id} value={cuisine.id}>{cuisine.name}</option>
-                        ))}
-                    </select>
-                </label>
-
-                <div>
-                    <label>Ingredients</label>
-
-                    {ingredients.map((ing) => (
-                        <div key={ing.id}>
-                            <IngredientSearch
-                                value={ing.ingredient}
-                                onIngredientChange={(option) => updateIngredient(ing.id, option)}
-                            />
-
-                            {ing.ingredient && !ing.ingredient.alwaysInStock && (
-                                <>
-                                    <input
-                                        type="number"
-                                        placeholder="Quantity"
-                                        value={ing.quantity ?? ""}
-                                        onChange={(e) => updateQuantity(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
-                                    />
-
-                                    <select
-                                        value={ing.unitId ?? ""}
-                                        onChange={(e) => updateUnit(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
-                                    >
-                                        <option value="">Select unit</option>
-                                        {units.map((unit) => (
-                                            <option key={unit.id} value={unit.id}>
-                                                {unit.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </>
-                            )}
-                        </div>
-                    ))}
-
-                    <button className={ButtonStyles.smallButton} type="button" onClick={addIngredient}>+ Add ingredient...</button>
-                    <button className={ButtonStyles.smallButton} type="button" onClick={removeIngredient} disabled={ingredients.length <= 1}>- Remove ingredient...</button>
                 </div>
 
-                <div>
-                    <label>Steps</label>
+
+                <div className={AddRecipeStyles.divs}>
+                    <label className={AddRecipeStyles.label}>
+                        Diet
+                        <select
+                            value={dietId ?? ""}
+                            className={AddRecipeStyles.select}
+                            onChange={(e) => setDietId(e.target.value === "" ? undefined : Number(e.target.value))}
+                        >
+                            <option value="">Select diet</option>
+                            {diets.map((diet) => (
+                                <option key={diet.id} value={diet.id}>{diet.name}</option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <label className={AddRecipeStyles.label}>
+                        Cuisine
+                        <select
+                            value={cuisineId ?? ""}
+                            className={AddRecipeStyles.select}
+                            onChange={(e) => setCuisineId(e.target.value === "" ? undefined : Number(e.target.value))}
+                        >
+                            <option value="">Select cuisine</option>
+                            {cuisines.map((cuisine) => (
+                                <option key={cuisine.id} value={cuisine.id}>{cuisine.name}</option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+
+
+                <div className={AddRecipeStyles.ingredients}>
+                    <label className={AddRecipeStyles.label}>Ingredients</label>
+
+                    {ingredients.map((ing) => (
+                        <div key={ing.id} className={AddRecipeStyles.ingredient}>
+                            <IngredientSearch
+                                value={ing.ingredient}
+                                placeholder="Select Ingredient"
+                                onIngredientChange={(option) => updateIngredient(ing.id, option)}
+                            />
+                                <input
+                                    type="number"
+                                    placeholder="Quantity"
+                                    className={AddRecipeStyles.quantityInput}
+                                    value={ing.quantity ?? ""}
+                                    onChange={(e) => updateQuantity(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
+                                />
+
+                                <select
+                                    value={ing.unitId ?? ""}
+                                    className={AddRecipeStyles.select}
+                                    onChange={(e) => updateUnit(ing.id, e.target.value === "" ? undefined : Number(e.target.value))}
+                                >
+                                    <option value="">Select unit</option>
+                                    {units.map((unit) => (
+                                        <option key={unit.id} value={unit.id}>
+                                            {unit.name}
+                                        </option>
+                                    ))}
+                                </select>
+
+                        </div>
+                    ))}
+                    
+                    <div className={AddRecipeStyles.divs}>
+                        <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeIngredient} disabled={ingredients.length <= 1}>- Remove ingredient</button>
+                        <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addIngredient}>+ Add ingredient</button>
+                    </div>
+                </div>
+
+                <div className={AddRecipeStyles.steps}>
+                    <label className={AddRecipeStyles.label}>Steps</label>
 
                     {steps.map((step, index) => (
-                        <div key={step.id}>
-                            <span>{index + 1}.</span>
-                            <input
-                                type="text"
+                        <div key={step.id} className={AddRecipeStyles.step}>
+                            <span className={AddRecipeStyles.stepNumber}>{index + 1}</span>
+                            <textarea
                                 value={step.description}
+                                className={AddRecipeStyles.stepInput}
                                 onChange={(e) => updateStep(step.id, e.target.value)}
                                 placeholder={`Step ${index + 1}`}
+                                rows={2}
                             />
                         </div>
                     ))}
-
-                    <button className={ButtonStyles.smallButton} type="button" onClick={addStep}>+ Add step...</button>
-                    <button className={ButtonStyles.smallButton} type="button" onClick={removeStep} disabled={steps.length <= 1}>- Remove step...</button>
+                    
+                    <div className={AddRecipeStyles.divs}>
+                        <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeStep} disabled={steps.length <= 1}>- Remove step...</button>
+                        <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addStep}>+ Add step...</button>
+                    </div>
                 </div>
 
                 {error && <p>{error}</p>}
