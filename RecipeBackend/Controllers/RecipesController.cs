@@ -169,4 +169,43 @@ public class RecipesController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(recipe);
     }
+
+    
+    [HttpPost("{id}/image")]
+    public async Task<IActionResult> UploadRecipeImage(int id, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var extension = Path.GetExtension(file.FileName).ToLower();
+        if (!allowedExtensions.Contains(extension))
+            return BadRequest("Invalid file type.");
+
+        var recipe = await _context.Recipes.FindAsync(id);
+        if (recipe == null)
+            return NotFound("Recipe not found.");
+
+        var fileName = $"{Guid.NewGuid()}{extension}";
+
+        var uploadPath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot", "uploads", "recipe-images"
+        );
+
+        if (!Directory.Exists(uploadPath))
+            Directory.CreateDirectory(uploadPath);
+
+        var filePath = Path.Combine(uploadPath, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        recipe.ImageUrl = fileName;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { imageUrl = recipe.ImageUrl });
+    }
 }
