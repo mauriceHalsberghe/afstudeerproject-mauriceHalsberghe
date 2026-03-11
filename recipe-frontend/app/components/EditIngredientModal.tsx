@@ -162,6 +162,7 @@ export default function EditIngredientModal({ ingredient, onClose, onSuccess }: 
                     <input
                         className={RatingModalStyles.input}
                         type="number"
+                        step="0.1"
                         value={quantity ?? ""}
                         onChange={(e) => {
                             setQuantity(e.target.value === "" ? undefined : Number(e.target.value));

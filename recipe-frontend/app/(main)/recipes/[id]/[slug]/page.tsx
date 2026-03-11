@@ -21,6 +21,9 @@ import Checkmark from '@/public/ingredient_stock.svg'
 import Cross from '@/public/ingredient_not_stock.svg'
 import Cart from '@/public/ingredient_cart.svg'
 
+import { formatQuantity } from "@/lib/formatQuantity";
+import { slugifyTitle } from "@/lib/slugifyTitle";
+
 type Diet = {
     id: number;
     name: string;
@@ -64,13 +67,6 @@ type Recipe = {
     likeCount: number;
     averageRating?: number;
 };
-
-function slugify(title: string) {
-  return title
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
-}
 
 export default function RecipeDetail() {
     const [loading, setLoading] = useState(true);
@@ -119,7 +115,7 @@ export default function RecipeDetail() {
                         recipe.user.id === loggedUserId ?  
                             <Link
                                 className={ButtonStyles.smallButton}
-                                href={`/recipes/${recipeId}/${slugify(recipe.title)}/edit`}
+                                href={`/recipes/${recipeId}/${slugifyTitle(recipe.title)}/edit`}
                                 >
                                 Edit Recipe
                             </Link> 
@@ -167,7 +163,7 @@ export default function RecipeDetail() {
                         {
                             ingredient.quantity &&
                             <p className={DetailStyles.ingredientAmount}>
-                                {ingredient.quantity}
+                                {formatQuantity(ingredient.quantity)}
                                 {ingredient.unit}
                             </p>
                         }

@@ -13,6 +13,8 @@ import EditIngredientModal from "@/app/components/EditIngredientModal";
 import IngredientStyles from '@/app/styles/pages/ingredients.module.css';
 import DeleteIngredientModal from "@/app/components/DeleteIngredientModal";
 
+import { formatQuantity } from "@/lib/formatQuantity";
+
 import EditIcon from "@/public/pencil.svg";
 import TrashIcon from "@/public/trash.svg";
 
@@ -224,7 +226,7 @@ export default function Ingredients() {
                           <>
                             {ingredient.quantity != null && ingredient.quantityUnit && (
                               <p className={IngredientStyles.ingredientQuantity}>
-                                {ingredient.quantity} {ingredient.quantityUnit?.shortName ?? ""}
+                                {formatQuantity(ingredient.quantity)} {ingredient.quantityUnit?.shortName ?? ""}
                               </p>
                             )}
                           </>
