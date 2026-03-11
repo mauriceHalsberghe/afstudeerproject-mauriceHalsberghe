@@ -13,9 +13,11 @@ export type QuantityUnit = {
 
 export type Ingredient = {
   id: number;
+  ingredientId: number;
   name: string;
   quantity: number;
   unit: string;
+  quantityUnit?: QuantityUnit;
   alwaysInStock: boolean;
   ingredientName: string;
   isInInventory?: boolean;
