@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import RecipeCard from '../components/RecipeCard';
 import RecipeFilters, { RecipeFiltersState } from "../components/RecipeFilters";
 
-import HomeStyles from '@/app/styles//pages/home.module.css';
+import HomeStyles from '@/app/styles/pages/home.module.css';
 import { AuthContext } from '@/context/AuthContext';
 import EmptyView from "../components/EmptyView";
 import { Recipe } from "@/types/RecipeTypes";

@@ -70,12 +70,6 @@ export default function RecipeDetail() {
 
         if (missingIngredients.length === 0) return;
 
-        console.log(missingIngredients);
-
-        console.log(recipe);
-        
-        
-
         try {
             await Promise.all(
                 missingIngredients.map((ingredient) =>

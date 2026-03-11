@@ -142,10 +142,7 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
 
     const displayError = internalError || externalError;
 
-    const progress = (step / 3) * 100;
-
-    console.log(imageUrl);
-    
+    const progress = (step / 3) * 100;    
 
     return (
         <form className={AddRecipeStyles.form} onSubmit={handleSubmit}>
