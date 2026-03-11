@@ -16,13 +16,37 @@ type DietSelectorProps = {
 
 export default function DietSelector({ diets, selectedDiet, onChange, disabled}: DietSelectorProps) {
 
-  const handleClick = (dietId: number) => {
+  const handleClick = (dietId: number | null) => {
     if (disabled) return;
     onChange(selectedDiet === dietId ? null : dietId);
   };
 
   return (
     <div className={PrefStyles.list}>
+
+      <div className={PrefStyles.radio}>
+        <input
+          id="diet-none"
+          value="none"
+          className={PrefStyles.radioInput}
+          type="radio"
+          disabled={disabled}
+          checked={selectedDiet === null}
+          onChange={() => {}}
+          onClick={() => handleClick(null)}
+        />
+        <label
+          htmlFor="diet-none"
+          className={PrefStyles.radioLabel}
+          onClick={(e) => {
+            e.preventDefault();
+            handleClick(null);
+          }}
+        >
+          No Diet
+        </label>
+      </div>
+
       {diets.map((diet) => (
         <div key={diet.id} className={PrefStyles.radio}>
           <input
