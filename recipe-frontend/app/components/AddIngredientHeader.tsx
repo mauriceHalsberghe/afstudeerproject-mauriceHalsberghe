@@ -85,6 +85,11 @@ export default function AddIngredientHeader({ postUrl, onSuccess }: Props) {
       return;
     }
 
+    if (isQuantityFilled && !Number.isInteger(quantity!)) {
+      setError("Quantity must be a whole number.");
+      return;
+    }
+
     const formData = {
       userId: loggedUserId,
       ingredientId: selectedIngredient?.value,
