@@ -19,6 +19,7 @@ export type Ingredient = {
   alwaysInStock: boolean;
   ingredientName: string;
   isInInventory?: boolean;
+  isInShoppingList?: boolean;
   ingredientTypeId: number;
 };
 

@@ -108,12 +108,17 @@ export default function RecipeDetail() {
     
             
             <h2 className={DetailStyles.subtitle}>Ingredients</h2>
+
+            <button className={ButtonStyles.smallButton}>Add missing to shopping list</button>
+
             <ul className={DetailStyles.ingredients}>
                 {recipe.ingredients.map((ingredient) => (
                     <li className={DetailStyles.ingredient} key={ingredient.id}>
                         {ingredient.isInInventory !== undefined && (
                             <span className={DetailStyles.ingredientIcon}>
-                                {ingredient.isInInventory ? <Checkmark/> : <Cross />}
+                                {ingredient.isInInventory ? <Checkmark/> : 
+                                    ingredient.isInShoppingList ? <Cart /> :
+                                <Cross />}
                             </span>
                         )}
 
