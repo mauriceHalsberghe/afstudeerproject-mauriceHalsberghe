@@ -1,5 +1,5 @@
 .page {
-    margin: 2rem;
+    margin: 1rem;
     display: flex;
     flex-direction: column;
     margin-bottom: 7rem;
@@ -47,9 +47,19 @@
 }
 
 .divs {
+    margin-top: 1rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     width: 100%;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 2rem;
 }
 
 .select {
@@ -62,9 +72,11 @@
     color: var(--green-200);
     font-size: 1rem;
     font-weight: 500;
+
     option {
         font-size: 1rem;
     }
+
     &:focus-visible {
         outline: none;
     }
@@ -108,6 +120,8 @@
     width: 100%;
     border-radius: 1rem;
     min-height: 36px;
+    height: max-content;
+    field-sizing: content;
 }
 
 .stepNumber {
@@ -157,4 +171,37 @@
     top: 50%;
     transform: translate(-50%, -50%);
     transition: opacity 0.3s ease;
+
+    opacity: 0.8;
+
+    color: var(--white);
+    stroke: var(--black);
+    stroke-width: 2;
+    paint-order: stroke fill;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressSubtitle {
+  color: var(--gray-300);
+}
+
+.progressBar {
+  background-color: var(--gray-200);
+  border-radius: 5rem;
+  height: 4px;
+  width: 100%;
+
+  span {
+    display: block;
+    height: 4px;
+    border-radius: 5rem;
+    background-color: var(--green-200);
+    transition: width 800ms ease;
+  }
 }

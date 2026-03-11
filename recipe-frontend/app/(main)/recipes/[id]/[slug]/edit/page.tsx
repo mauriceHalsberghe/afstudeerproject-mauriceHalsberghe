@@ -6,7 +6,6 @@ import { AuthContext } from "@/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import RecipeForm, { RecipeFormValues } from "@/app/components/RecipeForm";
 import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
-import EmptyView from "@/app/components/EmptyView";
 
 type Diet = {
     id: number;
@@ -92,12 +91,12 @@ export default function EditRecipe() {
     fetchData();
 }, [recipeId, loggedUserId]);
 
-    if (loading || auth?.loading) return <div>LOADING</div>;
-    if (recipe?.user?.id !== loggedUserId) return <div>Can&apos;t edit this recipe</div>;
-
     if (!recipe) {
         return 
     }
+
+    if (recipe?.user?.id !== loggedUserId) return <div>Can&apos;t edit this recipe</div>;
+
 
     const initialValues: RecipeFormValues = {
         title: recipe.title,
@@ -176,13 +175,15 @@ export default function EditRecipe() {
     return (
         <main className={AddRecipeStyles.page}>
             <h1 className={AddRecipeStyles.title}>Edit recipe</h1>
-            <RecipeForm
-                key={recipe.id}
-                initialValues={initialValues}
-                onSubmit={handleSubmit}
-                submitLabel="Update Recipe"
-                error={error}
-            />
+            { loading ? <p>Loading...</p> : 
+                <RecipeForm
+                    key={recipe.id}
+                    initialValues={initialValues}
+                    onSubmit={handleSubmit}
+                    submitLabel="Update Recipe"
+                    error={error}
+                />
+            }
         </main>
     );
 }

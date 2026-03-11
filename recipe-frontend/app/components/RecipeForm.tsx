@@ -9,6 +9,7 @@ import ButtonStyles from "@/app/styles/components/button.module.css";
 import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
 import Image from "next/image";
 import UploadIcon from "@/public/upload.svg";
+import Link from "next/link";
 
 type QuantityUnit = {
     id: number;
@@ -150,8 +151,17 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
 
     const displayError = internalError || externalError;
 
+    const progress = (step / 3) * 100;
+
     return (
         <form className={AddRecipeStyles.form} onSubmit={handleSubmit}>
+
+            <div className={AddRecipeStyles.progress}>
+                <h3 className={AddRecipeStyles.progressSubtitle}>Step {step} of 3</h3>
+                <div className={AddRecipeStyles.progressBar}>
+                    <span style={{ width: `${progress}%` }}></span>
+                </div>
+            </div>
             
             {step === 1 &&
 
@@ -221,7 +231,8 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                     </label>
                 </div>
 
-                <div className={AddRecipeStyles.divs}>
+                <div className={AddRecipeStyles.buttons}>
+                    <Link className={ButtonStyles.button} href={'./'}>Cancel</Link>
                     <button className={ButtonStyles.button} onClick={() => setStep(2)}>Next</button>
                 </div>
             </>
@@ -260,12 +271,12 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                             </div>
                         ))}
                         <div className={AddRecipeStyles.divs}>
-                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeIngredient} disabled={ingredients.length <= 1}>- Remove ingredient</button>
-                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addIngredient}>+ Add ingredient</button>
+                            <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} type="button" onClick={removeIngredient} disabled={ingredients.length <= 1}>- Remove ingredient</button>
+                            <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} type="button" onClick={addIngredient}>+ Add ingredient</button>
                         </div>
                     </div>
 
-                    <div className={AddRecipeStyles.divs}>
+                    <div className={AddRecipeStyles.buttons}>
                         <button className={ButtonStyles.button} onClick={() => setStep(1)}>Previous</button>
                         <button className={ButtonStyles.button} onClick={() => setStep(3)}>Next</button>
                     </div>
@@ -290,12 +301,12 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                             </div>
                         ))}
                         <div className={AddRecipeStyles.divs}>
-                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={removeStep} disabled={steps.length <= 1}>- Remove step...</button>
-                            <button className={`${ButtonStyles.smallButton} ${AddRecipeStyles.button}`} type="button" onClick={addStep}>+ Add step...</button>
+                            <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} type="button" onClick={removeStep} disabled={steps.length <= 1}>- Remove step...</button>
+                            <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} type="button" onClick={addStep}>+ Add step...</button>
                         </div>
                     </div>
 
-                    <div className={AddRecipeStyles.divs}>
+                    <div className={AddRecipeStyles.buttons}>
                         <button className={ButtonStyles.button} onClick={() => setStep(2)}>Previous</button>
                         <button className={ButtonStyles.button} type="submit">{submitLabel}</button>
                     </div>
