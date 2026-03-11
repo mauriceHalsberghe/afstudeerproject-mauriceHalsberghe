@@ -114,6 +114,7 @@ public class RecipesController : ControllerBase
                     .Select(ri => new RecipeIngredientDto
                     {
                         Id = ri.Id,
+                        IngredientId = ri.IngredientId,
                         Quantity = ri.Quantity,
                         Unit = ri.QuantityUnit != null ? ri.QuantityUnit.ShortName : null,
                         IngredientName = ri.Ingredient.Name,
