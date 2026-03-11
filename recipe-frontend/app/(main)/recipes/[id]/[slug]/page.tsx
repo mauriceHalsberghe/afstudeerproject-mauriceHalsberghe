@@ -188,11 +188,14 @@ export default function RecipeDetail() {
                 ))}
             </ul>
 
-            {showModal && loggedUserId &&
-                <div 
-                    className={RatingModalStyles.modalOverlay} 
-                    onClick={() => setShowModal(false)}
-                >
+            {showModal &&
+                (
+                    loggedUserId ? 
+
+                    <div 
+                        className={RatingModalStyles.modalOverlay} 
+                        onClick={() => setShowModal(false)}
+                    >
                     <div onClick={(e) => e.stopPropagation()}>
                         <RatingModal 
                             userId={loggedUserId} 
@@ -201,7 +204,34 @@ export default function RecipeDetail() {
                             onRated={fetchRecipe}
                         />
                     </div>
+                </div> 
+                :
+                <div
+                    className={RatingModalStyles.modalOverlay}
+                    onClick={() => setShowModal(false)}
+                >
+                    <div
+                        className={RatingModalStyles.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className={RatingModalStyles.text}>
+                            <h2 className={RatingModalStyles.title}>Not logged in</h2>
+                            <p className={RatingModalStyles.subtitle}>Log in to rate recipes</p>
+                        </div>
+
+                        <div className={RatingModalStyles.buttons}>
+                        <button
+                            className={ButtonStyles.secondaryButton}
+                            onClick={() => setShowModal(false)}
+                        >
+                            Cancel
+                        </button>
+
+                        <Link className={ButtonStyles.button} href={'/login'}>Log in</Link>
+                        </div>
+                    </div>
                 </div>
+                )
             }
 
         </div>
