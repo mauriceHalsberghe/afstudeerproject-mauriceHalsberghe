@@ -8,53 +8,11 @@ import RecipeForm, { RecipeFormValues } from "@/app/components/RecipeForm";
 import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
 import EmptyView from "@/app/components/EmptyView";
 import { slugifyTitle } from "@/lib/slugifyTitle";
+import { RecipeDetails } from "@/types/RecipeTypes";
 
-type Diet = {
-    id: number;
-    name: string;
-};
-
-type Cuisine = {
-    id: number;
-    name: string;
-};
-
-type User = {
-    id: number;
-    username: string;
-    avatar: string;
-};
-
-type Step = {
-    id: number;
-    stepNumber: number;
-    description: string;
-}
-
-type Ingredient = {
-    id: number;
-    quantity: number;
-    unit: string;
-    ingredientName: string;
-    isInInventory?: boolean;
-};
-
-type Recipe = {
-    id: number;
-    title: string;
-    imageUrl: string;
-    time: number;
-    diet?: Diet;
-    cuisine?: Cuisine;
-    user?: User;
-    steps: Step[];
-    ingredients: Ingredient[];
-    likeCount: number;
-    averageRating?: number;
-};
 
 export default function EditRecipe() {
-    const [recipe, setRecipe] = useState<Recipe | null>(null);
+    const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [units, setUnits] = useState<{ id: number; name: string; shortName: string }[]>([]);

@@ -15,32 +15,7 @@ import ButtonStyles from "@/app/styles/components/button.module.css";
 import CartIcon from '@/public/cart.svg'
 
 import { formatQuantity } from "@/lib/formatQuantity";
-
-type ListIngredient = {
-  id: number;
-  checked: boolean;
-  quantity?: number;
-  quantityUnit?: QuantityUnit;
-  ingredient: Ingredient;
-};
-
-type QuantityUnit = {
-  id: number;
-  name: string;
-  shortName: string;
-};
-
-type Ingredient = {
-  id: number;
-  name: string;
-  alwaysInStock: boolean;
-  ingredientTypeId: number;
-};
-
-type IngredientType = {
-  id: number;
-  name: string;
-};
+import { ListIngredient } from "@/types/IngredientTypes";
 
 export default function ShoppingList() {
     const [loading, setLoading] = useState(true);

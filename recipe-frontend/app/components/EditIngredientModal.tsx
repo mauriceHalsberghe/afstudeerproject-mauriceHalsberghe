@@ -5,24 +5,7 @@ import { API_URL } from "@/lib/api";
 import IngredientStyles from "@/app/styles/pages/ingredients.module.css";
 import RatingModalStyles from '@/app/styles/components/ratingmodal.module.css';
 import ButtonStyles from '@/app/styles/components/button.module.css';
-
-type QuantityUnit = {
-    id: number;
-    name: string;
-    shortName: string;
-};
-
-type InventoryIngredient = {
-    id: number;
-    quantity?: number;
-    quantityUnit?: QuantityUnit;
-    ingredient: {
-        id: number;
-        name: string;
-        alwaysInStock: boolean;
-        ingredientTypeId: number;
-    };
-};
+import { InventoryIngredient, QuantityUnit } from "@/types/IngredientTypes";
 
 type Props = {
     ingredient: InventoryIngredient;

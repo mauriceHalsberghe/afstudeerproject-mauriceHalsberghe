@@ -10,35 +10,7 @@ import RecipeFilters, {
 } from "@/app/components/RecipeFilters";
 import HomeStyles from "@/app/styles/pages/home.module.css";
 import EmptyView from "@/app/components/EmptyView";
-
-type Diet = {
-  id: number;
-  name: string;
-};
-
-type Cuisine = {
-  id: number;
-  name: string;
-};
-
-type User = {
-  id: number;
-  username: string;
-  avatar: string;
-};
-
-type Recipe = {
-  id: number;
-  title: string;
-  imageUrl: string;
-  time: number;
-  likeCount: number;
-  isLikedByCurrentUser: boolean;
-  diet?: Diet;
-  cuisine?: Cuisine;
-  user?: User;
-  averageRating: number;
-};
+import { Recipe } from "@/types/RecipeTypes";
 
 export default function LikedRecipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -50,6 +22,7 @@ export default function LikedRecipes() {
     selectedCuisine: 0,
     time: 15,
     onlyUsers: false,
+    onlyInStock: false,
     selectedSort: 1,
   });
 
@@ -105,6 +78,9 @@ export default function LikedRecipes() {
 
     const matchesOnlyUsers =
       !filters.onlyUsers || recipe.user !== null;
+
+    const matchesOnlyIngredients = 
+      !filters.onlyInStock || recipe.missingIngredientCount === 0;
 
     return (
       matchesDiet &&

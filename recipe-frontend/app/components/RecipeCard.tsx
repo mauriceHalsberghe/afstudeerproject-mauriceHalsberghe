@@ -7,37 +7,7 @@ import Link from 'next/link';
 import LikeButton from "./LikeButton";
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
-
-
-type Diet = {
-  id: number;
-  name: string;
-};
-
-type Cuisine = {
-  id: number;
-  name: string;
-};
-
-type User = {
-  id: number;
-  username: string;
-  avatar: string;
-};
-
-type Recipe = {
-  id: number;
-  title: string;
-  imageUrl: string;
-  time: number;
-  likeCount: number;
-  isLikedByCurrentUser: boolean;
-  averageRating: number;
-  diet?: Diet;
-  cuisine?: Cuisine;
-  user?: User;
-  missingIngredientCount?: number | null;
-};
+import { Recipe } from "@/types/RecipeTypes";
 
 type Props = {
   recipe: Recipe;

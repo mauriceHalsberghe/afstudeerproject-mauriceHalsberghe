@@ -23,54 +23,11 @@ import Cart from '@/public/ingredient_cart.svg'
 
 import { formatQuantity } from "@/lib/formatQuantity";
 import { slugifyTitle } from "@/lib/slugifyTitle";
-
-type Diet = {
-    id: number;
-    name: string;
-};
-
-type Cuisine = {
-    id: number;
-    name: string;
-};
-
-type User = {
-    id: number;
-    username: string;
-    avatar: string;
-};
-
-type Step = {
-    id: number;
-    stepNumber: number;
-    description: string;
-}
-
-type Ingredient = {
-    id: number;
-    quantity: number;
-    unit: string;
-    ingredientName: string;
-    isInInventory?: boolean;
-};
-
-type Recipe = {
-    id: number;
-    title: string;
-    imageUrl: string;
-    time: number;
-    diet?: Diet;
-    cuisine?: Cuisine;
-    user?: User;
-    steps: Step[];
-    ingredients: Ingredient[];
-    likeCount: number;
-    averageRating?: number;
-};
+import { RecipeDetails } from "@/types/RecipeTypes";
 
 export default function RecipeDetail() {
     const [loading, setLoading] = useState(true);
-    const [recipe, setRecipe] = useState<Recipe | null>(null);
+    const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
     const [showModal, setShowModal] = useState(false);
 
     const params = useParams();
@@ -86,7 +43,7 @@ export default function RecipeDetail() {
                 url = `${API_URL}/api/recipes/${recipeId}?currentUserId=${loggedUserId}`
             }
             const res = await fetch(url);
-            const recipeData: Recipe = await res.json();
+            const recipeData: RecipeDetails = await res.json();
             setRecipe(recipeData);
         } catch (err) {
             console.error(err);

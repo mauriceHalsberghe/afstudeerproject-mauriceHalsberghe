@@ -10,36 +10,7 @@ import RecipeFilters, { RecipeFiltersState } from "../components/RecipeFilters";
 import HomeStyles from '@/app/styles//pages/home.module.css';
 import { AuthContext } from '@/context/AuthContext';
 import EmptyView from "../components/EmptyView";
-
-type Diet = {
-  id: number;
-  name: string;
-};
-
-type Cuisine = {
-  id: number;
-  name: string;
-};
-
-type User = {
-  id: number;
-  username: string;
-  avatar: string;
-};
-
-type Recipe = {
-  id: number;
-  title: string;
-  imageUrl: string;
-  time: number;
-  likeCount: number;
-  isLikedByCurrentUser: boolean;
-  averageRating: number;
-  diet?: Diet;
-  cuisine?: Cuisine;
-  user?: User;
-  missingIngredientCount?: number | null;
-};
+import { Recipe } from "@/types/RecipeTypes";
 
 export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);

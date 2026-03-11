@@ -18,31 +18,7 @@ import { formatQuantity } from "@/lib/formatQuantity";
 import EditIcon from "@/public/pencil.svg";
 import TrashIcon from "@/public/trash.svg";
 import AppleIcon from '@/public/apple.svg'
-
-type InventoryIngredient = {
-  id: number;
-  quantity?: number;
-  quantityUnit?: QuantityUnit;
-  ingredient: Ingredient;
-};
-
-type QuantityUnit = {
-  id: number;
-  name: string;
-  shortName: string;
-};
-
-type Ingredient = {
-  id: number;
-  name: string;
-  alwaysInStock: boolean;
-  ingredientTypeId: number;
-};
-
-type IngredientType = {
-  id: number;
-  name: string;
-}
+import { IngredientType, InventoryIngredient } from "@/types/IngredientTypes";
 
 export default function Ingredients() {
   const [loading, setLoading] = useState(true);

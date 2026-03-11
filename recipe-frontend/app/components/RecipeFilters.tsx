@@ -4,16 +4,7 @@ import { API_URL } from "@/lib/api";
 
 import { useEffect, useState } from "react";
 import filtersStyles from "@/app/styles/components/recipefilers.module.css";
-
-type Diet = {
-  id: number;
-  name: string;
-};
-
-type Cuisine = {
-  id: number;
-  name: string;
-};
+import { Cuisine, Diet } from "@/types/RecipeTypes";
 
 export type RecipeFiltersState = {
   search: string;

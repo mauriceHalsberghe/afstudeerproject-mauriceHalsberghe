@@ -10,21 +10,12 @@ import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
 import Image from "next/image";
 import UploadIcon from "@/public/upload.svg";
 import Link from "next/link";
+import { Cuisine, Diet } from "@/types/RecipeTypes";
 
 type QuantityUnit = {
     id: number;
     name: string;
     shortName: string;
-};
-
-type Diet = {
-    id: number;
-    name: string;
-};
-
-type Cuisine = {
-    id: number;
-    name: string;
 };
 
 export interface RecipeIngredient {
