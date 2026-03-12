@@ -257,4 +257,25 @@ public class RecipesController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(recipe);
     }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteRecipe(int id)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var recipe = await _context.Recipes
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (recipe == null)
+            return NotFound();
+
+        if (recipe.UserId != userId)
+            return Forbid();
+
+        _context.Recipes.Remove(recipe);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
