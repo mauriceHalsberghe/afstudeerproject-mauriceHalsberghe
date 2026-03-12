@@ -5,17 +5,21 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import RecipeForm, { RecipeFormValues } from "@/app/components/RecipeForm";
-import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
 import EmptyView from "@/app/components/EmptyView";
 import { slugifyTitle } from "@/lib/slugifyTitle";
 import { RecipeDetails } from "@/types/RecipeTypes";
 
+import AddRecipeStyles from "@/app/styles/pages/addrecipe.module.css";
+import ButtonStyles from "@/app/styles/components/button.module.css";
+import ModalStyles from "@/app/styles/components/modal.module.css";
 
 export default function EditRecipe() {
     const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [units, setUnits] = useState<{ id: number; name: string; shortName: string }[]>([]);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const auth = useContext(AuthContext);
     const loggedUserId = auth?.user?.id;
@@ -135,9 +139,39 @@ export default function EditRecipe() {
         }
     };
 
+    const handleDelete = async () => {
+        setLoading(true);
+
+        try {
+            const res = await fetch(`${API_URL}/api/recipes/${recipeId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (!res.ok) {
+                setError("Failed to delete recipe. Please try again.");
+                return;
+            }
+
+            router.push("/");
+
+        } catch (err) {
+            console.error(err);
+            setError("Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
+            setShowDeleteModal(false);
+        }
+    };
+
     return (
         <main className={AddRecipeStyles.page}>
-            <h1 className={AddRecipeStyles.title}>Edit recipe</h1>
+            <div className={AddRecipeStyles.header}>
+                <h1 className={AddRecipeStyles.title}>Edit recipe</h1>
+                <button className={`${ButtonStyles.buttonRed} ${ButtonStyles.smallButton}`} onClick={() => setShowDeleteModal(true)}>Delete Recipe</button>
+            </div>
             { loading ? <p>Loading...</p> : 
                 <RecipeForm
                     key={recipe.id}
@@ -146,6 +180,40 @@ export default function EditRecipe() {
                     submitLabel="Update Recipe"
                     error={error}
                 />
+            }
+
+            {
+                showDeleteModal && 
+                <div className={ModalStyles.modalOverlay} onClick={() => setShowDeleteModal(false)}>
+                    <div className={ModalStyles.modal}>
+                        <div className={ModalStyles.text}>
+                        <h2 className={ModalStyles.title}>Delete Recipe</h2>
+                        <p className={ModalStyles.subtitle}>
+                            Are you sure you want to delete this recipe?
+                        </p>
+                        </div>
+
+                        {error && <p className={ModalStyles.error}>{error}</p>}
+
+                        <div className={ModalStyles.buttons}>
+                        <button
+                            className={ButtonStyles.secondaryButton}
+                            onClick={() => setShowDeleteModal(false)}
+                            disabled={loading}
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            className={ButtonStyles.buttonRed}
+                            onClick={handleDelete}
+                            disabled={loading}
+                        >
+                            {loading ? "Deleting..." : "Delete"}
+                        </button>
+                        </div>
+                    </div>
+                    </div>
             }
         </main>
     );

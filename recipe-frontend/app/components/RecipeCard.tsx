@@ -15,7 +15,7 @@ type Props = {
 };
 
 function RecipeCard({ recipe, onUnlike }: Props) {
-  const auth = useContext(AuthContext);  
+  const auth = useContext(AuthContext);    
 
   return (
     <div className={RecipeCardStyles.card}>
@@ -24,7 +24,7 @@ function RecipeCard({ recipe, onUnlike }: Props) {
           className={RecipeCardStyles.image}
           width={400}
           height={200}
-          src={`${API_URL}/uploads/recipe-images/${recipe.imageUrl}`}
+          src={recipe.imageUrl === '/recipe.jpg' ? '/recipe.jpg' : `${API_URL}/uploads/recipe-images/${recipe.imageUrl}` }
           alt={recipe.title}
         />
         <div className={RecipeCardStyles.text}>
