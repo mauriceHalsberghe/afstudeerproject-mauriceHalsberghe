@@ -6,6 +6,8 @@ import { useContext, useEffect, useState } from "react";
 
 import CommentStyles from "@/app/styles/components/comment.module.css"
 
+import { formatDistanceToNow } from 'date-fns'
+
 type Comment = {
     id: number;
     user: User;
@@ -48,26 +50,27 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
     return (
         <div className={CommentStyles.page}>
             <h2 className={CommentStyles.title}>Comments - {comments.length}</h2>
-            {comments.map((comment) => (
-                <div key={comment.id} className={CommentStyles.commentCard}>
-                    <Image
-                        className={CommentStyles.avatar}
-                        src={comment.user.avatar ? `${API_URL}/uploads/avatars/${comment.user.avatar}` : '/avatar.svg'} 
-                        alt={`avatar`}
-                        width={64}
-                        height={64}
-                    />
-                    <div className={CommentStyles.text}>
-                        <h3 className={CommentStyles.username}>{comment.user.username}</h3>
-                        <p className={CommentStyles.comment}>{comment.message}</p>
-                        <time>{new Date(comment.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    })}</time>
+
+            <div className={CommentStyles.comments}>
+                {comments.map((comment) => (
+                    <div key={comment.id} className={CommentStyles.commentCard}>
+                        <Image
+                            className={CommentStyles.avatar}
+                            src={comment.user.avatar ? `${API_URL}/uploads/avatars/${comment.user.avatar}` : '/avatar.svg'} 
+                            alt={`avatar`}
+                            width={64}
+                            height={64}
+                        />
+                        <div className={CommentStyles.text}>
+                            <div className={CommentStyles.commentInfo}>
+                                <h3 className={CommentStyles.username}>{comment.user.username}</h3>
+                                <time className={CommentStyles.date}>• {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</time>
+                            </div>
+                            <p className={CommentStyles.comment}>{comment.message}</p>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 }
