@@ -23,7 +23,7 @@ export default function LikedRecipes() {
     time: 15,
     onlyUsers: false,
     onlyInStock: false,
-    selectedSort: 1,
+    selectedSort: 3,
   });
 
   const auth = useContext(AuthContext);

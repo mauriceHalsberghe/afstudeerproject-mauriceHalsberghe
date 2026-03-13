@@ -138,8 +138,8 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter }: Pr
             onChange={(e) => update({ selectedSort: Number(e.target.value) })}
             className={filtersStyles.select}
           >
-            <option value={1}>Sort by Rating</option>
             <option value={3}>Available ingredients</option>
+            <option value={1}>Sort by Rating</option>
             <option value={2}>Sort from A-Z</option>
           </select>
 
