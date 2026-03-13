@@ -102,7 +102,11 @@ export default function Home() {
         </div>
         <div className={HomeStyles.main}>
             {[...Array(3)].map((_, i) => (
-                <div key={i} className={HomeStyles.skeletonCard} />
+                <div key={i} className={HomeStyles.skeletonCard}>
+                  <span className={HomeStyles.skeletonCardInfo}>
+                    <span></span>
+                  </span>
+                </div>
             ))}
         </div>
     </main>;
