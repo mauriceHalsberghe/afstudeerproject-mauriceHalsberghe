@@ -94,8 +94,6 @@ export default function EditIngredientModal({
         }),
       });
 
-      console.log(res);
-
       if (!res.ok) {
         setError("Failed to update ingredient. Please try again.");
         return;

@@ -53,8 +53,6 @@ export default function RecipeDetail() {
       setLoading(false);
     }
   };
-
-  console.log(recipe);
   
 
   useEffect(() => {

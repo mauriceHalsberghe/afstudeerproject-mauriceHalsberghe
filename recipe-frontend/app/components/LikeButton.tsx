@@ -33,7 +33,6 @@ export default function LikeButton({
   const toggleLike = async () => {
     if (!userId) {
       setShowModal(true);
-      console.log("log in to like");
       return;
     }
 
