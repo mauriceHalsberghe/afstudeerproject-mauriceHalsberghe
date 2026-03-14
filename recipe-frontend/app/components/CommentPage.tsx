@@ -76,6 +76,10 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
         
     }
 
+    const sortedComments = [...comments].sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
     return (
         <div className={CommentStyles.page}>
             <h2 className={CommentStyles.title}>Comments - {comments.length}</h2>
@@ -106,7 +110,7 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
             </form>
 
             <div className={CommentStyles.comments}>
-                {comments.map((comment) => (
+                {sortedComments.map((comment) => (
                     <div key={comment.id} className={CommentStyles.commentCard}>
                         <Image
                             className={CommentStyles.avatar}
