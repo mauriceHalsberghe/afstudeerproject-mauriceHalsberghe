@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
 import CommentStyles from "@/app/styles/components/comment.module.css"
+import ButtonStyles from "@/app/styles/components/button.module.css"
 
 import { formatDistanceToNow } from 'date-fns'
 
@@ -24,6 +25,8 @@ type Props = {
 export default function CommentPage({ recipeId, loggedUserId }: Props) {
     const [loading, setLoading] = useState(false);
     const [comments, setComments] = useState<Comment[]>([]);
+
+    const [commentValue, setCommentValue] = useState("");
 
     const auth = useContext(AuthContext);
 
@@ -47,9 +50,60 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
         fetchComments();
     }, []);
 
+    const handlePostComment = async (e: React.FormEvent<HTMLFormElement>) => {
+        if (!auth?.token) return;
+        e.preventDefault();
+
+        try {
+            const res = await fetch(`${API_URL}/api/Comments`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${auth.token}`
+                },
+                body: JSON.stringify({
+                    recipeId: recipeId,
+                    message: commentValue,
+                    commentId: null,
+                })
+            });
+            if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+            fetchComments();
+        } catch (err) {
+            console.error(err);
+        }
+        
+    }
+
     return (
         <div className={CommentStyles.page}>
             <h2 className={CommentStyles.title}>Comments - {comments.length}</h2>
+
+            <form className={CommentStyles.commentForm} onSubmit={handlePostComment}>
+                <Image
+                    className={CommentStyles.avatar}
+                    src={auth?.user?.avatar ? `${API_URL}/uploads/avatars/${auth?.user?.avatar}` : '/avatar.svg'} 
+                    alt={`avatar`}
+                    width={64}
+                    height={64}
+                />
+
+                <input 
+                    className={CommentStyles.commentInput}
+                    placeholder="Add a comment..."
+                    value={commentValue}
+                    onChange={(e) => setCommentValue(e.target.value)}
+                />
+
+                {
+                    commentValue &&
+                    <div className={CommentStyles.buttons}>
+                        <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} onClick={() => setCommentValue('')}>Cancel</button>
+                        <button type="submit" className={ButtonStyles.smallButton}>Post</button>
+                    </div>
+                }
+            </form>
 
             <div className={CommentStyles.comments}>
                 {comments.map((comment) => (
