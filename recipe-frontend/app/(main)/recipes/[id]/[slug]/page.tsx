@@ -26,6 +26,7 @@ import Apple from "@/public/ingredient_half_stock.svg";
 import { formatQuantity } from "@/lib/formatQuantity";
 import { slugifyTitle } from "@/lib/slugifyTitle";
 import { RecipeDetails } from "@/types/RecipeTypes";
+import CommentPage from "@/app/components/CommentPage";
 
 export default function RecipeDetail() {
   const [loading, setLoading] = useState(true);
@@ -259,6 +260,8 @@ export default function RecipeDetail() {
             </div>
           </div>
         ))}
+
+        <CommentPage recipeId={recipeId} loggedUserId={loggedUserId}/>
     </div>
   );
 }
