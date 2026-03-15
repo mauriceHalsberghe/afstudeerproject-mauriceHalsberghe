@@ -8,9 +8,12 @@ public class RecipeDto
     public int? Time { get; set; }
     public int? DietId { get; set; }
     public int? CuisineId { get; set; }
+    public int? DishTypeId { get; set; }
 
     public DietDto? Diet { get; set; }
     public CuisineDto? Cuisine { get; set; }
+    public DishTypeDto? DishType { get; set; }
+
     public UserSummaryDto? User { get; set; }
 
     public int LikeCount { get; set; }
@@ -35,6 +38,12 @@ public class DietDto
 }
 
 public class CuisineDto
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+}
+
+public class DishTypeDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }

@@ -26,6 +26,7 @@ public class RecipesController : ControllerBase
             .Include(r => r.RecipeIngredients)
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
+            .Include(r => r.DishType)
             .Include(r => r.User)
             .Include(r => r.Reviews)
             .Select(r => new RecipeDto
@@ -36,6 +37,7 @@ public class RecipesController : ControllerBase
                 Time = r.Time,
                 DietId = r.DietId,
                 CuisineId = r.CuisineId,
+                DishTypeId = r.DishTypeId,
                 Diet = r.Diet == null ? null : new DietDto
                 {
                     Id = r.Diet.Id,
@@ -45,6 +47,11 @@ public class RecipesController : ControllerBase
                 {
                     Id = r.Cuisine.Id,
                     Name = r.Cuisine.Name
+                },
+                DishType = r.DishType == null ? null : new DishTypeDto
+                {
+                    Id = r.DishType.Id,
+                    Name = r.DishType.Name
                 },
                 User = r.User == null ? null : new UserSummaryDto
                 {
