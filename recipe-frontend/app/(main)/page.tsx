@@ -1,12 +1,9 @@
 "use client";
 
 import { API_URL } from "@/lib/api";
-
 import { useContext, useEffect, useRef, useState, useCallback } from "react";
-
 import RecipeCard from '../components/RecipeCard';
 import RecipeFilters, { RecipeFiltersState } from "../components/RecipeFilters";
-
 import HomeStyles from '@/app/styles/pages/home.module.css';
 import { AuthContext } from '@/context/AuthContext';
 import EmptyView from "../components/EmptyView";
@@ -15,15 +12,14 @@ import { Recipe } from "@/types/RecipeTypes";
 const PAGE_SIZE = 4;
 
 export default function Home() {
+  const auth = useContext(AuthContext);
+  const loggedUserId = auth?.user?.id;
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
-  const pageRef = useRef(1);
-  const loadingMoreRef = useRef(false);
-  const hasMoreRef = useRef(true);
-  const loaderRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(1);
 
   const [filters, setFilters] = useState<RecipeFiltersState>({
     search: "",
@@ -35,128 +31,74 @@ export default function Home() {
     selectedSort: 3,
   });
 
-  const auth = useContext(AuthContext);
-  const loggedUserId = auth?.user?.id;
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  const filtersRef = useRef(filters);
-  const loggedUserIdRef = useRef(loggedUserId);
-
-  useEffect(() => {
-    filtersRef.current = filters;
-  }, [filters]);
-
-  useEffect(() => {
-    loggedUserIdRef.current = loggedUserId;
-  }, [loggedUserId]);
-
-  const buildUrl = (pageNum: number) => {
-    const f = filtersRef.current;
-    const userId = loggedUserIdRef.current;
-
+  const fetchRecipes = useCallback(async (isInitial = false) => {
+    const currentPage = isInitial ? 1 : page;
+    
     const params = new URLSearchParams({
-      currentUserId: userId?.toString() ?? "",
-      page: pageNum.toString(),
+      currentUserId: loggedUserId?.toString() ?? "",
+      page: currentPage.toString(),
       pageSize: PAGE_SIZE.toString(),
-      search: f.search,
-      sortBy: f.selectedSort.toString(),
-      onlyUsers: f.onlyUsers.toString(),
-      onlyInStock: f.onlyInStock.toString(),
+      search: filters.search,
+      sortBy: filters.selectedSort.toString(),
+      onlyUsers: filters.onlyUsers.toString(),
+      onlyInStock: filters.onlyInStock.toString(),
     });
-    if (f.selectedDiet) params.set("dietId", f.selectedDiet.toString());
-    if (f.selectedCuisine) params.set("cuisineId", f.selectedCuisine.toString());
-    return `${API_URL}/api/recipes?${params}`;
-  };
-
-  const fetchMore = async () => {
-    if (loadingMoreRef.current || !hasMoreRef.current) return;
-
-    loadingMoreRef.current = true;
-    setLoadingMore(true);
+    if (filters.selectedDiet) params.set("dietId", filters.selectedDiet.toString());
+    if (filters.selectedCuisine) params.set("cuisineId", filters.selectedCuisine.toString());
 
     try {
-      const res = await fetch(buildUrl(pageRef.current));
+      const res = await fetch(`${API_URL}/api/recipes?${params}`);
       const data = await res.json();
 
       setRecipes(prev => {
-        const existingIds = new Set(prev.map(r => r.id));
-        const fresh = data.recipes.filter((r: Recipe) => !existingIds.has(r.id));
-        return [...prev, ...fresh];
-      });
+        if (isInitial) return data.recipes;
 
-      const newHasMore = pageRef.current * PAGE_SIZE < data.totalCount;
-      hasMoreRef.current = newHasMore;
-      setHasMore(newHasMore);
-      pageRef.current += 1;
+        const existingIds = new Set(prev.map(r => r.id));
+        const uniqueNewRecipes = data.recipes.filter(
+          (recipe: Recipe) => !existingIds.has(recipe.id)
+        );
+        return [...prev, ...uniqueNewRecipes];
+      });
+      const moreAvailable = (currentPage * PAGE_SIZE) < data.totalCount;
+      setHasMore(moreAvailable);
+
+      setPage(prev => isInitial ? 2 : prev + 1);
 
     } catch (err) {
-      console.error(err);
+    console.error("Failed to fetch recipes:", err);
     } finally {
-      loadingMoreRef.current = false;
+      setLoading(false);
       setLoadingMore(false);
     }
-  };
+  }, [filters, loggedUserId, page]);
 
   useEffect(() => {
     if (auth?.loading) return;
-
-    let cancelled = false;
-
-    const fetchFirst = async () => {
-      setLoading(true);
-      setRecipes([]);
-      setHasMore(true);
-      pageRef.current = 1;
-      hasMoreRef.current = true;
-      loadingMoreRef.current = false;
-
-      try {
-        const res = await fetch(buildUrl(1));
-        const data = await res.json();
-        if (cancelled) return;
-
-        setRecipes(data.recipes);
-        const newHasMore = PAGE_SIZE < data.totalCount;
-        hasMoreRef.current = newHasMore;
-        setHasMore(newHasMore);
-        pageRef.current = 2;
-
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    fetchFirst();
-    return () => { cancelled = true; };
+    setLoading(true);
+    fetchRecipes(true);
   }, [filters, loggedUserId, auth?.loading]);
 
   useEffect(() => {
-    const el = loaderRef.current;
-    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasMore && !loadingMore && !loading) {
+        setLoadingMore(true);
+        fetchRecipes();
+      }
+    }, { threshold: 0.1 });
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          fetchMore();
-        }
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(el);
+    if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [loading]);
-  
-  if (auth?.loading || loading) {
+  }, [hasMore, loadingMore, loading, fetchRecipes]);
+
+  if (auth?.loading || (loading && recipes.length === 0)) {
     return (
       <main className={HomeStyles.home}>
         <div className={HomeStyles.header} />
         <div className={HomeStyles.main}>
           {[...Array(3)].map((_, i) => (
-            <div key={i} className={HomeStyles.skeletonCard}>
-              <span className={HomeStyles.skeletonCardInfo}><span /></span>
-            </div>
+            <div key={i} className={HomeStyles.skeletonCard} />
           ))}
         </div>
       </main>
@@ -179,9 +121,14 @@ export default function Home() {
         </ul>
       )}
 
-      <div ref={loaderRef} style={{ height: 1 }} />
-      {loadingMore && <p style={{ textAlign: "center" }}>Loading more...</p>}
-      {!hasMore && recipes.length > 0 && <p style={{ textAlign: "center", opacity: 0.5 }}>All recipes loaded</p>}
+      <div ref={loaderRef}>
+        {loadingMore && <p>Loading more...</p>}
+
+        {!hasMore && recipes.length > 0 && (
+          <p>All recipes loaded</p>
+        )}
+        
+      </div>
     </main>
   );
 }
