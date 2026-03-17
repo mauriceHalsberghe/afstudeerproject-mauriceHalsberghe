@@ -9,7 +9,7 @@ import { AuthContext } from '@/context/AuthContext';
 import EmptyView from "../components/EmptyView";
 import { Recipe } from "@/types/RecipeTypes";
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 9;
 
 export default function Home() {
   const auth = useContext(AuthContext);
@@ -97,9 +97,11 @@ export default function Home() {
       <main className={HomeStyles.home}>
         <div className={HomeStyles.header} />
         <div className={HomeStyles.main}>
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className={HomeStyles.skeletonCard} />
-          ))}
+          <div className={HomeStyles.skeletonGrid}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className={HomeStyles.skeletonCard} />
+            ))}
+          </div>
         </div>
       </main>
     );
@@ -122,11 +124,12 @@ export default function Home() {
       )}
 
       <div ref={loaderRef}>
-        {loadingMore && <p>Loading more...</p>}
 
-        {!hasMore && recipes.length > 0 && (
-          <p>All recipes loaded</p>
-        )}
+      {loadingMore && <p>Loading more...</p>}
+
+      {!hasMore && recipes.length > 0 && (
+        <p>All recipes loaded</p>
+      )}
         
       </div>
     </main>

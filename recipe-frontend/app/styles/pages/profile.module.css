@@ -5,6 +5,13 @@
     margin: 6rem 2rem;
     gap: 3rem;
     position: relative;
+
+    @media (min-width: 1000px) {
+        margin-left: 12rem;
+    }
+    @media (min-width: 1300px) {
+        margin-left: 14rem;
+    }
 }
 
 .names {

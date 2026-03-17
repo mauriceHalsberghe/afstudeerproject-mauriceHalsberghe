@@ -1,92 +1,98 @@
 .card {
-    background-color: var(--white);
-    border-radius: 0.5rem;
-    max-width: 500px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    position: relative;
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  max-width: 1000px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  position: relative;
+
+  @media (min-width: 1000px) {
+  }
 }
 
 .image {
-    width: 100%;
-    height: 12rem;
-    object-fit: cover;
-    border-radius: 0.5rem 0.5rem 0 0;
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .text {
-    padding: 0.75rem 1rem;
-    position: relative;
+  padding: 0.75rem 1rem;
+  position: relative;
 }
 
 .title {
-    font-size: 16px;
-    font-weight: 600;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .detailData {
-    display: flex;
-    align-items: center;
-    gap: 1rem
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.time, .rating, .ingredient, .ingredientMissing {
-    color: var(--green-200);
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+.time,
+.rating,
+.ingredient,
+.ingredientMissing {
+  color: var(--green-200);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 
-    &::before {
-        content: '';
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        background-color: var(--green-200);
-    }
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: var(--green-200);
+  }
 }
 
 .rating::before {
-    mask: url('/star.svg') no-repeat center;
-    -webkit-mask: url('/star.svg') no-repeat center;
+  mask: url("/star.svg") no-repeat center;
+  -webkit-mask: url("/star.svg") no-repeat center;
 }
 
 .time::before {
-    mask: url('/clock.svg') no-repeat center;
-    -webkit-mask: url('/clock.svg') no-repeat center;
+  mask: url("/clock.svg") no-repeat center;
+  -webkit-mask: url("/clock.svg") no-repeat center;
 }
 
 .ingredient::before {
-    mask: url('/apple.svg') no-repeat center;
-    -webkit-mask: url('/apple.svg') no-repeat center;
+  mask: url("/apple.svg") no-repeat center;
+  -webkit-mask: url("/apple.svg") no-repeat center;
 }
 
 .ingredientMissing::before {
-    background-color: var(--red-100);
-    mask: url('/apple.svg') no-repeat center;
-    -webkit-mask: url('/apple.svg') no-repeat center;
+  background-color: var(--red-100);
+  mask: url("/apple.svg") no-repeat center;
+  -webkit-mask: url("/apple.svg") no-repeat center;
 }
 
 .tags {
-    display: flex;
-    position: absolute;
-    gap: 1rem;
-    left: 0.5rem;
-    top: -2rem;
+  display: flex;
+  position: absolute;
+  gap: 1rem;
+  left: 0.5rem;
+  top: -2rem;
 }
 
 .tag {
-    background-color: var(--green-200);
-    color: var(--white);
-    padding: 0.125rem 0.5rem;
-    border-radius: 5rem;
-    font-size: 14px;
+  background-color: var(--green-200);
+  color: var(--white);
+  padding: 0.125rem 0.5rem;
+  border-radius: 5rem;
+  font-size: 14px;
 }
 
 .avatar {
-    width: 2rem;
-    height: 2rem;
-    position: absolute;
-    top: -2.5rem;
-    right: 0.5rem;
-    border-radius: 3rem;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  top: -2.5rem;
+  right: 0.5rem;
+  border-radius: 3rem;
 }

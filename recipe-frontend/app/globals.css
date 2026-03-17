@@ -19,3 +19,9 @@
 html {
   background-color: var(--gray-100);
 }
+
+@media (min-width: 1000px) {
+  body {
+    display: flex;
+  }
+}
