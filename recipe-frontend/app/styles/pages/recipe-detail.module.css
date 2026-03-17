@@ -3,11 +3,16 @@
     margin-bottom: 8rem;
 
     @media (min-width: 1000px) {
-        margin-left: 12rem;
+        margin-left: 16rem;
         margin-bottom: 1rem;
+        width: 100%;
     }
-    @media (min-width: 1300px) {
-        margin-left: 14rem;
+}
+
+.main {
+    @media (min-width: 1000px) {
+        max-width: 50rem;
+        margin: 0 auto;
     }
 }
 
@@ -53,6 +58,10 @@
     object-fit: cover;
     max-width: 500px;
     border-radius: 0.5rem;
+    @media (min-width: 1000px) {
+        max-width: 50rem; 
+        height: 250px;
+    }
 }
 
 .detailData {

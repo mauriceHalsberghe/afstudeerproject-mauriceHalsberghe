@@ -96,7 +96,7 @@ export default function Preferences() {
     return (
         <main className={HomeStyles.home}>
 
-            <div className={HomeStyles.header}>
+            <div className={HomeStyles.userHeader}>
                 <div className={HomeStyles.userTitle}>
                     <Image
                         className={HomeStyles.avatar}
