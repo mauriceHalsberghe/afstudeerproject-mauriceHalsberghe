@@ -138,9 +138,11 @@ export default function Ingredients() {
             <h1 className={IngredientStyles.title}><AppleIcon />Shopping List</h1>
         </div>
         <div className={IngredientStyles.main}>
-            {[...Array(5)].map((_, i) => (
-                <div key={i} className={IngredientStyles.skeletonRow} />
-            ))}
+          <div className={IngredientStyles.skeletonGrid}>
+              {[...Array(5)].map((_, i) => (
+                  <div key={i} className={IngredientStyles.skeletonRow} />
+              ))}
+          </div>
         </div>
     </main>;
   }

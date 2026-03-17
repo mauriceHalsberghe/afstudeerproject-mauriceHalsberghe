@@ -125,10 +125,12 @@ export default function ShoppingList() {
             <div className={IngredientStyles.header}>
                 <h1 className={IngredientStyles.title}><CartIcon />Shopping List</h1>
             </div>
-            <div className={IngredientStyles.main}>
-                {[...Array(5)].map((_, i) => (
-                    <div key={i} className={IngredientStyles.skeletonRow} />
-                ))}
+            <div className={IngredientStyles.mainList}>
+                <div className={IngredientStyles.skeletonGridShopping}>
+                    {[...Array(5)].map((_, i) => (
+                        <div key={i} className={IngredientStyles.skeletonRow} />
+                    ))}
+                </div>
             </div>
         </main>;
     }
@@ -155,7 +157,7 @@ export default function ShoppingList() {
                 />
             </div>
 
-            <div className={IngredientStyles.main}>
+            <div className={IngredientStyles.mainList}>
                 {uncheckedIngredients.length <= 0 && checkedIngredients.length <= 0 && (
                     <EmptyView
                         title="Empty shopping list"
@@ -165,7 +167,7 @@ export default function ShoppingList() {
                 )}
 
                 {uncheckedIngredients.length > 0 && (
-                    <ul className={IngredientStyles.list}>
+                    <ul className={IngredientStyles.shoppingList}>
                         {uncheckedIngredients.map((ingredient) => (
                             <li 
                                 className={IngredientStyles.ingredient} 
@@ -225,7 +227,7 @@ export default function ShoppingList() {
 
                 {checkedIngredients.length > 0 && (
                     <>
-                        <ul className={`${IngredientStyles.list} ${IngredientStyles.checkedList}`} >
+                        <ul className={`${IngredientStyles.shoppingList} ${IngredientStyles.checkedList}`} >
                             {checkedIngredients.map((ingredient) => (
                                 <li
                                     className={`${IngredientStyles.ingredient} ${IngredientStyles.checkedIngredient}`}
