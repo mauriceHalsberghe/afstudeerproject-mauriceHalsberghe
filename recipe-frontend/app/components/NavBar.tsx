@@ -1,6 +1,8 @@
 "use client";
 
 import NavBarStyles from '@/app/styles/components/navbar.module.css';
+import ButtonStyles from '@/app/styles/components/button.module.css';
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -20,7 +22,8 @@ import { API_URL } from '@/lib/api';
 function NavBar() {
     const pathname = usePathname();
 
-    const isActive = (path: string) => pathname === path;
+    const isActive = (path: string) =>
+        pathname.replaceAll('/', '') === path.replaceAll('/', '');    
 
     const auth = useContext(AuthContext);
 
@@ -86,7 +89,11 @@ function NavBar() {
 
                     </Link>
                 </div>
-                <LogoutButton type="secondaryButton" />
+                {
+                    auth?.user ?
+                    <LogoutButton type="secondaryButton" /> :
+                    <Link className={ButtonStyles.button} href={'/login'}>Log in</Link>
+                }
             </div>
         </nav>
     );
