@@ -235,7 +235,7 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                 </div>
 
                 <div className={AddRecipeStyles.buttons}>
-                    <Link className={ButtonStyles.button} href={'./'}>Cancel</Link>
+                    <Link className={ButtonStyles.button} href={'/'}>Cancel</Link>
                     <button className={ButtonStyles.button} onClick={() => setStep(2)}>Next</button>
                 </div>
             </>

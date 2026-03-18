@@ -84,8 +84,8 @@ export default function LoginPage() {
 
         {error && <p className={AuthStyles.error}>{error}</p>}
 
-        <p className={AuthStyles.text}>No account yet? <Link className={AuthStyles.link} href={'./register'}>Register</Link></p>
-        <Link className={AuthStyles.link} href={'./'}>Continue as a Guest</Link>
+        <p className={AuthStyles.text}>No account yet? <Link className={AuthStyles.link} href={'/register'}>Register</Link></p>
+        <Link className={AuthStyles.link} href={'/'}>Continue as a Guest</Link>
     </div>
   );
 }

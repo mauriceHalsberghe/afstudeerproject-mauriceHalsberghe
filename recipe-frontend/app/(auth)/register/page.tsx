@@ -92,9 +92,9 @@ export default function RegisterPage() {
 
       {error && <p className={AuthStyles.error}>{error}</p>}
 
-      <p className={AuthStyles.text}>Already an account? <Link className={AuthStyles.link} href={'./login'}>Log in</Link></p>
+      <p className={AuthStyles.text}>Already an account? <Link className={AuthStyles.link} href={'/login'}>Log in</Link></p>
 
-      <Link className={AuthStyles.link} href={'./'}>Continue as a Guest</Link>
+      <Link className={AuthStyles.link} href={'/'}>Continue as a Guest</Link>
     </div>
   );
 }
