@@ -138,9 +138,10 @@ export default function Ingredients() {
   if (auth?.loading || loading) {
     return <main className={IngredientStyles.page}>
         <div className={IngredientStyles.header}>
-            <h1 className={IngredientStyles.title}><AppleIcon />Shopping List</h1>
+            <h1 className={IngredientStyles.title}><AppleIcon />Ingredient Inventory</h1>
         </div>
         <div className={IngredientStyles.main}>
+          <span className={IngredientStyles.skeletonText}></span>
           <div className={IngredientStyles.skeletonGrid}>
               {[...Array(5)].map((_, i) => (
                   <div key={i} className={IngredientStyles.skeletonRow} />
