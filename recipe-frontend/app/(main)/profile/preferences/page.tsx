@@ -136,8 +136,25 @@ export default function Preferences() {
 
     return (
         <div className={PrefStyles.pageProfile}>
-            <BackButton url="/profile" absolute={true}/>
-            <h1 className={PrefStyles.titleProfile}>Preferences</h1>
+            <header className={PrefStyles.header}>
+                <BackButton url="/profile" absolute={false}/>
+                <h1 className={PrefStyles.titleProfile}>Preferences</h1>
+                <div>
+                    <div className={PrefStyles.buttonsHeader}>
+                        {!isEditing ? (
+                            <button className={ButtonStyles.button} onClick={handleEdit}>
+                                <PencilIcon />
+                                Edit
+                            </button>
+                        ) : (
+                            <>
+                                <button className={ButtonStyles.button} onClick={handleCancel}>Cancel</button>
+                                <button className={ButtonStyles.button} onClick={handleSave}>Save Changes</button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </header>
 
             <div className={PrefStyles.pageStepProfile}>
                 <h3 className={PrefStyles.subtitle}>Diet</h3>
@@ -171,7 +188,7 @@ export default function Preferences() {
                 </label>
             </div>
 
-            <div className={PrefStyles.buttons}>
+            <div className={PrefStyles.buttonsPref}>
                 {!isEditing ? (
                     <button className={ButtonStyles.button} onClick={handleEdit}>
                         <PencilIcon />

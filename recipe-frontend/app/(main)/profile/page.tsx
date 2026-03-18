@@ -67,7 +67,7 @@ export default function Profile() {
                 <div className={ProfileStyles.links}>
                     <ProfileLink url='/liked-recipes' title='Liked recipes' icon={HeartIcon}/>
                     <ProfileLink url={`/users/${auth.user.username}`} title='Your recipes' icon={ChefIcon}/>
-                    <ProfileLink url='profile/preferences' title='Preferences' icon={PreferencesIcon}/>
+                    <ProfileLink url='/profile/preferences' title='Preferences' icon={PreferencesIcon}/>
                 </div>
 
                 <LogoutButton />

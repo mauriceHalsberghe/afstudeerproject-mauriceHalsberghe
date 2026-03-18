@@ -13,6 +13,7 @@ import PrefStyles from '@/app/styles/pages/preferences.module.css';
 import ButtonStyles from '@/app/styles/components/button.module.css';
 import AvatarUpload from '@/app/components/AvatarUpload';
 import { Allergy, AllergyType, Diet } from "@/types/RecipeTypes";
+import Image from "next/image";
 
 export default function RegisterPreferences() {
     const [step, setStep] = useState(1);
@@ -111,55 +112,59 @@ export default function RegisterPreferences() {
 
     return (
         <div className={PrefStyles.page}>
-            <div className={PrefStyles.welcome}>
-                <h1 className={PrefStyles.title}>Welcome, {auth.user.username}!</h1>
-                <h2>Let&apos;s set up your Profile</h2>
+            <Image className={PrefStyles.image} src={'/ingredients2.jpg'} alt="Ingredients" height={640} width={400} />
+
+            <div className={PrefStyles.main}>
+                <div className={PrefStyles.welcome}>
+                    <h1 className={PrefStyles.title}>Welcome, {auth.user.username}!</h1>
+                    <h2>Let&apos;s set up your Profile</h2>
+                </div>
+
+                <div className={PrefStyles.progress}>
+                    <h3 className={PrefStyles.progressSubtitle}>Step {step} of 3</h3>
+                    <div className={PrefStyles.progressBar}>
+                        <span style={{ width: `${progress}%` }}></span>
+                    </div>
+                </div>
+
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                {step === 1 && (
+                    <div className={PrefStyles.pageStep}>
+                        <h3 className={PrefStyles.subtitle}>Select your diet</h3>
+                        <DietSelector diets={diets} selectedDiet={selectedDiet} onChange={setSelectedDiet} disabled={false}/>
+                        <div className={PrefStyles.buttons}>
+                            <button className={ButtonStyles.button} onClick={() => setStep(2)}>
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {step === 2 && (
+                    <div className={PrefStyles.pageStep}>
+                        <h3 className={PrefStyles.subtitle}>Select your allergies</h3>
+                        <AllergySelector allergies={allergies} selectedAllergies={selectedAllergies} onToggle={toggleAllergy} disabled={false} />
+                        <div className={PrefStyles.buttons}>
+                            <button className={ButtonStyles.button} onClick={() => setStep(1)}>Back</button>
+                            <button className={ButtonStyles.button} onClick={() => setStep(3)}>
+                                {selectedAllergies.length < 1 ? 'Skip' : 'Next'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {step === 3 && (
+                    <div className={PrefStyles.pageStep}>
+                        <h3 className={PrefStyles.subtitle}>Add an avatar</h3>
+                        <AvatarUpload onUploadSuccess={() => {}} size={192} userId={loggedUserId} username={auth.user.username} />
+                        <div className={PrefStyles.buttons}>
+                            <button className={ButtonStyles.button} onClick={() => setStep(2)}>Back</button>
+                            <button className={ButtonStyles.button} onClick={handleComplete}>Complete</button>
+                        </div>
+                    </div>
+                )}
             </div>
-
-            <div className={PrefStyles.progress}>
-                <h3 className={PrefStyles.progressSubtitle}>Step {step} of 3</h3>
-                <div className={PrefStyles.progressBar}>
-                    <span style={{ width: `${progress}%` }}></span>
-                </div>
-            </div>
-
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            {step === 1 && (
-                <div className={PrefStyles.pageStep}>
-                    <h3 className={PrefStyles.subtitle}>Select your diet</h3>
-                    <DietSelector diets={diets} selectedDiet={selectedDiet} onChange={setSelectedDiet} disabled={false}/>
-                    <div className={PrefStyles.buttons}>
-                        <button className={ButtonStyles.button} onClick={() => setStep(2)}>
-                            {selectedDiet === null ? 'Skip' : 'Next'}
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {step === 2 && (
-                <div className={PrefStyles.pageStep}>
-                    <h3 className={PrefStyles.subtitle}>Select your allergies</h3>
-                    <AllergySelector allergies={allergies} selectedAllergies={selectedAllergies} onToggle={toggleAllergy} disabled={false} />
-                    <div className={PrefStyles.buttons}>
-                        <button className={ButtonStyles.button} onClick={() => setStep(1)}>Back</button>
-                        <button className={ButtonStyles.button} onClick={() => setStep(3)}>
-                            {selectedAllergies.length < 1 ? 'Skip' : 'Next'}
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {step === 3 && (
-                <div className={PrefStyles.pageStep}>
-                    <h3 className={PrefStyles.subtitle}>Add an avatar</h3>
-                    <AvatarUpload onUploadSuccess={() => {}} size={192} userId={loggedUserId} username={auth.user.username} />
-                    <div className={PrefStyles.buttons}>
-                        <button className={ButtonStyles.button} onClick={() => setStep(2)}>Back</button>
-                        <button className={ButtonStyles.button} onClick={handleComplete}>Complete</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
