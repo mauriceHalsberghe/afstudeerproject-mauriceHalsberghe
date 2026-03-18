@@ -21,6 +21,14 @@ public class UsersController : ControllerBase
         _context = context;
     }
 
+    [HttpGet("usernames")]
+    public async Task<ActionResult<IEnumerable<string>>> GetUsernames()
+    {
+        return await _context.Users
+            .Select(u => u.Username)
+            .ToListAsync();
+    }
+
     [Authorize]
     [HttpPost("preferences")]
     public async Task<IActionResult> UpdatePreferences(UpdateUserPreferencesDto dto)

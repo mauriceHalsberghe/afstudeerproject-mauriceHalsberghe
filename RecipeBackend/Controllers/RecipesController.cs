@@ -330,4 +330,15 @@ public class RecipesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("slugs")]
+    public async Task<ActionResult<IEnumerable<object>>> GetSlugs()
+    {
+        return await _context.Recipes
+            .Select(r => new { 
+                id = r.Id.ToString(), 
+                slug = r.Title.ToLower().Replace(" ", "-") 
+            })
+            .ToListAsync();
+    }
 }
