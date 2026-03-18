@@ -3,13 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   devIndicators: false,
   output: "export",
+  trailingSlash: true,
   
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "5041",
+        protocol: "https",
+        hostname: "recipebackend-api.azurewebsites.net",
         pathname: "/uploads/**",
       },
     ],

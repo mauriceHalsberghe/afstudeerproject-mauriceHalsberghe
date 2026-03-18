@@ -10,3 +10,6 @@ appsettings.Development.json
 
 .DS_Store
 Thumbs.db
+
+/publish
+deploy.zip
