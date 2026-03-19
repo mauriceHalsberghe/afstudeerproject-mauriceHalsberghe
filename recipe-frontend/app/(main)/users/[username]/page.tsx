@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Recipe } from "@/types/RecipeTypes";
 import { User } from "@/types/UserTypes";
 
-export default function UserRecipesPage({ username }: { username: string }) {
+export default function UserRecipesPage() {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -33,6 +33,9 @@ export default function UserRecipesPage({ username }: { username: string }) {
     });
 
     const params = useParams();
+    const username = params.username;
+    console.log(username);
+    
 
     const auth = useContext(AuthContext);
     const loggedUserId = auth?.user?.id;
