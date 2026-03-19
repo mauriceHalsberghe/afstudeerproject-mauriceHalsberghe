@@ -29,10 +29,13 @@ public class RecipesController : ControllerBase
         int? cuisineId = null,
         bool onlyUsers = false,
         bool onlyInStock = false,
-        int sortBy = 3)
+        int sortBy = 3,
+        bool filterByDiet = false,  
+        bool filterByAllergens = false) 
     {
         var query = _context.Recipes
             .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
             .Include(r => r.DishType)
@@ -52,6 +55,34 @@ public class RecipesController : ControllerBase
         if (onlyUsers)
             query = query.Where(r => r.UserId != null);
 
+        if (filterByDiet && currentUserId.HasValue)
+        {
+            var user = await _context.Users.FindAsync(currentUserId.Value);
+            if (user?.DietId != null)
+                query = query.Where(r => r.DietId == user.DietId);
+        }
+
+        if (filterByAllergens && currentUserId.HasValue)
+        {
+            var allergies = await _context.Allergies
+                .Where(a => a.UserId == currentUserId.Value)
+                .ToListAsync();
+
+            var blockedIngredientIds = allergies
+                .Where(a => a.IngredientId != null)
+                .Select(a => a.IngredientId!.Value)
+                .ToHashSet();
+
+            var blockedIngredientTypeIds = allergies
+                .Where(a => a.IngredientTypeId != null)
+                .Select(a => a.IngredientTypeId!.Value)
+                .ToHashSet();
+
+            query = query.Where(r => r.RecipeIngredients.All(ri =>
+                !blockedIngredientIds.Contains(ri.IngredientId) &&
+                (ri.Ingredient == null || !blockedIngredientTypeIds.Contains(ri.Ingredient.IngredientTypeId))
+            ));
+        }
 
         var projected = query.Select(r => new RecipeDto
         {
