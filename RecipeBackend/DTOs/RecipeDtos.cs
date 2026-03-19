@@ -1,5 +1,11 @@
 namespace RecipeBackend.DTOs;
 
+public class PaginatedRecipesDto
+{
+    public List<RecipeDto> Recipes { get; set; } = new();
+    public int TotalCount { get; set; }
+}
+
 public class RecipeDto
 {
     public int Id { get; set; }
@@ -35,6 +41,7 @@ public class DietDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }
+    public string? Description { get; set; }
 }
 
 public class CuisineDto

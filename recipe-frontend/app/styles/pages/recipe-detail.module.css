@@ -1,6 +1,19 @@
 .page {
     padding: 1rem;
     margin-bottom: 8rem;
+
+    @media (min-width: 1000px) {
+        margin-left: 16rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+}
+
+.main {
+    @media (min-width: 1000px) {
+        max-width: 50rem;
+        margin: 0 auto;
+    }
 }
 
 .header {
@@ -45,6 +58,10 @@
     object-fit: cover;
     max-width: 500px;
     border-radius: 0.5rem;
+    @media (min-width: 1000px) {
+        max-width: 50rem; 
+        height: 250px;
+    }
 }
 
 .detailData {

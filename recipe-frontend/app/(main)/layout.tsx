@@ -8,8 +8,8 @@ export default function MainLayout({
 }) {
   return (
     <>
-      {children}
       <NavBar />
+      {children}
     </>
   );
 }

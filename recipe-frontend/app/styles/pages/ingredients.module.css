@@ -1,9 +1,21 @@
 .page {
   padding-bottom: 10rem;
+
+  @media (min-width: 1000px) {
+    margin-left: 16rem;
+    width: 100%;
+  }
 }
 
-.main {
+.main, .mainList {
   padding: 1rem 2rem;
+}
+
+.mainList {
+  @media (min-width: 1000px) {
+    margin: auto;
+    max-width: 30rem;
+  }
 }
 
 .header {
@@ -112,6 +124,29 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  @media (min-width: 1000px) {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.shoppingList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  @media (min-width: 1000px) {
+    .ingredient {
+      min-height: 3rem;
+    }
+  }
 }
 
 .ingredient {
@@ -124,6 +159,11 @@
   padding: 0 1rem;
   font-size: 1.1rem;
   min-height: 2.5rem;
+  cursor: pointer;
+
+  @media (min-width: 1000px) {
+    min-height: 4rem;
+  }
 }
 
 .ingredientSign {
@@ -152,6 +192,7 @@
 .checkedList {
   border-top: 2px solid var(--gray-200);
   padding-top: 2rem;
+  margin-top: 2rem;
 }
 
 .checkedIngredient {
@@ -198,6 +239,10 @@
   p {
     text-align: center;
   }
+
+  @media (min-width: 1000px) {
+    margin-left: 8rem;
+  }
 }
 
 .buttons {
@@ -223,16 +268,81 @@
   color: var(--green-200);
 }
 
+@media (min-width: 1000px) {
+  .deleteBtn:hover {
+    color: var(--red-100);
+  }
+
+  .editBtn:hover {
+    color: var(--green-200);
+  }
+}
+
+.skeletonGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+
+  @media (min-width: 1000px) {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.skeletonGridShopping {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3rem;
+  gap: 0.5rem;
+}
+
 .skeletonRow {
   height: 2.5rem;
   border-radius: 0.5rem;
-  background: linear-gradient(90deg, var(--white) 25%, var(--gray-100) 50%, var(--white) 75%);
+  background: linear-gradient(
+    100deg,
+    var(--gray-200),
+    var(--gray-200) 50%,
+    var(--white) 60%,
+    var(--gray-200) 70%
+  );
   background-size: 200% 100%;
-  animation: load 3s infinite;
-  margin-bottom: 0.5rem;
+  animation: load 1s ease-out infinite;
+  @media (min-width: 1000px) {
+    min-height: 4rem;
+  }
+}
+
+.skeletonText {
+  display: block;
+  height: 1.5rem;
+  width: 8rem;
+  margin-top: 7rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(
+    100deg,
+    var(--gray-200),
+    var(--gray-200) 50%,
+    var(--white) 60%,
+    var(--gray-200) 70%
+  );
+  background-size: 200% 100%;
+  animation: load 1s ease-out infinite;
 }
 
 @keyframes load {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position-x: 200%;
+  }
+  100% {
+    background-position-x: 0%;
+  }
 }

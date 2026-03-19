@@ -136,11 +136,28 @@ export default function Preferences() {
 
     return (
         <div className={PrefStyles.pageProfile}>
-            <BackButton url="/profile" absolute={true}/>
-            <h1 className={PrefStyles.titleProfile}>Preferences</h1>
+            <header className={PrefStyles.header}>
+                <BackButton url="/profile" absolute={false}/>
+                <h1 className={PrefStyles.titleProfile}>Preferences</h1>
+                <div>
+                    <div className={PrefStyles.buttonsHeader}>
+                        {!isEditing ? (
+                            <button className={ButtonStyles.button} onClick={handleEdit}>
+                                <PencilIcon />
+                                Edit
+                            </button>
+                        ) : (
+                            <>
+                                <button className={ButtonStyles.button} onClick={handleCancel}>Cancel</button>
+                                <button className={ButtonStyles.button} onClick={handleSave}>Save Changes</button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </header>
 
             <div className={PrefStyles.pageStepProfile}>
-                <h3 className={PrefStyles.subtitle}>Diet</h3>
+                <h3 className={PrefStyles.subtitle}>Diet type</h3>
                 <DietSelector
                     diets={diets}
                     selectedDiet={selectedDiet}
@@ -148,15 +165,21 @@ export default function Preferences() {
                     disabled={!isEditing}
                 />
 
-                <label className="switch">
-                    Show only recipes of your diet
-                    <input type="checkbox" />
-                    <span className="slider round"></span>
+                <label className={PrefStyles.switchRowDiet}>
+                    <span className={PrefStyles.labelText}>
+                        <h2>Filter by diet</h2>
+                        Show only recipes of your diet
+                    </span>
+
+                    <div className={PrefStyles.switch}>
+                        <input type="checkbox" />
+                        <span className={PrefStyles.slider}></span>
+                    </div>
                 </label>
             </div>
 
             <div className={PrefStyles.pageStepProfile}>
-                <h3 className={PrefStyles.subtitle}>Allergies</h3>
+                <h3 className={PrefStyles.subtitle}>Allergies & Intolerances</h3>
                 <AllergySelector
                     allergies={ALLERGIES}
                     selectedAllergies={selectedAllergies}
@@ -164,14 +187,20 @@ export default function Preferences() {
                     disabled={!isEditing}
                 />
 
-                <label className="switch">
-                    Show only recipes without allergies
-                    <input type="checkbox" />
-                    <span className="slider round"></span>
+                    <label className={PrefStyles.switchRowAllergy}>
+                    <span className={PrefStyles.labelText}>
+                        <h2>Exclude recipes with allergens</h2>
+                        Hide recipes containing your selected allergens
+                    </span>
+
+                    <div className={PrefStyles.switch}>
+                        <input type="checkbox" />
+                        <span className={PrefStyles.slider}></span>
+                    </div>
                 </label>
             </div>
 
-            <div className={PrefStyles.buttons}>
+            <div className={PrefStyles.buttonsPref}>
                 {!isEditing ? (
                     <button className={ButtonStyles.button} onClick={handleEdit}>
                         <PencilIcon />

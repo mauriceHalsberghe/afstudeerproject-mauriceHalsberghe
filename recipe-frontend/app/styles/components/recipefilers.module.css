@@ -6,7 +6,6 @@
     padding-left: 2rem;
     font-size: 1.2rem;
     width: 100%;
-    max-width: 500px;
     input {
         width: 100%;
         padding: 0.25rem 0;
@@ -50,7 +49,6 @@
 
 .filterWrapper {
     position: relative;
-    max-width: 500px;
 }
 
 .filterWrapper::after {

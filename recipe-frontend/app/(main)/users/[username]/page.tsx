@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Recipe } from "@/types/RecipeTypes";
 import { User } from "@/types/UserTypes";
 
-export default function Preferences() {
+export default function UserRecipesPage({ username }: { username: string }) {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -33,7 +33,6 @@ export default function Preferences() {
     });
 
     const params = useParams();
-    const username = params.username;
 
     const auth = useContext(AuthContext);
     const loggedUserId = auth?.user?.id;
@@ -96,7 +95,7 @@ export default function Preferences() {
     return (
         <main className={HomeStyles.home}>
 
-            <div className={HomeStyles.header}>
+            <div className={HomeStyles.userHeader}>
                 <div className={HomeStyles.userTitle}>
                     <Image
                         className={HomeStyles.avatar}

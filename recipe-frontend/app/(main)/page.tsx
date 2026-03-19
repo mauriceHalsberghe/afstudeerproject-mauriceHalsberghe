@@ -1,20 +1,25 @@
 "use client";
 
 import { API_URL } from "@/lib/api";
-
-import { useContext, useEffect, useState } from "react";
-
+import { useContext, useEffect, useRef, useState, useCallback } from "react";
 import RecipeCard from '../components/RecipeCard';
 import RecipeFilters, { RecipeFiltersState } from "../components/RecipeFilters";
-
 import HomeStyles from '@/app/styles/pages/home.module.css';
 import { AuthContext } from '@/context/AuthContext';
 import EmptyView from "../components/EmptyView";
 import { Recipe } from "@/types/RecipeTypes";
 
+const PAGE_SIZE = 9;
+
 export default function Home() {
+  const auth = useContext(AuthContext);
+  const loggedUserId = auth?.user?.id;
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
 
   const [filters, setFilters] = useState<RecipeFiltersState>({
     search: "",
@@ -26,90 +31,84 @@ export default function Home() {
     selectedSort: 3,
   });
 
-  const auth = useContext(AuthContext);
-  const loggedUserId = auth?.user?.id;
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  const fetchRecipes = async () => {
-    setLoading(true);
+  const fetchRecipes = useCallback(async (isInitial = false) => {
+    const currentPage = isInitial ? 1 : page;
+    
+    const params = new URLSearchParams({
+      currentUserId: loggedUserId?.toString() ?? "",
+      page: currentPage.toString(),
+      pageSize: PAGE_SIZE.toString(),
+      search: filters.search,
+      sortBy: filters.selectedSort.toString(),
+      onlyUsers: filters.onlyUsers.toString(),
+      onlyInStock: filters.onlyInStock.toString(),
+    });
+    if (filters.selectedDiet) params.set("dietId", filters.selectedDiet.toString());
+    if (filters.selectedCuisine) params.set("cuisineId", filters.selectedCuisine.toString());
+
     try {
-      const res = await fetch(
-        `${API_URL}/api/recipes?currentUserId=${loggedUserId ?? ""}`
-      );
-      const data: Recipe[] = await res.json();
-      setRecipes(data);
+      const res = await fetch(`${API_URL}/api/recipes?${params}`);
+      const data = await res.json();
+
+      setRecipes(prev => {
+        if (isInitial) return data.recipes;
+
+        const existingIds = new Set(prev.map(r => r.id));
+        const uniqueNewRecipes = data.recipes.filter(
+          (recipe: Recipe) => !existingIds.has(recipe.id)
+        );
+        return [...prev, ...uniqueNewRecipes];
+      });
+      const moreAvailable = (currentPage * PAGE_SIZE) < data.totalCount;
+      setHasMore(moreAvailable);
+
+      setPage(prev => isInitial ? 2 : prev + 1);
+
     } catch (err) {
-      console.error(err);
+    console.error("Failed to fetch recipes:", err);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
-  };
-
+  }, [filters, loggedUserId, page]);
 
   useEffect(() => {
     if (auth?.loading) return;
-    fetchRecipes();
-  }, [loggedUserId, auth?.loading]);
+    setLoading(true);
+    fetchRecipes(true);
+  }, [filters, loggedUserId, auth?.loading]);
 
-  const filteredRecipes = recipes
-    .filter((recipe) => {
-      const matchesDiet =
-        filters.selectedDiet === 0 ||
-        recipe.diet?.id === filters.selectedDiet;
-
-      const matchesCuisine =
-        filters.selectedCuisine === 0 ||
-        recipe.cuisine?.id === filters.selectedCuisine;
-
-      const matchesTitle =
-        filters.search === "" ||
-        recipe.title.toLowerCase().includes(filters.search.toLowerCase());
-
-      const matchesOnlyUsers =
-        !filters.onlyUsers || recipe.user !== null;
-
-      const matchesOnlyIngredients = 
-        !filters.onlyInStock || recipe.missingIngredientCount === 0;
-
-      return (
-        matchesDiet &&
-        matchesCuisine &&
-        matchesTitle &&
-        matchesOnlyUsers &&
-        matchesOnlyIngredients
-      );
-    })
-    .sort((a, b) => {
-      if (filters.selectedSort === 1) {
-        return (b.averageRating ?? 0) - (a.averageRating ?? 0);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasMore && !loadingMore && !loading) {
+        setLoadingMore(true);
+        fetchRecipes();
       }
+    }, { threshold: 0.1 });
 
-      else if (filters.selectedSort === 2) {
-        return a.title.localeCompare(b.title);
-      }
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loading, fetchRecipes]);
 
-      else if (filters.selectedSort === 3) {
-      const missingA = a.missingIngredientCount ?? Infinity;
-      const missingB = b.missingIngredientCount ?? Infinity;
-      return missingA - missingB;
-    }
-
-      return 0;
-    });
-
-  if (auth?.loading || loading) {
-    return <main className={HomeStyles.home}>
-        <div className={HomeStyles.header}>
-        </div>
+  if (auth?.loading || (loading && recipes.length === 0)) {
+    return (
+      <main className={HomeStyles.home}>
+        <div className={HomeStyles.header} />
         <div className={HomeStyles.main}>
-            {[...Array(3)].map((_, i) => (
-                <div key={i} className={HomeStyles.skeletonCard}>
-                  <span className={HomeStyles.skeletonCardInfo}>
-                    <span></span>
-                  </span>
-                </div>
+          <div className={HomeStyles.skeletonGrid}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className={HomeStyles.skeletonCard}>
+                <span className={HomeStyles.skeletonCardInfo}>
+                  <span></span>
+                </span>
+              </div>
             ))}
+          </div>
         </div>
-    </main>;
+      </main>
+    );
   }
 
   return (
@@ -118,20 +117,25 @@ export default function Home() {
         <RecipeFilters filters={filters} onChange={setFilters} onlyUsersFilter={true} />
       </div>
 
-      {loading ? (
-        <p>Loading recipes...</p>
+      {recipes.length === 0 ? (
+        <EmptyView title="No recipes found" text="No recipes match your search" icon="recipe" btnUrl="./" btnText="Back" />
       ) : (
-        
-        filteredRecipes.length === 0 ? 
-        <EmptyView title="No recipes found" text="No recipes match your search" icon="recipe" btnUrl="./" btnText="Back"/>
-        :
         <ul className={HomeStyles.recipes}>
-          {filteredRecipes.map((recipe) => (
+          {recipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </ul>
-        
       )}
+
+      <div ref={loaderRef}>
+
+      {loadingMore && <p>Loading more...</p>}
+
+      {!hasMore && recipes.length > 0 && (
+        <p>All recipes loaded</p>
+      )}
+        
+      </div>
     </main>
   );
 }

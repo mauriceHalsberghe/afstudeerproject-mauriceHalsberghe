@@ -2,17 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-
+  trailingSlash: true,
+  
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "5041",
+        protocol: "https",
+        hostname: "recipebackend-api.azurewebsites.net",
+        // protocol: "http",
+        // hostname: "localhost",
         pathname: "/uploads/**",
       },
     ],
-    dangerouslyAllowLocalIP: true,
   },
 
   turbopack: {

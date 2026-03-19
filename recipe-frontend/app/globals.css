@@ -8,14 +8,28 @@
   --black: #191919;
   --white: hsl(0, 0%, 98%);
 
+  --green-50: #ddffea;
   --green-100: #60ca86;
   --green-200: #3a8756;
   --green-300: #1a3d27;
 
+  --red-50: #fecaca;
   --red-100: #bb5252;
   --red-200: #632c2c;
+
+  --blue-50: #ddeaff;
+  --blue-100: #5277bb;
+
+  --yellow-50: #fffadd;
+  --yellow-100: #cbb771;
 }
 
 html {
   background-color: var(--gray-100);
+}
+
+@media (min-width: 1000px) {
+  body {
+    display: flex;
+  }
 }

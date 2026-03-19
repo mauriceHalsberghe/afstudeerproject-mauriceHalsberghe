@@ -11,6 +11,7 @@ import AuthStyles from '@/app/styles/pages/auth.module.css';
 import ButtonStyles from '@/app/styles/components/button.module.css';
 
 import LogoIcon from "@/public/mealio_logo.svg"
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,49 +44,52 @@ export default function LoginPage() {
 
   return (
     <div className={AuthStyles.page}>
-        <LogoIcon className={AuthStyles.logo} />
-        <h1 className={AuthStyles.title}>Welcome to <span>Mealio</span></h1>
-        <h2 className={AuthStyles.subtitle}>Log into your account</h2>
+        <Image className={AuthStyles.image} src={'/ingredients2.jpg'} alt="Ingredients" height={640} width={400} />
+        <div className={AuthStyles.main}>
+            <LogoIcon className={AuthStyles.logo} />
+            <h1 className={AuthStyles.title}>Welcome to <span>Mealio</span></h1>
+            <h2 className={AuthStyles.subtitle}>Log into your account</h2>
 
-        <form className={AuthStyles.form} onSubmit={handleSubmit}>
-            
-            <div className={AuthStyles.inputs}>
-                <label className={AuthStyles.label} htmlFor="email">
-                    Email
-                    <input
-                        className={AuthStyles.input}
-                        required
-                        placeholder="Email"
-                        type="email"
-                        id="email"
-                        onChange={(e) =>
-                            setForm({ ...form, email: e.target.value })
+            <form className={AuthStyles.form} onSubmit={handleSubmit}>
+                
+                <div className={AuthStyles.inputs}>
+                    <label className={AuthStyles.label} htmlFor="email">
+                        Email
+                        <input
+                            className={AuthStyles.input}
+                            required
+                            placeholder="Email"
+                            type="email"
+                            id="email"
+                            onChange={(e) =>
+                                setForm({ ...form, email: e.target.value })
+                            }
+                        />
+                    </label>
+
+                    <label className={AuthStyles.label} htmlFor="password">
+                        Password
+                        <input
+                            className={AuthStyles.input}
+                            required
+                            placeholder="Password"
+                            type="password"
+                            id="password"
+                            onChange={(e) =>
+                                setForm({ ...form, password: e.target.value })
                         }
-                    />
-                </label>
+                        />
+                    </label>
+                </div>
 
-                <label className={AuthStyles.label} htmlFor="password">
-                    Password
-                    <input
-                        className={AuthStyles.input}
-                        required
-                        placeholder="Password"
-                        type="password"
-                        id="password"
-                        onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
-                    }
-                    />
-                </label>
-            </div>
+                <button className={ButtonStyles.button} type="submit">Login</button>
+            </form>
 
-            <button className={ButtonStyles.button} type="submit">Login</button>
-        </form>
+            {error && <p className={AuthStyles.error}>{error}</p>}
 
-        {error && <p className={AuthStyles.error}>{error}</p>}
-
-        <p className={AuthStyles.text}>No account yet? <Link className={AuthStyles.link} href={'./register'}>Register</Link></p>
-        <Link className={AuthStyles.link} href={'./'}>Continue as a Guest</Link>
+            <p className={AuthStyles.text}>No account yet? <Link className={AuthStyles.link} href={'/register'}>Register</Link></p>
+            <Link className={AuthStyles.link} href={'/'}>Continue as a Guest</Link>
+        </div>
     </div>
   );
 }

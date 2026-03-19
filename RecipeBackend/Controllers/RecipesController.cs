@@ -20,61 +20,83 @@ public class RecipesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes(int? currentUserId)
+    public async Task<ActionResult<PaginatedRecipesDto>> GetRecipes(
+        int? currentUserId,
+        int page = 1,
+        int pageSize = 4,
+        string? search = null,
+        int? dietId = null,
+        int? cuisineId = null,
+        bool onlyUsers = false,
+        bool onlyInStock = false,
+        int sortBy = 3)
     {
-        var recipes = await _context.Recipes
+        var query = _context.Recipes
             .Include(r => r.RecipeIngredients)
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
             .Include(r => r.DishType)
             .Include(r => r.User)
             .Include(r => r.Reviews)
-            .Select(r => new RecipeDto
-            {
-                Id = r.Id,
-                Title = r.Title,
-                ImageUrl = r.ImageUrl,
-                Time = r.Time,
-                DietId = r.DietId,
-                CuisineId = r.CuisineId,
-                DishTypeId = r.DishTypeId,
-                Diet = r.Diet == null ? null : new DietDto
-                {
-                    Id = r.Diet.Id,
-                    Name = r.Diet.Name
-                },
-                Cuisine = r.Cuisine == null ? null : new CuisineDto
-                {
-                    Id = r.Cuisine.Id,
-                    Name = r.Cuisine.Name
-                },
-                DishType = r.DishType == null ? null : new DishTypeDto
-                {
-                    Id = r.DishType.Id,
-                    Name = r.DishType.Name
-                },
-                User = r.User == null ? null : new UserSummaryDto
-                {
-                    Id = r.User.Id,
-                    Username = r.User.Username,
-                    Avatar = r.User.Avatar
-                },
-                LikeCount = r.Likes.Count(),
-                IsLikedByCurrentUser = currentUserId.HasValue && 
-                    r.Likes.Any(l => l.UserId == currentUserId.Value),
-                    
-                AverageRating = r.Reviews.Any()
-                    ? Math.Round(r.Reviews.Average(rv => rv.Rating) / 2.0, 1)
-                    : (double?)null,
-                MissingIngredientCount = currentUserId.HasValue
-                    ? r.RecipeIngredients
-                        .Count(ri => !_context.InventoryIngredients
-                            .Any(ii => ii.UserId == currentUserId.Value && ii.IngredientId == ri.IngredientId))
-                    : (int?)null,
-            })
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(r => r.Title != null && r.Title.ToLower().Contains(search.ToLower()));
+
+        if (dietId.HasValue && dietId > 0)
+            query = query.Where(r => r.DietId == dietId);
+
+        if (cuisineId.HasValue && cuisineId > 0)
+            query = query.Where(r => r.CuisineId == cuisineId);
+
+        if (onlyUsers)
+            query = query.Where(r => r.UserId != null);
+
+
+        var projected = query.Select(r => new RecipeDto
+        {
+            Id = r.Id,
+            Title = r.Title,
+            ImageUrl = r.ImageUrl,
+            Time = r.Time,
+            DietId = r.DietId,
+            CuisineId = r.CuisineId,
+            DishTypeId = r.DishTypeId,
+            Diet = r.Diet == null ? null : new DietDto { Id = r.Diet.Id, Name = r.Diet.Name },
+            Cuisine = r.Cuisine == null ? null : new CuisineDto { Id = r.Cuisine.Id, Name = r.Cuisine.Name },
+            DishType = r.DishType == null ? null : new DishTypeDto { Id = r.DishType.Id, Name = r.DishType.Name },
+            User = r.User == null ? null : new UserSummaryDto { Id = r.User.Id, Username = r.User.Username, Avatar = r.User.Avatar },
+            LikeCount = r.Likes.Count(),
+            IsLikedByCurrentUser = currentUserId.HasValue && r.Likes.Any(l => l.UserId == currentUserId.Value),
+            AverageRating = r.Reviews.Any()
+                ? Math.Round(r.Reviews.Average(rv => rv.Rating) / 2.0, 1)
+                : (double?)null,
+            MissingIngredientCount = currentUserId.HasValue
+                ? r.RecipeIngredients.Count(ri => !_context.InventoryIngredients
+                    .Any(ii => ii.UserId == currentUserId.Value && ii.IngredientId == ri.IngredientId))
+                : (int?)null,
+        });
+
+        projected = sortBy switch
+        {
+            1 => projected.OrderByDescending(r => r.AverageRating ?? 0),
+            2 => projected.OrderBy(r => r.Title),
+            3 => projected.OrderBy(r => r.MissingIngredientCount ?? int.MaxValue),
+            _ => projected
+        };
+
+        if (onlyInStock)
+            projected = projected.Where(r => r.MissingIngredientCount == 0);
+
+        var totalCount = await projected.CountAsync();
+
+        var recipes = await projected
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return Ok(recipes);
+
+        return Ok(new PaginatedRecipesDto { Recipes = recipes, TotalCount = totalCount });
     }
 
     [HttpGet("{id}")]
@@ -307,5 +329,16 @@ public class RecipesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    [HttpGet("slugs")]
+    public async Task<ActionResult<IEnumerable<object>>> GetSlugs()
+    {
+        return await _context.Recipes
+            .Select(r => new { 
+                id = r.Id.ToString(), 
+                slug = r.Title.ToLower().Replace(" ", "-") 
+            })
+            .ToListAsync();
     }
 }
