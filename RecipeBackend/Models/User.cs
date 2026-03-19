@@ -10,4 +10,7 @@ public class User
     public string? Bio { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public int? DietId { get; set; } 
+
+    public bool FilterByDiet { get; set; } = false;
+    public bool FilterByAllergens { get; set; } = false;
 }
