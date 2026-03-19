@@ -1,10 +1,12 @@
 .home {
   padding: 2rem;
-  padding-bottom: 7rem;
+  padding-bottom: 10rem;
   width: 100%;
+  position: relative;
 
   @media (min-width: 1000px) {
     margin-left: 16rem;
+    min-height: 100vh;
   }
   @media (min-width: 1400px) {
     padding: 2rem 6rem 5rem 6rem;
@@ -114,5 +116,17 @@
   }
   100% {
     background-position-x: 0%;
+  }
+}
+
+.message {
+  color: var(--gray-300);
+  font-style: italic;
+  position: absolute;
+  bottom: 6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  @media (min-width: 1000px) {
+    bottom: 1rem;
   }
 }

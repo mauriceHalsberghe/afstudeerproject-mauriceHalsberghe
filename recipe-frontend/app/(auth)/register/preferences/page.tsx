@@ -95,7 +95,9 @@ export default function RegisterPreferences() {
                 body: JSON.stringify({
                     dietId: selectedDiet,
                     ingredientAllergyIds,
-                    ingredientTypeAllergyIds
+                    ingredientTypeAllergyIds,
+                    filterByDiet: selectedDiet !== null,
+                    filterByAllergens: selectedAllergies.length > 0,
                 })
             });
 
