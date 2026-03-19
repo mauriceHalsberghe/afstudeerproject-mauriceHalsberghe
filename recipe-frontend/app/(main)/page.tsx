@@ -170,13 +170,8 @@ export default function Home() {
       )}
 
       <div ref={loaderRef}>
-
-      {loadingMore && <p>Loading more...</p>}
-
-      {!hasMore && recipes.length > 0 && (
-        <p>All recipes loaded</p>
-      )}
-        
+        {loadingMore && <p className={HomeStyles.message}>Loading more...</p>}
+        {!hasMore && recipes.length > 0 && (<p className={HomeStyles.message}>All recipes loaded</p>)}
       </div>
     </main>
   );
