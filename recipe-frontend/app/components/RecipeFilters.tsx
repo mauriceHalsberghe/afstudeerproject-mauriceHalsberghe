@@ -20,9 +20,11 @@ type Props = {
   filters: RecipeFiltersState;
   onlyUsersFilter: boolean;
   onChange: (filters: RecipeFiltersState) => void;
+  userDietId?: number | null;       // new
+  filterByDiet?: boolean;   
 };
 
-export default function RecipeFilters({ filters, onChange, onlyUsersFilter }: Props) {
+export default function RecipeFilters({ filters, onChange, onlyUsersFilter, userDietId, filterByDiet }: Props) {
   const [diets, setDiets] = useState<Diet[]>([]);
   const [cuisines, setCuisines] = useState<Cuisine[]>([]);
 
@@ -64,18 +66,21 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter }: Pr
       <div className={filtersStyles.filterWrapper}>
 
         <div className={filtersStyles.filters}>
-          <select
-            value={filters.selectedDiet}
-            onChange={(e) => update({ selectedDiet: Number(e.target.value) })}
-            className={filtersStyles.select}
-          >
-            <option value={0}>All Diets</option>
-            {diets.map((diet) => (
-              <option key={diet.id} value={diet.id}>
-                {diet.name}
-              </option>
-            ))}
-          </select>
+
+          {!(filterByDiet && userDietId) && (
+            <select
+              value={filters.selectedDiet}
+              onChange={(e) => update({ selectedDiet: Number(e.target.value) })}
+              className={filtersStyles.select}
+            >
+              <option value={0}>All Diets</option>
+              {diets.map((diet) => (
+                <option key={diet.id} value={diet.id}>
+                  {diet.name}
+                </option>
+              ))}
+            </select>
+          )}
 
           <select
             value={filters.selectedCuisine}
