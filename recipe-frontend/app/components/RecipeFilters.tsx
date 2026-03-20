@@ -24,7 +24,7 @@ type Props = {
   filters: RecipeFiltersState;
   onlyUsersFilter: boolean;
   onChange: (filters: RecipeFiltersState) => void;
-  userDietId?: number | null;       // new
+  userDietId?: number | null;
   filterByDiet?: boolean;   
 };
 
@@ -57,7 +57,6 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter, user
     filters.onlyInStock ||
     filters.onlyUsers ||
     filters.selectedSort !== 3;
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -198,6 +197,7 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter, user
           }
 
           <select
+            value={filters.selectedSort}
             onChange={(e) => update({ selectedSort: Number(e.target.value) })}
             className={filtersStyles.select}
             onMouseDown={() => setSelectOpen(true)}
