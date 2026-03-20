@@ -70,6 +70,7 @@ export default function EditRecipe() {
         servings: String(recipe.servings ?? ""),
         dietId: recipe.diet?.id,
         cuisineId: recipe.cuisine?.id,
+        dishTypeId: recipe.dishType?.id,
         imageUrl: recipe.imageUrl ?? "/recipe.jpg",
         steps: recipe.steps
             .sort((a, b) => a.stepNumber - b.stepNumber)
@@ -100,6 +101,7 @@ export default function EditRecipe() {
             time: values.time ? parseInt(values.time) : null,
             servings: values.servings ? parseInt(values.servings) : null,
             dietId: values.dietId ?? null,
+            dishTypeId: values.dishTypeId ?? null,
             cuisineId: values.cuisineId ?? null,
             steps: values.steps
                 .filter((s) => s.description.trim() !== "")

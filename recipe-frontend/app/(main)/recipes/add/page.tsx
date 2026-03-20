@@ -27,6 +27,7 @@ export default function AddRecipe() {
             servings: values.servings ? parseInt(values.servings) : null,
             dietId: values.dietId ?? null,
             cuisineId: values.cuisineId ?? null,
+            dishTypeId: values.dishTypeId ?? null,
             steps: values.steps
                 .filter((s) => s.description.trim() !== "")
                 .map((s, index) => ({ stepNumber: index + 1, description: s.description })),
