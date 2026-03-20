@@ -32,7 +32,7 @@ import CommentPage from "@/app/components/CommentPage";
 export default function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
 
   const params = useParams();
   const recipeId = Number(params.id);
@@ -101,6 +101,23 @@ export default function RecipeDetail() {
     }
   };
 
+  const hasAllIngredients = recipe?.ingredients
+    .filter(i => !i.alwaysInStock)
+    .every(i => i.hasEnoughInInventory === true);
+
+  const handleRemoveUsedIngredients = async () => {
+    if (!loggedUserId) return;
+
+    try {
+      await fetch(`${API_URL}/api/inventoryingredient/remove/${recipeId}/user/${loggedUserId}`, {
+        method: "POST",
+      });
+      await fetchRecipe();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (!recipe) {
     return <p>Recipe not found</p>;
   }  
@@ -158,7 +175,7 @@ export default function RecipeDetail() {
       </div>
 
         <div className={DetailStyles.detailData}>
-          <div onClick={() => setShowModal(true)}>
+          <div onClick={() => setShowRatingModal(true)}>
             {recipe.averageRating ? (
               <div className={DetailStyles.ratingAmount}>
                 <RatingStars amount={recipe.averageRating} />
@@ -229,18 +246,28 @@ export default function RecipeDetail() {
             </li>
           ))}
         </ul>
+        
+        {hasAllIngredients &&
+          <button
+            className={ButtonStyles.smallButton}
+            onClick={handleRemoveUsedIngredients}
+            disabled={!loggedUserId}
+          >
+            Remove used ingredients
+          </button>
+        }
 
-        {showModal &&
+        {showRatingModal &&
           (loggedUserId ? (
             <div
               className={ModalStyles.modalOverlay}
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowRatingModal(false)}
             >
               <div onClick={(e) => e.stopPropagation()}>
                 <RatingModal
                   userId={loggedUserId}
                   recipeId={recipeId}
-                  onClose={() => setShowModal(false)}
+                  onClose={() => setShowRatingModal(false)}
                   onRated={fetchRecipe}
                 />
               </div>
@@ -248,7 +275,7 @@ export default function RecipeDetail() {
           ) : (
             <div
               className={ModalStyles.modalOverlay}
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowRatingModal(false)}
             >
               <div
                 className={ModalStyles.modal}
@@ -262,7 +289,7 @@ export default function RecipeDetail() {
                 <div className={ModalStyles.buttons}>
                   <button
                     className={ButtonStyles.secondaryButton}
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setShowRatingModal(false)}
                   >
                     Cancel
                   </button>
