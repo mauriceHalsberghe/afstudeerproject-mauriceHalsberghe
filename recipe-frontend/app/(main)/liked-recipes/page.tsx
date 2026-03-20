@@ -26,6 +26,8 @@ export default function LikedRecipes() {
   const [filterByAllergens, setFilterByAllergens] = useState(false);
   const [prefsLoaded, setPrefsLoaded] = useState(false);
 
+  const [initialLoading, setInitialLoading] = useState(true);
+
   const [filters, setFilters] = useState<RecipeFiltersState>({
     search: "",
     selectedDiet: 0,
@@ -115,7 +117,7 @@ export default function LikedRecipes() {
     }
 
     setLoading(true);
-    fetchRecipes(true);
+    fetchRecipes(true).then(() => setInitialLoading(false));
   }, [filters, loggedUserId, auth?.loading, prefsLoaded, filterByDiet, filterByAllergens]);
 
   useEffect(() => {
@@ -130,60 +132,36 @@ export default function LikedRecipes() {
     return () => observer.disconnect();
   }, [hasMore, loadingMore, loading, fetchRecipes]);
 
-  if (auth?.loading || (loading && recipes.length === 0)) {
-    return (
-      <main className={HomeStyles.home}>
-        <div className={HomeStyles.header}>
-          <RecipeFilters
-            key="recipe-filters"
-            filters={filters}
-            onChange={setFilters}
-            onlyUsersFilter={true}
-            userDietId={userDietId}
-            filterByDiet={filterByDiet}
-          />
-        </div>
-        <div className={HomeStyles.main}>
-          <div className={HomeStyles.skeletonGrid}>
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className={HomeStyles.skeletonCard}>
-                <span className={HomeStyles.skeletonCardInfo}>
-                  <span></span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (!loggedUserId) {
-    return (
-      <EmptyView
-        title="Not logged in"
-        text="Log in to see your liked recipes"
-        btnText="Log In"
-        btnUrl="/login"
-        icon="profile"
-      />
-    );
-  }
-
   return (
     <main className={HomeStyles.home}>
-      <div className={HomeStyles.header}>
-        <RecipeFilters
-          key="recipe-filters"
-          filters={filters}
-          onChange={setFilters}
-          onlyUsersFilter={false}
-          userDietId={userDietId}
-          filterByDiet={filterByDiet}
-        />
-      </div>
+      <RecipeFilters
+        key="recipe-filters"
+        filters={filters}
+        onChange={setFilters}
+        onlyUsersFilter={false}
+        userDietId={userDietId}
+        filterByDiet={filterByDiet}
+      />
 
-      {recipes.length === 0 ? (
+      {!loggedUserId && !auth?.loading ? (
+        <EmptyView
+          title="Not logged in"
+          text="Log in to see your liked recipes"
+          btnText="Log In"
+          btnUrl="/login"
+          icon="profile"
+        />
+      ) : (initialLoading && recipes.length === 0) || auth?.loading ? (
+        <div className={HomeStyles.skeletonGrid}>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className={HomeStyles.skeletonCard}>
+              <span className={HomeStyles.skeletonCardInfo}>
+                <span></span>
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : recipes.length === 0 ? (
         <EmptyView
           title="No liked recipes yet"
           text="Start exploring recipes and save the ones you love"
@@ -207,7 +185,6 @@ export default function LikedRecipes() {
         {loadingMore && <p className={HomeStyles.message}>Loading more...</p>}
         {!hasMore && recipes.length > 0 && <p className={HomeStyles.message}>All recipes loaded</p>}
       </div>
-
     </main>
   );
 }

@@ -26,6 +26,8 @@ export default function Home() {
   const [filterByAllergens, setFilterByAllergens] = useState(false);
   const [prefsLoaded, setPrefsLoaded] = useState(false);
 
+  const [initialLoading, setInitialLoading] = useState(true);
+
   const [filters, setFilters] = useState<RecipeFiltersState>({
     search: "",
     selectedDiet: 0,
@@ -112,7 +114,7 @@ export default function Home() {
   useEffect(() => {
     if (auth?.loading || !prefsLoaded) return;
     setLoading(true);
-    fetchRecipes(true);
+    fetchRecipes(true).then(() => setInitialLoading(false));
   }, [filters, loggedUserId, auth?.loading, prefsLoaded, filterByDiet, filterByAllergens]);
 
   useEffect(() => {
@@ -138,7 +140,7 @@ export default function Home() {
         filterByDiet={filterByDiet}
       />
 
-      {(loading && recipes.length === 0) || auth?.loading ? (
+      {(initialLoading && recipes.length === 0) || auth?.loading ? (
         <div className={HomeStyles.skeletonGrid}>
           {[...Array(5)].map((_, i) => (
             <div key={i} className={HomeStyles.skeletonCard}>
