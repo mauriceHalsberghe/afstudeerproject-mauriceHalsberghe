@@ -84,7 +84,7 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter, user
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
         />
-        <CrossIcon className={filtersStyles.cross} onClick={() => update({ search: "" })} />
+        <CrossIcon className={`${filtersStyles.cross} ${filters.search ? filtersStyles.crossActive : ""}`} onClick={() => update({ search: "" })} />
       </div>
 
       <div className={`${filtersStyles.filterWrapper} ${!filtersVisible && filtersStyles.filtersHidden}`}>
