@@ -3,6 +3,7 @@
   "short_name": "Mealio",
   "description": "Your ingredients, endless meals.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ececec",
   "theme_color": "#3a8756",

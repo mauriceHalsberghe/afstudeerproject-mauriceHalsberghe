@@ -29,7 +29,10 @@ export default function Profile() {
     const [usernameError, setUsernameError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
 
-    const [showInstallModal, setShowInstallModal] = useState(true);
+    const [showInstallModal, setShowInstallModal] = useState(false);
+    
+    const isInPWA = typeof window !== 'undefined' && 
+        window.matchMedia('(display-mode: standalone)').matches;
 
     const auth = useContext(AuthContext);
 
@@ -136,10 +139,12 @@ export default function Profile() {
                     <ProfileLink url='/liked-recipes' title='Liked recipes' icon={HeartIcon}/>
                     <ProfileLink url={`/users/${auth.user.username}`} title='Your recipes' icon={ChefIcon}/>
                     <ProfileLink url='/profile/preferences' title='Preferences' icon={PreferencesIcon}/>
-                    <button className={ProfileStyles.installApp} onClick={() => setShowInstallModal(true)}>
-                        <InstallIcon />
-                        Install App
-                    </button>
+                    {!isInPWA && (
+                        <button className={ProfileStyles.installApp} onClick={() => setShowInstallModal(true)}>
+                            <InstallIcon />
+                            Install App
+                        </button>
+                    )}
                 </div>
 
                 <LogoutButton />
