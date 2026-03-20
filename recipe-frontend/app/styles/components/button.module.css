@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 40px;
+    height: 2.5rem;
     border-radius: 2rem;
     color: var(--gray-100);
     background-color: var(--green-200);
@@ -25,8 +25,8 @@
     }
 
     svg {
-        width: 20px;
-        height: 20px;
+        width: 1.25rem;
+        height: 1.25rem;
     }
 }
 
@@ -60,7 +60,7 @@
 .secondaryButton {
     background-color: transparent;
     color: var(--green-200);
-    border: 2px solid var(--green-200);
+    border: 0.125rem solid var(--green-200);
     width: 100%;
 
     &:active {

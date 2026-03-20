@@ -1,35 +1,34 @@
 .backButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    font-weight: 500;
-    gap: 0.5rem;
-    font-size: 1.2rem;
-    left: 1rem;
-    top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  font-weight: 500;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  left: 1rem;
+  top: 1.5rem;
 
-    svg {
-        width: 20px;
-        height: 20px;
-    }
-    path {
-        transform: rotate(180deg);
-        transform-box: fill-box;
-        transform-origin: center;
-    }
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  path {
+    transform: rotate(180deg);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
 
+  p {
+    display: none;
+  }
+  @media (min-width: 62.5rem) {
     p {
-        display: none;
+      display: block;
     }
-    @media (min-width: 1000px) {
-        p {
-            display: block;
-        }
-    }
+  }
 }
 
-
 .backAbsolute {
-    position: absolute;
+  position: absolute;
 }

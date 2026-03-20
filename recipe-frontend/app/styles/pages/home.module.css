@@ -4,12 +4,12 @@
   width: 100%;
   position: relative;
 
-  @media (min-width: 1000px) {
+  @media (min-width: 62.5rem) {
     margin-left: 16rem;
     min-height: 100vh;
-    width: calc(100% - 16rem)
+    width: calc(100% - 16rem);
   }
-  @media (min-width: 1400px) {
+  @media (min-width: 87.5rem) {
     padding: 2rem 6rem 5rem 6rem;
   }
 }
@@ -17,7 +17,7 @@
 .header {
   height: fit-content;
   margin-bottom: 1rem;
-  @media (min-width: 1000px) {
+  @media (min-width: 62.5rem) {
     margin-bottom: 3rem;
   }
 }
@@ -42,13 +42,16 @@
 }
 
 .avatar {
-  height: 48px;
-  width: 48px;
+  height: 3rem;
+  width: 3rem;
   object-fit: cover;
   border-radius: 5rem;
 }
 
-.recipes, .skeletonGrid, .UserRecipes, .skeletonGridUser {
+.recipes,
+.skeletonGrid,
+.UserRecipes,
+.skeletonGridUser {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -58,21 +61,22 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
-  @media (min-width: 1400px) {
+  @media (min-width: 87.5rem) {
     gap: 2rem;
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.UserRecipes, .skeletonGridUser {
+.UserRecipes,
+.skeletonGridUser {
   margin-top: 1rem;
 }
 
 .skeletonCard {
-  max-width: 1000px;
+  max-width: 62.5rem;
   height: 16.5rem;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
   position: relative;
 
   background: linear-gradient(
@@ -85,7 +89,7 @@
   background-size: 200% 100%;
   animation: load 1s ease-out infinite;
 
-  @media (min-width: 1000px) {
+  @media (min-width: 62.5rem) {
     max-width: none;
   }
 
@@ -97,7 +101,7 @@
     bottom: 0;
     height: 4.5rem;
     width: 100%;
-    padding: 12px 16px;
+    padding: .75rem 1rem;
     span {
       display: block;
       width: 8rem;
@@ -133,7 +137,7 @@
   bottom: 6rem;
   left: 50%;
   transform: translateX(-50%);
-  @media (min-width: 1000px) {
+  @media (min-width: 62.5rem) {
     bottom: 1rem;
   }
 }

@@ -72,10 +72,10 @@ export default function IngredientSearch({ value, onIngredientChange, placeholde
         menuPortal: base => ({ ...base, zIndex: 9999 }),
         control: () => ({
           display: "flex",
-          borderWidth: "2px",
+          borderWidth: "0.125rem",
           borderColor: "var(--gray-200)",
           borderRadius: "5rem",
-          padding: "0 6px",
+          padding: "0 0.375rem",
           zIndex: 2000,
         }),
         placeholder: (base) => ({ ...base, color: "var(--gray-300)" }),

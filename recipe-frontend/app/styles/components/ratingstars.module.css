@@ -1,7 +1,7 @@
 .stars {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: .25rem;
     color: var(--green-200);
 
     p {
@@ -9,13 +9,13 @@
     }
 
     svg {
-        width: 18px;
-        height: 18px;
+        width: 1.125rem;
+        height: 1.125rem;
     }
 }
 
 .starsInteractive {
-    gap: 8px;
+    gap: .5rem;
     cursor: pointer;
     svg {
         width: 2rem;
