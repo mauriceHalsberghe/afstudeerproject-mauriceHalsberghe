@@ -1,6 +1,12 @@
 import { ReactNode } from "react";
 import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mealio",
+  description: "Browse recipes based on your ingredients!",
+};
 
 export default function RootLayout({
   children,
