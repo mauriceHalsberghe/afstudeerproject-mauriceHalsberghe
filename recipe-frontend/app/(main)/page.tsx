@@ -127,47 +127,28 @@ export default function Home() {
     return () => observer.disconnect();
   }, [hasMore, loadingMore, loading, fetchRecipes]);
 
-  if (auth?.loading || (loading && recipes.length === 0)) {
-    return (
-      <main className={HomeStyles.home}>
-        <div className={HomeStyles.header}>
-          <RecipeFilters
-            key="recipe-filters"
-            filters={filters}
-            onChange={setFilters}
-            onlyUsersFilter={true}
-            userDietId={userDietId}
-            filterByDiet={filterByDiet}
-          />
-        </div>
-        <div className={HomeStyles.main}>
-          <div className={HomeStyles.skeletonGrid}>
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className={HomeStyles.skeletonCard}>
-                <span className={HomeStyles.skeletonCardInfo}>
-                  <span></span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className={HomeStyles.home}>
-        <RecipeFilters
-          key="recipe-filters"
-          filters={filters}
-          onChange={setFilters}
-          onlyUsersFilter={true}
-          userDietId={userDietId}
-          filterByDiet={filterByDiet}
-        />
+      <RecipeFilters
+        key="recipe-filters"
+        filters={filters}
+        onChange={setFilters}
+        onlyUsersFilter={true}
+        userDietId={userDietId}
+        filterByDiet={filterByDiet}
+      />
 
-
-      {recipes.length === 0 ? (
+      {(loading && recipes.length === 0) || auth?.loading ? (
+        <div className={HomeStyles.skeletonGrid}>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className={HomeStyles.skeletonCard}>
+              <span className={HomeStyles.skeletonCardInfo}>
+                <span></span>
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : recipes.length === 0 ? (
         <EmptyView title="No recipes found" text="No recipes match your search" icon="recipe" btnUrl="./" btnText="Back" />
       ) : (
         <ul className={HomeStyles.recipes}>
@@ -179,7 +160,7 @@ export default function Home() {
 
       <div ref={loaderRef}>
         {loadingMore && <p className={HomeStyles.message}>Loading more...</p>}
-        {!hasMore && recipes.length > 0 && (<p className={HomeStyles.message}>All recipes loaded</p>)}
+        {!hasMore && recipes.length > 0 && <p className={HomeStyles.message}>All recipes loaded</p>}
       </div>
     </main>
   );

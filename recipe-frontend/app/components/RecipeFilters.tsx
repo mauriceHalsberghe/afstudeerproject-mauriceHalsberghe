@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import filtersStyles from "@/app/styles/components/recipefilers.module.css";
 import { Cuisine, Diet } from "@/types/RecipeTypes";
 
+import CrossIcon from "@/public/cross.svg";
+
 export type RecipeFiltersState = {
   search: string;
   selectedDiet: number;
@@ -82,6 +84,7 @@ export default function RecipeFilters({ filters, onChange, onlyUsersFilter, user
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
         />
+        <CrossIcon className={filtersStyles.cross} onClick={() => update({ search: "" })} />
       </div>
 
       <div className={`${filtersStyles.filterWrapper} ${!filtersVisible && filtersStyles.filtersHidden}`}>
