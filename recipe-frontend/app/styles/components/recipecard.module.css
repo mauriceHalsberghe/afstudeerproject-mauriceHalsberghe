@@ -110,4 +110,5 @@
   top: -3rem;
   right: 0.5rem;
   border-radius: 3rem;
+  border: 2px solid var(--white);
 }
