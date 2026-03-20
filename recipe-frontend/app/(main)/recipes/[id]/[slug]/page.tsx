@@ -28,6 +28,7 @@ import { formatQuantity } from "@/lib/formatQuantity";
 import { slugifyTitle } from "@/lib/slugifyTitle";
 import { RecipeDetails } from "@/types/RecipeTypes";
 import CommentPage from "@/app/components/CommentPage";
+import LikeButton from "@/app/components/LikeButton";
 
 export default function RecipeDetail() {
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,9 @@ export default function RecipeDetail() {
 
   const [showShoppingListModal, setShowShoppingListModal] = useState(false);
   const [showCompleteRecipeModal, setShowCompleteRecipeModal] = useState(false);
+
+  const [likeCount, setLikeCount] = useState(recipe?.likeCount ?? 0);
+  const [liked, setLiked] = useState(recipe?.isLikedByCurrentUser ?? false);
 
   const params = useParams();
   const recipeId = Number(params.id);
@@ -62,6 +66,13 @@ export default function RecipeDetail() {
   useEffect(() => {
     fetchRecipe();
   }, [recipeId, loggedUserId]);
+
+  useEffect(() => {
+  if (recipe) {
+    setLikeCount(recipe.likeCount);
+    setLiked(recipe.isLikedByCurrentUser ?? false);
+  }
+}, [recipe]);
 
   const hasMissingIngredients = recipe?.ingredients.some(
     (ingredient) =>
@@ -179,6 +190,16 @@ export default function RecipeDetail() {
           src={`${API_URL}/uploads/recipe-images/${recipe.imageUrl}`}
         />
 
+        <LikeButton
+          recipeId={recipe.id}
+          initialLiked={recipe.isLikedByCurrentUser}
+          initialLikeCount={recipe.likeCount}
+          userId={auth?.user?.id}
+          onUnlike={() => {}}
+          onLikeCountChange={setLikeCount}
+          onLikedChange={setLiked}
+        />
+
         <div className={DetailStyles.tags}>
           {recipe.diet && (
             <p className={DetailStyles.tag}>{recipe.diet.name}</p>
@@ -206,12 +227,8 @@ export default function RecipeDetail() {
           <p className={DetailStyles.servings}>{recipe.servings}<span>servings</span></p>
 
           <p className={DetailStyles.likeCount}>
-            {recipe.isLikedByCurrentUser ? (
-              <LikeFilledIcon />
-            ) : (
-              <LikeUnfilledIcon />
-            )}
-            {recipe.likeCount}
+            {liked ? <LikeFilledIcon /> : <LikeUnfilledIcon />}
+            {likeCount}
           </p>
         </div>
 
