@@ -27,6 +27,7 @@ public class RecipesController : ControllerBase
         string? search = null,
         int? dietId = null,
         int? cuisineId = null,
+        int? dishTypeId = null,
         bool onlyUsers = false,
         bool onlyInStock = false,
         int sortBy = 3,
@@ -52,6 +53,9 @@ public class RecipesController : ControllerBase
 
         if (cuisineId.HasValue && cuisineId > 0)
             query = query.Where(r => r.CuisineId == cuisineId);
+
+        if (dishTypeId.HasValue && dishTypeId > 0)
+            query = query.Where(r => r.DishTypeId == dishTypeId);
 
         if (onlyUsers)
             query = query.Where(r => r.UserId != null);
