@@ -4,7 +4,7 @@ import { API_URL } from "@/lib/api";
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css";
 import ModalStyles from "@/app/styles/components/modal.module.css";
@@ -29,6 +29,7 @@ import { slugifyTitle } from "@/lib/slugifyTitle";
 import { RecipeDetails } from "@/types/RecipeTypes";
 import CommentPage from "@/app/components/CommentPage";
 import LikeButton from "@/app/components/LikeButton";
+import EmptyView from "@/app/components/EmptyView";
 
 export default function RecipeDetail() {
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,10 @@ export default function RecipeDetail() {
         url = `${API_URL}/api/recipes/${recipeId}?currentUserId=${loggedUserId}`;
       }
       const res = await fetch(url);
+      if (!res.ok) {
+        setRecipe(null);
+        return;
+      }
       const recipeData: RecipeDetails = await res.json();
       setRecipe(recipeData);
     } catch (err) {
@@ -141,8 +146,57 @@ export default function RecipeDetail() {
     }
   };
 
+  if (loading) return ( 
+    <div className={DetailStyles.page}>
+      <div className={DetailStyles.header}>
+        <span className={DetailStyles.skeletonTitle}></span>
+      </div>
+      <div className={DetailStyles.main}>
+        <div className={DetailStyles.skeletonImage}></div>
+
+        <div className={DetailStyles.detailData}>
+          <span className={DetailStyles.skeletonDetailData}></span>
+        </div>
+
+        <div className={DetailStyles.subtitleDiv}>
+          <span className={DetailStyles.skeletonSubtitle}></span>
+        </div>
+
+        <div className={DetailStyles.content}>
+          <ul className={DetailStyles.ingredients}>
+            {[...Array(5)].map((width, i) => (
+              <li
+                className={DetailStyles.skeletonIngredient}
+                key={i}
+                style={{ width: `${width}rem` }}
+              ></li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={DetailStyles.subtitleDiv}>
+          <span className={DetailStyles.skeletonSubtitle}></span>
+        </div>
+
+        <ul className={DetailStyles.steps}>
+          {[...Array(5)].map((width, i) => (
+            <li
+              className={DetailStyles.skeletonIngredient}
+              key={i}
+              style={{ width: `${width}rem` }}
+            ></li>
+          ))}
+        </ul>
+
+
+        
+      </div>
+    </div>
+  );
+
+
   if (!recipe) {
-    return <p>Recipe not found</p>;
+    return <EmptyView title="Recipe not found" text="This recipe does not exist" icon="recipe" btnUrl="/" btnText="Back" />;
   }
 
   return (
