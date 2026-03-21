@@ -16,6 +16,7 @@ type Props = {
     btnText?: string;
     btnUrl?: string;
     icon?: string; 
+    centered? : boolean;
 };
 
 export default function EmptyView(view : Props) {
@@ -37,7 +38,7 @@ export default function EmptyView(view : Props) {
     }
 
     return (
-        <main className={EmptyViewStyles.page}>
+        <main className={EmptyViewStyles.page} style={view.centered ? { margin: 0 } : undefined}>
             {icon}
             <div className={EmptyViewStyles.textDiv}>
                 <h1 className={EmptyViewStyles.title}>{view.title}</h1>
