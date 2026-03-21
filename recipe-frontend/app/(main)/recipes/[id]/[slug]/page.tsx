@@ -1,14 +1,17 @@
-import { API_URL } from "@/lib/api";
 import { RecipeDetails } from "@/types/RecipeTypes";
 import RecipeDetailClient from "@/app/components/RecipeDetailClient";
 
+const API_URL = process.env.API_URL;
+
 type Props = {
-  params: { id: string; slug?: string };
+  params: Promise<{ id: string; slug?: string }>;
 };
 
 export async function generateMetadata({ params }: Props) {
+  const { id } = await params;
+
   try {
-    const res = await fetch(`${API_URL}/api/recipes/${params.id}`, {
+    const res = await fetch(`${API_URL}/api/recipes/${id}`, {
       cache: "no-store",
     });
 
