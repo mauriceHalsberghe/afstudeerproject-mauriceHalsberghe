@@ -39,6 +39,7 @@
 .pageProfile {
   margin-top: 0;
   gap: 2rem;
+  margin-bottom: 6rem;
 }
 
 .welcome {
@@ -125,6 +126,10 @@
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.buttonsPref {
+  margin: 0;
 }
 
 @media (min-width: 62.5rem) {

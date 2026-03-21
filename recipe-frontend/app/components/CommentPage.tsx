@@ -135,7 +135,7 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
                 {
                     commentValue &&
                     <div className={CommentStyles.buttons}>
-                        <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} onClick={() => setCommentValue('')}>Cancel</button>
+                        <button  type="button" className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} onClick={() => setCommentValue('')}>Cancel</button>
                         <button type="submit" className={ButtonStyles.smallButton}>Post</button>
                     </div>
                 }
@@ -213,7 +213,7 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
                                 />
 
                                 <div className={CommentStyles.buttons}>
-                                    <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} onClick={() => setReplyingId(0)}>Cancel</button>
+                                    <button className={`${ButtonStyles.smallButton} ${ButtonStyles.secondaryButton}`} type="button" onClick={() => setReplyingId(0)}>Cancel</button>
                                     <button type="submit" className={ButtonStyles.smallButton}>Post</button>
                                 </div>
                             </form>

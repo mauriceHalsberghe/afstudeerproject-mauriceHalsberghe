@@ -218,6 +218,20 @@ export default function Preferences() {
                 </div>
             </header>
 
+            <div className={PrefStyles.buttonsPref}>
+                {!isEditing ? (
+                    <button className={ButtonStyles.button} onClick={handleEdit}>
+                        <PencilIcon />
+                        Edit
+                    </button>
+                ) : (
+                    <>
+                        <button className={ButtonStyles.button} onClick={handleCancel}>Cancel</button>
+                        <button className={ButtonStyles.button} onClick={handleSave}>Save Changes</button>
+                    </>
+                )}
+            </div>
+
             <div className={PrefStyles.pageStepProfile}>
                 <h3 className={PrefStyles.subtitle}>Diet type</h3>
                 <DietSelector
@@ -274,20 +288,6 @@ export default function Preferences() {
                         <span className={PrefStyles.slider}></span>
                     </div>
                 </label>
-            </div>
-
-            <div className={PrefStyles.buttonsPref}>
-                {!isEditing ? (
-                    <button className={ButtonStyles.button} onClick={handleEdit}>
-                        <PencilIcon />
-                        Edit
-                    </button>
-                ) : (
-                    <>
-                        <button className={ButtonStyles.button} onClick={handleCancel}>Cancel</button>
-                        <button className={ButtonStyles.button} onClick={handleSave}>Save Changes</button>
-                    </>
-                )}
             </div>
 
             {saveStatus === "success" && <p className={PrefStyles.message}>Preferences saved!</p>}
