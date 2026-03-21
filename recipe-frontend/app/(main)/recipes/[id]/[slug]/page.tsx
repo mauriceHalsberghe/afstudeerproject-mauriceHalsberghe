@@ -4,7 +4,7 @@ import { API_URL } from "@/lib/api";
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import DetailStyles from "@/app/styles/pages/recipe-detail.module.css";
 import ModalStyles from "@/app/styles/components/modal.module.css";
@@ -21,17 +21,26 @@ import Checkmark from "@/public/ingredient_stock.svg";
 import Cross from "@/public/ingredient_not_stock.svg";
 import Cart from "@/public/ingredient_cart.svg";
 import Apple from "@/public/ingredient_half_stock.svg";
-
+import LikeFilledIcon from "@/public/like_filled.svg";
+import LikeUnfilledIcon from "@/public/like_unfilled.svg";
 
 import { formatQuantity } from "@/lib/formatQuantity";
 import { slugifyTitle } from "@/lib/slugifyTitle";
 import { RecipeDetails } from "@/types/RecipeTypes";
 import CommentPage from "@/app/components/CommentPage";
+import LikeButton from "@/app/components/LikeButton";
+import EmptyView from "@/app/components/EmptyView";
 
 export default function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+
+  const [showShoppingListModal, setShowShoppingListModal] = useState(false);
+  const [showCompleteRecipeModal, setShowCompleteRecipeModal] = useState(false);
+
+  const [displayLiked, setDisplayLiked] = useState(false);
+  const [displayLikeCount, setDisplayLikeCount] = useState(0);
 
   const params = useParams();
   const recipeId = Number(params.id);
@@ -46,6 +55,10 @@ export default function RecipeDetail() {
         url = `${API_URL}/api/recipes/${recipeId}?currentUserId=${loggedUserId}`;
       }
       const res = await fetch(url);
+      if (!res.ok) {
+        setRecipe(null);
+        return;
+      }
       const recipeData: RecipeDetails = await res.json();
       setRecipe(recipeData);
     } catch (err) {
@@ -54,11 +67,18 @@ export default function RecipeDetail() {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
+    if (auth?.loading) return;
     fetchRecipe();
   }, [recipeId, loggedUserId]);
+
+  useEffect(() => {
+    if (recipe) {
+      setDisplayLiked(recipe.isLikedByCurrentUser ?? false);
+      setDisplayLikeCount(recipe.likeCount);
+    }
+  }, [recipe]);
 
   const hasMissingIngredients = recipe?.ingredients.some(
     (ingredient) =>
@@ -78,8 +98,9 @@ export default function RecipeDetail() {
 
     if (missingIngredients.length === 0) return;
 
-    try {      
-      
+    setShowShoppingListModal(false);
+
+    try {
       await Promise.all(
         missingIngredients.map((ingredient) =>
           fetch(`${API_URL}/api/listingredients`, {
@@ -88,8 +109,12 @@ export default function RecipeDetail() {
             body: JSON.stringify({
               userId: loggedUserId,
               ingredientId: ingredient.ingredientId,
-              quantity: ingredient.alwaysInStock ? null : ingredient.missingAmount ?? ingredient.quantity ?? null,
-              quantityUnitId: ingredient.alwaysInStock ? null : ingredient.quantityUnitId ?? null,
+              quantity: ingredient.alwaysInStock
+                ? null
+                : (ingredient.missingAmount ?? ingredient.quantity ?? null),
+              quantityUnitId: ingredient.alwaysInStock
+                ? null
+                : (ingredient.quantityUnitId ?? null),
             }),
           }),
         ),
@@ -100,9 +125,80 @@ export default function RecipeDetail() {
     }
   };
 
+  const hasAllIngredients = recipe?.ingredients
+    .filter((i) => !i.alwaysInStock)
+    .every((i) => i.hasEnoughInInventory === true);
+
+  const handleRemoveUsedIngredients = async () => {
+    if (!loggedUserId) return;
+
+    try {
+      await fetch(
+        `${API_URL}/api/inventoryingredient/remove/${recipeId}/user/${loggedUserId}`,
+        {
+          method: "POST",
+        },
+      );
+      setShowCompleteRecipeModal(false);
+      setShowRatingModal(true);
+      await fetchRecipe();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (loading) return ( 
+    <div className={DetailStyles.page}>
+      <div className={DetailStyles.header}>
+        <span className={DetailStyles.skeletonTitle}></span>
+      </div>
+      <div className={DetailStyles.main}>
+        <div className={DetailStyles.skeletonImage}></div>
+
+        <div className={DetailStyles.detailData}>
+          <span className={DetailStyles.skeletonDetailData}></span>
+        </div>
+
+        <div className={DetailStyles.subtitleDiv}>
+          <span className={DetailStyles.skeletonSubtitle}></span>
+        </div>
+
+        <div className={DetailStyles.content}>
+          <ul className={DetailStyles.ingredients}>
+            {[...Array(5)].map((width, i) => (
+              <li
+                className={DetailStyles.skeletonIngredient}
+                key={i}
+                style={{ width: `${width}rem` }}
+              ></li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={DetailStyles.subtitleDiv}>
+          <span className={DetailStyles.skeletonSubtitle}></span>
+        </div>
+
+        <ul className={DetailStyles.steps}>
+          {[...Array(5)].map((width, i) => (
+            <li
+              className={DetailStyles.skeletonIngredient}
+              key={i}
+              style={{ width: `${width}rem` }}
+            ></li>
+          ))}
+        </ul>
+
+
+        
+      </div>
+    </div>
+  );
+
+
   if (!recipe) {
-    return <p>Recipe not found</p>;
-  }  
+    return <EmptyView title="Recipe not found" text="This recipe does not exist" icon="recipe" btnUrl="/" btnText="Back" />;
+  }
 
   return (
     <div className={DetailStyles.page}>
@@ -116,7 +212,7 @@ export default function RecipeDetail() {
                 className={ButtonStyles.smallButton}
                 href={`/recipes/${recipeId}/${slugifyTitle(recipe.title)}/edit`}
               >
-                Edit Recipe
+                Edit <span className={DetailStyles.editSpan}>Recipe</span>
               </Link>
             ) : (
               <Link
@@ -141,7 +237,6 @@ export default function RecipeDetail() {
       </div>
 
       <div className={DetailStyles.main}>
-
         <Image
           className={DetailStyles.image}
           width={360}
@@ -150,8 +245,31 @@ export default function RecipeDetail() {
           src={`${API_URL}/uploads/recipe-images/${recipe.imageUrl}`}
         />
 
+        <LikeButton
+          key={`${recipe.id}-${auth?.user?.id ?? "guest"}`}
+          recipeId={recipe.id}
+          initialLiked={recipe.isLikedByCurrentUser ?? false}
+          initialLikeCount={recipe.likeCount}
+          userId={auth?.user?.id}
+          onUnlike={() => {}}
+          onLikeCountChange={setDisplayLikeCount}
+          onLikedChange={setDisplayLiked}
+        />
+
+        <div className={DetailStyles.tags}>
+          {recipe.diet && (
+            <p className={DetailStyles.tag}>{recipe.diet.name}</p>
+          )}
+          {recipe.cuisine && (
+            <p className={DetailStyles.tag}>{recipe.cuisine.name}</p>
+          )}
+          {recipe.dishType && (
+            <p className={DetailStyles.tag}>{recipe.dishType.name}</p>
+          )}
+        </div>
+
         <div className={DetailStyles.detailData}>
-          <div onClick={() => setShowModal(true)}>
+          <div onClick={() => setShowRatingModal(true)}>
             {recipe.averageRating ? (
               <div className={DetailStyles.ratingAmount}>
                 <RatingStars amount={recipe.averageRating} />
@@ -162,9 +280,26 @@ export default function RecipeDetail() {
             )}
           </div>
           <p className={DetailStyles.duration}>{recipe.time} min</p>
+          <p className={DetailStyles.servings}>{recipe.servings}<span>servings</span></p>
+
+          <p className={DetailStyles.likeCount}>
+            {displayLiked ? <LikeFilledIcon /> : <LikeUnfilledIcon />}
+            {displayLikeCount}
+          </p>
         </div>
 
-        <h2 className={DetailStyles.subtitle}>Ingredients</h2>
+        <div className={DetailStyles.subtitleDiv}>
+          <h2 className={DetailStyles.subtitle}>Ingredients</h2>
+          {hasMissingIngredients && (
+            <button
+              className={ButtonStyles.smallButton}
+              onClick={() => setShowShoppingListModal(true)}
+              disabled={!loggedUserId}
+            >
+              Add missing to list
+            </button>
+          )}
+        </div>
 
         <div className={DetailStyles.content}>
           <ul className={DetailStyles.ingredients}>
@@ -197,38 +332,149 @@ export default function RecipeDetail() {
             ))}
           </ul>
 
-          {hasMissingIngredients && (
-            <button
-              className={ButtonStyles.smallButton}
-              onClick={handleAddMissingToShoppingList}
-              disabled={!loggedUserId}
+          {showShoppingListModal && (
+            <div
+              className={ModalStyles.modalOverlay}
+              onClick={() => setShowShoppingListModal(false)}
             >
-              Add to shopping list
-            </button>
+              <div
+                className={ModalStyles.modal}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className={ModalStyles.text}>
+                  <h2 className={ModalStyles.title}>Missing ingredients</h2>
+                  <h3 className={ModalStyles.subtitle}>
+                    Add these to your shopping list:
+                  </h3>
+                  <ul className={ModalStyles.list}>
+                    {recipe.ingredients
+                      .filter(
+                        (i) =>
+                          i.hasEnoughInInventory === false &&
+                          i.isInShoppingList === false,
+                      )
+                      .map((i) => (
+                        <li key={i.id}>
+                          {i.quantity && (
+                            <span>
+                              {formatQuantity(i.quantity)}
+                              {i.unit}{" "}
+                            </span>
+                          )}
+                          {i.ingredientName}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+
+                <div className={ModalStyles.buttons}>
+                  <button
+                    className={ButtonStyles.secondaryButton}
+                    onClick={() => setShowShoppingListModal(false)}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className={ButtonStyles.button}
+                    onClick={handleAddMissingToShoppingList}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
+        
+        <div className={DetailStyles.instructions}>
 
-        <h2 className={DetailStyles.subtitle}>Instructions</h2>
-        <ul className={DetailStyles.steps}>
-          {recipe.steps.map((step) => (
-            <li className={DetailStyles.step} key={step.id}>
-              <p className={DetailStyles.stepNumber}>{step.stepNumber}</p>
-              <p className={DetailStyles.stepDescription}>{step.description}</p>
-            </li>
-          ))}
-        </ul>
+          <h2 className={DetailStyles.subtitle}>Instructions</h2>
+          <ul className={DetailStyles.steps}>
+            {recipe.steps.map((step) => (
+              <li className={DetailStyles.step} key={step.id}>
+                <p className={DetailStyles.stepNumber}>{step.stepNumber}</p>
+                <p className={DetailStyles.stepDescription}>{step.description}</p>
+              </li>
+            ))}
+          </ul>
 
-        {showModal &&
+          {hasAllIngredients && (
+            <button
+              className={ButtonStyles.smallButton}
+              onClick={() => setShowCompleteRecipeModal(true)}
+              disabled={!loggedUserId}
+            >
+              Remove used ingredients
+            </button>
+          )}
+
+        </div>
+
+        {showCompleteRecipeModal && (
+          <div
+            className={ModalStyles.modalOverlay}
+            onClick={() => setShowCompleteRecipeModal(false)}
+          >
+            <div
+              className={ModalStyles.modal}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={ModalStyles.text}>
+                <h2 className={ModalStyles.title}>Done cooking?</h2>
+                <h3 className={ModalStyles.subtitle}>
+                  These ingredients will be removed from your inventory:
+                </h3>
+                <ul className={ModalStyles.list}>
+                  {recipe.ingredients
+                    .filter(
+                      (i) =>
+                        !i.alwaysInStock && i.hasEnoughInInventory === true,
+                    )
+                    .map((i) => (
+                      <li key={i.id}>
+                        {i.quantity && (
+                          <span>
+                            {formatQuantity(i.quantity)}
+                            {i.unit}{" "}
+                          </span>
+                        )}
+                        {i.ingredientName}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
+              <div className={ModalStyles.buttons}>
+                <button
+                  className={ButtonStyles.secondaryButton}
+                  onClick={() => setShowCompleteRecipeModal(false)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className={ButtonStyles.button}
+                  onClick={handleRemoveUsedIngredients}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showRatingModal &&
           (loggedUserId ? (
             <div
               className={ModalStyles.modalOverlay}
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowRatingModal(false)}
             >
               <div onClick={(e) => e.stopPropagation()}>
                 <RatingModal
                   userId={loggedUserId}
                   recipeId={recipeId}
-                  onClose={() => setShowModal(false)}
+                  onClose={() => setShowRatingModal(false)}
                   onRated={fetchRecipe}
                 />
               </div>
@@ -236,7 +482,7 @@ export default function RecipeDetail() {
           ) : (
             <div
               className={ModalStyles.modalOverlay}
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowRatingModal(false)}
             >
               <div
                 className={ModalStyles.modal}
@@ -250,7 +496,7 @@ export default function RecipeDetail() {
                 <div className={ModalStyles.buttons}>
                   <button
                     className={ButtonStyles.secondaryButton}
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setShowRatingModal(false)}
                   >
                     Cancel
                   </button>
@@ -263,9 +509,8 @@ export default function RecipeDetail() {
             </div>
           ))}
 
-          <CommentPage recipeId={recipeId} loggedUserId={loggedUserId}/>
+        <CommentPage recipeId={recipeId} loggedUserId={loggedUserId} />
       </div>
-
     </div>
   );
 }

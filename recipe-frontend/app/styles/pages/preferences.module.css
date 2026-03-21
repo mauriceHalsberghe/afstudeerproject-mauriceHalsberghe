@@ -1,44 +1,44 @@
 .page {
-    width: 100%;
+  width: 100%;
 }
 
 .image {
-    display: none;
+  display: none;
 }
 
-@media (min-width: 1000px) {
-    .page {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .image {
-        display: block;
-        height: 100vh;
-        width: 45vw;
-        object-fit: cover;
-    }
+@media (min-width: 62.5rem) {
+  .page {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image {
+    display: block;
+    height: 100vh;
+    width: 45vw;
+    object-fit: cover;
+  }
 }
 
-.main, .pageProfile {
+.main,
+.pageProfile {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3rem;
   margin-top: 15vh;
-  @media (min-width: 1000px) {
-      width: 55vw;
-      margin-top: 0;
+  @media (min-width: 62.5rem) {
+    width: 55vw;
+    margin-top: 0;
   }
 }
 
 .pageProfile {
   margin-top: 0;
   gap: 2rem;
-
 }
 
 .welcome {
@@ -82,46 +82,52 @@
 .progressBar {
   background-color: var(--gray-200);
   border-radius: 5rem;
-  height: 4px;
+  height: 0.25rem;
   width: 100%;
 
   span {
     display: block;
-    height: 4px;
+    height: 0.25rem;
     border-radius: 5rem;
     background-color: var(--green-200);
     transition: width 500ms ease;
   }
 }
 
-.pageStep, .pageStepProfile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+.pageStep,
+.pageStepProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
 .pageStepProfile {
   gap: 1rem;
+  background-color: var(--white);
+  border-radius: 1rem;
+  padding: 1rem 2rem;
 }
 
 .subtitle {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
-.list, .listAllergy {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 1rem 2rem;
+.list,
+.listAllergy {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1rem 2rem;
 }
 
-.buttons, .buttonsPref {
+.buttons,
+.buttonsPref {
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
   .buttonsPref {
     display: none;
   }
@@ -146,7 +152,7 @@
 
 .radio input + .radioLabel::before,
 .checkbox input + .checkboxLabel::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 1.4rem;
   height: 1.4rem;
@@ -156,15 +162,19 @@
   vertical-align: top;
 
   background: var(--white);
-  border: 2px solid var(--gray-300);
+  border: 0.125rem solid var(--gray-300);
   border-radius: 50%;
   transition: all 250ms ease;
 }
 
-.radio input:checked + .radioLabel::before,
-.checkbox input:checked + .checkboxLabel::before {
+.radio input:checked + .radioLabel::before {
   border-color: var(--green-300);
   background-color: var(--green-200);
+}
+
+.checkbox input:checked + .checkboxLabel::before {
+  border-color: var(--red-200);
+  background-color: var(--red-100);
 }
 
 .radio input:disabled + .radioLabel::before,
@@ -173,9 +183,12 @@
   cursor: default;
 }
 
-.radio input:checked:disabled + .radioLabel::before,
-.checkbox input:checked:disabled + .checkboxLabel::before {
+.radio input:checked:disabled + .radioLabel::before {
   background-color: var(--green-200);
+}
+
+.checkbox input:checked:disabled + .checkboxLabel::before {
+  background-color: var(--red-100);
 }
 
 .radio input:disabled + .radioLabel,
@@ -185,6 +198,46 @@
 
 .checkbox input + .checkboxLabel::before {
   border-radius: 0.25rem;
+}
+
+.AddAllergyButton {
+  color: var(--black);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 1.2rem;
+  position: relative;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    color: red;
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    left: 0;
+
+    background-image: url("/plus.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  @media (min-width: 62.5rem) {
+    border: 0.125rem solid var(--gray-200);
+    border-radius: 0.5rem;
+    justify-content: center;
+    padding: 1rem;
+    gap: 0.5rem;
+    &::before {
+      position: relative;
+      left: auto;
+    }
+
+    &:hover {
+      background-color: var(--gray-100);
+    }
+  }
 }
 
 .header {
@@ -200,7 +253,7 @@
 
 .buttonsHeader {
   display: none;
-  @media (min-width: 1000px) {
+  @media (min-width: 62.5rem) {
     display: flex;
     gap: 1rem;
   }
@@ -210,8 +263,11 @@
   display: none;
 }
 
-@media (min-width: 1000px) {
+.labelText p {
+  display: none;
+}
 
+@media (min-width: 62.5rem) {
   .message {
     position: absolute;
     left: 50%;
@@ -220,7 +276,7 @@
   }
 
   .header {
-    padding: 0 3rem;
+    padding: 0 2rem;
   }
 
   .pageProfile {
@@ -231,14 +287,10 @@
 
   .pageStepProfile {
     min-width: 37rem;
-    align-items: start;
-    background-color: var(--white);
-    border-radius: 1rem;
-    padding: 1rem 2rem;
     .list {
       gap: 1rem;
     }
-    
+
     .listAllergy {
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
@@ -247,7 +299,7 @@
 
   .dietDesc {
     display: block;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--gray-300);
   }
 
@@ -256,14 +308,18 @@
     display: none;
   }
 
-  .radio, .checkbox {
-    border: 2px solid var(--gray-200);
+  .radio,
+  .checkbox {
+    border: 0.125rem solid var(--gray-200);
     background-color: var(--white);
     border-radius: 0.5rem;
     min-width: 16rem;
     padding: 1rem;
     transition: background-color 0.3s ease;
     cursor: pointer;
+    &:hover {
+      background-color: var(--gray-100);
+    }
   }
 
   .checkbox {
@@ -293,7 +349,7 @@
       right: 0.5rem;
       top: 0.5rem;
 
-      background-image: url('/checkbox_checked.svg');
+      background-image: url("/checkbox_checked.svg");
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -306,34 +362,40 @@
     border-color: var(--red-100);
     position: relative;
   }
-}
 
+  .labelText p {
+    display: block;
+  }
+}
 
 .switchRowDiet,
 .switchRowAllergy {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+  min-width: 20rem;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 
-  cursor: pointer;
+  :has(input:disabled) {
+    cursor: default;
+  }
 }
 
 .switchRowDiet {
-  border: 2px solid var(--blue-100);
+  border: 0.125rem solid var(--blue-100);
   background-color: var(--blue-50);
 }
 
 .switchRowAllergy {
-  border: 2px solid var(--yellow-100);
+  border: 0.125rem solid var(--yellow-100);
   background-color: var(--yellow-50);
 }
 
 .labelText {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.4;
   color: var(--gray-300);
   h2 {
@@ -344,9 +406,10 @@
 
 .switch {
   position: relative;
-  width: 50px;
-  height: 28px;
+  width: 3.125rem;
+  height: 1.75rem;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .switch input {
@@ -355,25 +418,30 @@
   height: 0;
 }
 
+.switch input:disabled + .slider {
+  background-color: var(--gray-300);
+  opacity: 0.6;
+}
+
 .slider {
   position: absolute;
   inset: 0;
   background-color: var(--gray-200);
-  border-radius: 999px;
+  border-radius: 10rem;
   transition: 0.3s;
 }
 
 .slider:before {
   content: "";
   position: absolute;
-  height: 22px;
-  width: 22px;
-  left: 3px;
-  bottom: 3px;
+  height: 1.375rem;
+  width: 1.375rem;
+  left: .1875rem;
+  bottom: .1875rem;
   background-color: var(--white);
   border-radius: 50%;
   transition: 0.3s;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .switch input:checked + .slider {
@@ -381,12 +449,12 @@
 }
 
 .switch input:checked + .slider:before {
-  transform: translateX(22px);
+  transform: translateX(1.375rem);
 }
 
-@media (min-width: 1500px) {
-
+@media (min-width: 93.75rem) {
   .header {
+    padding: 0 4rem;
     position: absolute;
     top: 0;
     width: calc(100vw - 16rem);
@@ -404,7 +472,8 @@
   .pageStepProfile {
     min-height: 30rem;
 
-    .switchRowAllergy, .switchRowDiet {
+    .switchRowAllergy,
+    .switchRowDiet {
       margin-top: auto;
     }
   }

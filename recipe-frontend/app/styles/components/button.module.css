@@ -1,4 +1,4 @@
-.button , .secondaryButton, .smallButton, .buttonRed, .thirdButton {
+.button , .secondaryButton, .smallButton, .xsButton, .buttonRed, .thirdButton {
     padding: 0 1.2rem;
     font-size: 1.2rem;
     min-width: fit-content;
@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 40px;
+    height: 2.5rem;
     border-radius: 2rem;
     color: var(--gray-100);
     background-color: var(--green-200);
@@ -25,8 +25,8 @@
     }
 
     svg {
-        width: 20px;
-        height: 20px;
+        width: 1.25rem;
+        height: 1.25rem;
     }
 }
 
@@ -50,17 +50,21 @@
 }
 
 
-.smallButton {
+.smallButton, .xsButton {
     font-size: 1rem;
     min-width: max-content;
     padding: 0 1rem;
     width: fit-content;
 }
 
+.xsButton {
+    max-height: 36px;
+}
+
 .secondaryButton {
     background-color: transparent;
     color: var(--green-200);
-    border: 2px solid var(--green-200);
+    border: 0.125rem solid var(--green-200);
     width: 100%;
 
     &:active {

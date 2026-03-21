@@ -27,12 +27,17 @@ public class RecipesController : ControllerBase
         string? search = null,
         int? dietId = null,
         int? cuisineId = null,
+        int? dishTypeId = null,
         bool onlyUsers = false,
         bool onlyInStock = false,
-        int sortBy = 3)
+        int sortBy = 3,
+        bool onlyLiked = false,
+        bool filterByDiet = false,  
+        bool filterByAllergens = false) 
     {
         var query = _context.Recipes
             .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
             .Include(r => r.Cuisine)
             .Include(r => r.Diet)
             .Include(r => r.DishType)
@@ -49,9 +54,43 @@ public class RecipesController : ControllerBase
         if (cuisineId.HasValue && cuisineId > 0)
             query = query.Where(r => r.CuisineId == cuisineId);
 
+        if (dishTypeId.HasValue && dishTypeId > 0)
+            query = query.Where(r => r.DishTypeId == dishTypeId);
+
         if (onlyUsers)
             query = query.Where(r => r.UserId != null);
+        
+        if (onlyLiked && currentUserId.HasValue)
+            query = query.Where(r => r.Likes.Any(l => l.UserId == currentUserId.Value));
 
+        if (filterByDiet && currentUserId.HasValue)
+        {
+            var user = await _context.Users.FindAsync(currentUserId.Value);
+            if (user?.DietId != null)
+                query = query.Where(r => r.DietId == user.DietId);
+        }
+
+        if (filterByAllergens && currentUserId.HasValue)
+        {
+            var allergies = await _context.Allergies
+                .Where(a => a.UserId == currentUserId.Value)
+                .ToListAsync();
+
+            var blockedIngredientIds = allergies
+                .Where(a => a.IngredientId != null)
+                .Select(a => a.IngredientId!.Value)
+                .ToHashSet();
+
+            var blockedIngredientTypeIds = allergies
+                .Where(a => a.IngredientTypeId != null)
+                .Select(a => a.IngredientTypeId!.Value)
+                .ToHashSet();
+
+            query = query.Where(r => r.RecipeIngredients.All(ri =>
+                !blockedIngredientIds.Contains(ri.IngredientId) &&
+                (ri.Ingredient == null || !blockedIngredientTypeIds.Contains(ri.Ingredient.IngredientTypeId))
+            ));
+        }
 
         var projected = query.Select(r => new RecipeDto
         {
@@ -75,13 +114,17 @@ public class RecipesController : ControllerBase
                 ? r.RecipeIngredients.Count(ri => !_context.InventoryIngredients
                     .Any(ii => ii.UserId == currentUserId.Value && ii.IngredientId == ri.IngredientId))
                 : (int?)null,
+            RawAverageRating = r.Reviews.Any()
+                ? r.Reviews.Average(rv => (double)rv.Rating) / 2.0
+                : 0,
         });
 
         projected = sortBy switch
         {
-            1 => projected.OrderByDescending(r => r.AverageRating ?? 0),
+            1 => projected.OrderByDescending(r => r.RawAverageRating),
             2 => projected.OrderBy(r => r.Title),
-            3 => projected.OrderBy(r => r.MissingIngredientCount ?? int.MaxValue),
+            3 => projected.OrderBy(r => r.MissingIngredientCount ?? int.MaxValue)
+                .ThenByDescending(r => r.RawAverageRating),
             _ => projected
         };
 
@@ -110,6 +153,7 @@ public class RecipesController : ControllerBase
                 Title = r.Title,
                 ImageUrl = r.ImageUrl,
                 Time = r.Time,
+                Servings = r.Servings,
 
                 Diet = r.Diet == null ? null : new DietDto
                 {
@@ -121,6 +165,12 @@ public class RecipesController : ControllerBase
                 {
                     Id = r.Cuisine.Id,
                     Name = r.Cuisine.Name
+                },
+
+                DishType = r.DishType == null ? null : new DishTypeDto
+                {
+                    Id = r.DishType.Id,
+                    Name = r.DishType.Name
                 },
 
                 User = r.User == null ? null : new UserSummaryDto
@@ -184,6 +234,8 @@ public class RecipesController : ControllerBase
 
                 LikeCount = r.Likes.Count(),
 
+                IsLikedByCurrentUser = currentUserId.HasValue && r.Likes.Any(l => l.UserId == currentUserId.Value),
+
                 AverageRating = r.Reviews.Any()
                     ? Math.Round(r.Reviews.Average(rv => rv.Rating) / 2.0, 1)
                     : (double?)null,
@@ -207,8 +259,10 @@ public class RecipesController : ControllerBase
             Title = dto.Title,
             ImageUrl = dto.ImageUrl,
             Time = dto.Time,
+            Servings = dto.Servings,
             DietId = dto.DietId,
             CuisineId = dto.CuisineId,
+            DishTypeId = dto.DishTypeId,
             UserId = userId,
             Steps = dto.Steps.Select(s => new Step
             {
@@ -287,8 +341,10 @@ public class RecipesController : ControllerBase
         recipe.Title = dto.Title;
         recipe.ImageUrl = dto.ImageUrl;
         recipe.Time = dto.Time;
+        recipe.Servings = dto.Servings; 
         recipe.DietId = dto.DietId;
         recipe.CuisineId = dto.CuisineId;
+        recipe.DishTypeId = dto.DishTypeId;
 
         _context.Steps.RemoveRange(recipe.Steps);
         _context.RecipeIngredients.RemoveRange(recipe.RecipeIngredients);

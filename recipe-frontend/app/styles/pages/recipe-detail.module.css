@@ -1,151 +1,274 @@
 .page {
-    padding: 1rem;
-    margin-bottom: 8rem;
+  padding: 1rem;
+  margin-bottom: 8rem;
 
-    @media (min-width: 1000px) {
-        margin-left: 16rem;
-        margin-bottom: 1rem;
-        width: 100%;
-    }
+  @media (min-width: 62.5rem) {
+    margin-left: 16rem;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
 }
 
 .main {
-    @media (min-width: 1000px) {
-        max-width: 50rem;
-        margin: 0 auto;
-    }
+  position: relative;
+  @media (min-width: 62.5rem) {
+    max-width: 50rem;
+    margin: 0 auto;
+  }
 }
 
 .header {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 2px solid var(--gray-200);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 0.125rem solid var(--gray-200);
 }
 
 .title {
-    grid-column: 2;
-    text-align: center;
-    font-size: 1.4rem;
-    font-weight: 500;
+  grid-column: 2;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 
 .userDetails {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .user {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.username {
+  display: none;
+  @media (min-width: 62.5rem) {
+    display: block;
+  }
 }
 
 .avatar {
-    border-radius: 5rem;
-    height: 2rem;
-    width: 2rem;
+  border-radius: 5rem;
+  height: 2rem;
+  width: 2rem;
 }
 
-.image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    max-width: 500px;
-    border-radius: 0.5rem;
-    @media (min-width: 1000px) {
-        max-width: 50rem; 
-        height: 250px;
-    }
+.editSpan {
+  display: none;
+  @media (min-width: 62.5rem) {
+    display: block;
+  }
+}
+
+.image,
+.skeletonImage {
+  width: 100%;
+  height: 12.5rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  @media (min-width: 62.5rem) {
+    max-width: 50rem;
+    height: 15.625rem;
+  }
+}
+
+.tags {
+  display: flex;
+  position: absolute;
+  gap: 0.5rem;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.tag {
+  background-color: var(--green-200);
+  color: var(--white);
+  padding: 0.125rem 0.5rem;
+  border-radius: 5rem;
+  font-size: 0.875rem;
 }
 
 .detailData {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
-.rating, .duration, .ratingAmount {
-    color: var(--green-200);
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap:  4px;   
+.rating,
+.duration,
+.ratingAmount,
+.servings {
+  color: var(--green-200);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .25rem;
 }
 
-.ratingAmount, .rating {
-    cursor: pointer;
+.ratingAmount,
+.rating {
+  cursor: pointer;
 }
 
 .rating::before,
-.duration::before {
-    content: "";
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background-size: contain;
-    background-repeat: no-repeat;
+.duration::before,
+.servings::before {
+  content: "";
+  display: inline-block;
+  width: 1.125rem;
+  height: 1.125rem;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .rating::before {
-    background-image: url('/star.svg');
+  background-image: url("/star.svg");
 }
 
 .duration::before {
-    background-image: url('/clock.svg');
+  background-image: url("/clock.svg");
+}
+
+.servings::before {
+  background-image: url("/cloche.svg");
+}
+
+.servings span {
+  display: none;
+  @media (min-width: 62.5rem) {
+    display: inline;
+  }
+}
+
+.likeCount {
+  color: var(--gray-300);
+  position: absolute;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.subtitleDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .subtitle {
-    font-weight: 500;
-    margin: 1.5rem 0 1rem 0;
+  font-weight: 500;
+  margin: 1.5rem 0 1rem 0;
 }
 
 .content {
-    display: flex;
-    flex-direction: row;
-    justify-content:space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .ingredients {
-    width: fit-content;
-    padding-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem
+  width: fit-content;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .ingredient {
-    display: flex;
-    gap: 0.25rem;
-    align-items: center;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
 }
 
 .ingredientIcon {
-    margin-right: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .steps {
-    padding-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.instructions {
+  button {
+    margin: 2rem auto;
+  }
 }
 
 .step {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .stepNumber {
-    background-color: var(--gray-200);
-    min-width: 28px;
-    height: 28px;
-    font-size: 1.1rem;
-    text-align: center;
-    border-radius: 2rem;
+  background-color: var(--gray-200);
+  min-width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1.1rem;
+  text-align: center;
+  border-radius: 2rem;
+}
+
+.skeletonTitle {
+  display: block;
+  width: 10rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  grid-column: 2;
+
+  background: var(--skeleton-bg);
+  background-size: 200% 100%;
+  animation: load 1s ease-out infinite;
+}
+
+.skeletonImage {
+  background: var(--skeleton-bg);
+  background-size: 200% 100%;
+  animation: load 1s ease-out infinite;
+}
+
+.skeletonDetailData,
+.skeletonSubtitle,
+.skeletonIngredient {
+  display: block;
+  width: 18rem;
+  height: 1.5rem;
+  border-radius: 0.5rem;
+
+  background: var(--skeleton-bg);
+  background-size: 200% 100%;
+  animation: load 1s ease-out infinite;
+}
+
+.skeletonSubtitle {
+  margin: 1.5rem 0 1rem;
+  width: 8rem;
+}
+
+.skeletonIngredient {
+  width: 12rem;
+}
+
+@keyframes load {
+  0% {
+    background-position-x: 200%;
+  }
+  100% {
+    background-position-x: 0%;
+  }
 }

@@ -32,7 +32,6 @@ export default function ShoppingList() {
     const [showIngredientOptions, setShowIngredientOptions ] = useState<number | null>(null);
     const [editingIngredient, setEditingIngredient] = useState<InventoryIngredient | null>(null);
     const [deletingId, setDeletingId] = useState<number | null>(null);
-    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const auth = useContext(AuthContext);
     const loggedUserId = auth?.user?.id;
@@ -128,6 +127,7 @@ export default function ShoppingList() {
         return <main className={IngredientStyles.page}>
             <div className={IngredientStyles.header}>
                 <h1 className={IngredientStyles.title}><CartIcon />Shopping List</h1>
+                <AddIngredientHeader />
             </div>
             <div className={IngredientStyles.mainList}>
                 <div className={IngredientStyles.skeletonGridShopping}>

@@ -1,200 +1,230 @@
 .page {
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 7rem;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 7rem;
 
-    @media (min-width: 1000px) {
-        min-width: 55rem;
-        margin: auto;
-        padding-left: 16rem;
-        margin-top: 2rem;
-    }
+  @media (min-width: 62.5rem) {
+    min-width: 55rem;
+    margin: auto;
+    padding-left: 16rem;
+    margin-top: 2rem;
+  }
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--gray-200);
-    padding-bottom: 1rem;
-    margin: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.125rem solid var(--gray-200);
+  padding-bottom: 1rem;
+  margin: 0 1rem;
 }
 
 .title {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.label, .labelDuration {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-    color: var(--gray-300);
+.label,
+.labelDuration,
+.labelServings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  color: var(--gray-300);
 }
 
-.labelDuration {
-    width: 10rem;
+.labelDuration,
+.labelServings {
+  width: calc(50% - 0.25rem);
 }
 
-.input, .stepInput, .quantityInput {
-    flex: 1;
-    padding: 0.25rem 1rem;
-    display: flex;
-    border-radius: 2rem;
-    border: 2px solid var(--gray-200);
-    color: var(--black);
+@media (min-width: 62.5rem) {
+  .labelDuration {
+    width: 8rem;
+  }
+
+  .labelServings {
+    width: 4rem;
+    .input::placeholder {
+      opacity: 0;
+      color: transparent;
+    }
+  }
+}
+
+.input,
+.stepInput,
+.quantityInput {
+  flex: 1;
+  padding: 0.25rem 1rem;
+  display: flex;
+  border-radius: 2rem;
+  border: 0.125rem solid var(--gray-200);
+  color: var(--black);
 }
 
 .quantityInput {
-    flex: 0;
-    width: 6.5rem;
-    border: 2px solid var(--gray-200);
+  flex: 0;
+  width: 6.5rem;
+  border: 0.125rem solid var(--gray-200);
 }
 
 .divs {
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  @media (min-width: 62.5rem) {
+    flex-direction: row;
+  }
+}
+
+.secondaryInputs {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    justify-content: center;
-    margin: 0 auto;
-    margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 2rem;
 }
 
 .select {
-    cursor: pointer;
-    padding: 0 0.5rem;
-    height: 36px;
-    display: flex;
-    border-radius: 2rem;
-    border: 2px solid var(--green-200);
-    color: var(--green-200);
+  cursor: pointer;
+  padding: 0 0.5rem;
+  height: 2.25rem;
+  display: flex;
+  border-radius: 2rem;
+  border: 0.125rem solid var(--green-200);
+  color: var(--green-200);
+  font-size: 1rem;
+  font-weight: 500;
+
+  option {
     font-size: 1rem;
-    font-weight: 500;
+  }
 
-    option {
-        font-size: 1rem;
-    }
-
-    &:focus-visible {
-        outline: none;
-    }
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .ingredients {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .ingredient {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
 
-    div:first-child {
-        width: 100%;
-    }
+  div:first-child {
+    width: 100%;
+  }
 }
 
 .button {
-    width: 100%;
+  width: 100%;
 }
 
 .steps {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  @media (min-width: 62.5rem) {
+    max-width: 39rem;
+  }
 }
 
 .step {
-    display: flex;
-    gap: 1rem;
-    flex-direction: row;
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
 }
 
 .stepInput {
-    resize: vertical;
-    width: 100%;
-    border-radius: 1rem;
-    min-height: 36px;
-    height: max-content;
-    field-sizing: content;
+  resize: vertical;
+  width: 100%;
+  border-radius: 1rem;
+  min-height: 2.25rem;
+  height: max-content;
+  field-sizing: content;
 }
 
 .stepNumber {
-    background-color: var(--gray-200);
-    min-width: 28px;
-    height: 28px;
-    font-size: 1.1rem;
-    text-align: center;
-    border-radius: 2rem;
-    margin-top: 0.25rem;
+  background-color: var(--gray-200);
+  min-width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1.1rem;
+  text-align: center;
+  border-radius: 2rem;
+  margin-top: 0.25rem;
 }
 
 .imageUpload {
-    max-width: 1000px;
-    color: var(--gray-300);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  max-width: 62.5rem;
+  color: var(--gray-300);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
     cursor: pointer;
+  }
 
-    input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    @media (min-width: 1000px) {
-        max-width: 50rem;
-    }
-
+  @media (min-width: 62.5rem) {
+    max-width: 50rem;
+  }
 }
 
 .image {
-    position: relative;
-    pointer-events: none;
+  position: relative;
+  pointer-events: none;
 
-    img {
-        pointer-events: none;
-        border-radius: 1rem;
-        object-fit: cover;
-        width: 100%;
-        max-height: 20rem;
-        object-position: center;
-        transition: filter 0.3s ease;
-    }
+  img {
+    pointer-events: none;
+    border-radius: 1rem;
+    object-fit: cover;
+    width: 100%;
+    max-height: 20rem;
+    object-position: center;
+    transition: filter 0.3s ease;
+  }
 }
 
 .uploadIcon {
-    position: absolute;
-    height: 10rem;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.3s ease;
+  position: absolute;
+  height: 10rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
 
-    opacity: 0.8;
+  opacity: 0.8;
 
-    color: var(--white);
-    stroke: var(--black);
-    stroke-width: 2;
-    paint-order: stroke fill;
+  color: var(--white);
+  stroke: var(--black);
+  stroke-width: 2;
+  paint-order: stroke fill;
 }
 
 .progress {
@@ -211,12 +241,12 @@
 .progressBar {
   background-color: var(--gray-200);
   border-radius: 5rem;
-  height: 4px;
+  height: 0.25rem;
   width: 100%;
 
   span {
     display: block;
-    height: 4px;
+    height: 0.25rem;
     border-radius: 5rem;
     background-color: var(--green-200);
     transition: width 800ms ease;

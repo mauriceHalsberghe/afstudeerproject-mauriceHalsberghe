@@ -17,9 +17,10 @@ type Props = {
   value: IngredientOption | null;
   onIngredientChange?: (ingredient: IngredientOption | null) => void;
   placeholder?: string;
+  instanceId?: string;
 };
 
-export default function IngredientSearch({ value, onIngredientChange, placeholder }: Props) {
+export default function IngredientSearch({ value, onIngredientChange, placeholder, instanceId }: Props) {
 
   const loadOptions: LoadOptions<
     IngredientOption,
@@ -57,6 +58,7 @@ export default function IngredientSearch({ value, onIngredientChange, placeholde
 
   return (
     <AsyncPaginate
+      instanceId={instanceId ?? "ingredient-search"}
       value={value}
       placeholder={placeholder || "Add Ingredient..." }
       onChange={(option) => {
@@ -68,13 +70,15 @@ export default function IngredientSearch({ value, onIngredientChange, placeholde
       isSearchable
       menuPortalTarget={typeof document !== "undefined" ? document.body : undefined}
       styles={{
-        menu: (base) => ({ ...base, zIndex: 10 }),
+        menu: (base) => ({ ...base, zIndex: 1002 }),
+        menuPortal: base => ({ ...base, zIndex: 9999 }),
         control: () => ({
           display: "flex",
-          borderWidth: "2px",
+          borderWidth: "0.125rem",
           borderColor: "var(--gray-200)",
           borderRadius: "5rem",
-          padding: "0 6px",
+          padding: "0 0.375rem",
+          zIndex: 2000,
         }),
         placeholder: (base) => ({ ...base, color: "var(--gray-300)" }),
         option: (base, state) => ({

@@ -293,6 +293,9 @@ namespace RecipeBackend.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
+                    b.Property<int?>("Servings")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("Time")
                         .HasColumnType("integer");
 
@@ -443,6 +446,12 @@ namespace RecipeBackend.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("FilterByAllergens")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("FilterByDiet")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

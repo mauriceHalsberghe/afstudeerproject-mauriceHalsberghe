@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import IngredientSearch, { IngredientOption } from "@/app/components/IngredientSearch";
-import { Cuisine, Diet } from "@/types/RecipeTypes";
+import { Cuisine, Diet, DishType } from "@/types/RecipeTypes";
 import { QuantityUnit } from "@/types/IngredientTypes";
 
 import ButtonStyles from "@/app/styles/components/button.module.css";
@@ -30,8 +30,10 @@ type Step = {
 export interface RecipeFormValues {
     title: string;
     time: string;
+    servings: string;
     dietId: number | undefined;
     cuisineId: number | undefined;
+    dishTypeId: number | undefined;
     ingredients: RecipeIngredient[];
     steps: Step[];
     imageUrl: string;
@@ -50,8 +52,11 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
 
     const [title, setTitle] = useState(initialValues?.title ?? "");
     const [time, setTime] = useState(initialValues?.time ?? "");
+    const [servings, setServings] = useState(initialValues?.servings ?? "");
     const [dietId, setDietId] = useState<number | undefined>(initialValues?.dietId);
     const [cuisineId, setCuisineId] = useState<number | undefined>(initialValues?.cuisineId);
+    const [dishTypeId, setDishTypeId] = useState<number | undefined>(initialValues?.dishTypeId);
+
     const [ingredients, setIngredients] = useState<RecipeIngredient[]>(
         initialValues?.ingredients?.map(i => ({
             ...i,
@@ -70,6 +75,7 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
     const [units, setUnits] = useState<QuantityUnit[]>([]);
     const [diets, setDiets] = useState<Diet[]>([]);
     const [cuisines, setCuisines] = useState<Cuisine[]>([]);
+    const [dishTypes, setDishTypes] = useState<DishType[]>([]);
     const [internalError, setInternalError] = useState("");    
 
     const [step, setStep] = useState(1);
@@ -77,14 +83,16 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [unitsRes, dietsRes, cuisinesRes] = await Promise.all([
+                const [unitsRes, dietsRes, cuisinesRes, dishTypesRes] = await Promise.all([
                     fetch(`${API_URL}/api/QuantityUnits`),
                     fetch(`${API_URL}/api/Diets`),
                     fetch(`${API_URL}/api/Cuisines`),
+                    fetch(`${API_URL}/api/DishTypes`),
                 ]);
                 if (unitsRes.ok) setUnits(await unitsRes.json());
                 if (dietsRes.ok) setDiets(await dietsRes.json());
                 if (cuisinesRes.ok) setCuisines(await cuisinesRes.json());
+                if (dishTypesRes.ok) setDishTypes(await dishTypesRes.json());
             } catch (err) {
                 console.error(err);
             }
@@ -144,7 +152,7 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
             return;
         }
 
-        await onSubmit({ title, time, dietId, cuisineId, ingredients, steps, imageUrl }, pendingImageFile);
+        await onSubmit({ title, time, servings, dietId, cuisineId, dishTypeId, ingredients, steps, imageUrl }, pendingImageFile);
     };
 
     const displayError = internalError || externalError;
@@ -177,17 +185,30 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                         />
                     </label>
 
-                    <label className={AddRecipeStyles.labelDuration}>
-                        Duration (min)
-                        <input
-                            type="number"
-                            value={time}
-                            required
-                            onChange={(e) => setTime(e.target.value)}
-                            placeholder="Duration"
-                            className={AddRecipeStyles.input}
-                        />
-                    </label>
+                    <div className={AddRecipeStyles.secondaryInputs}>
+                        <label className={AddRecipeStyles.labelDuration}>
+                            Duration (min)
+                            <input
+                                type="number"
+                                value={time}
+                                required
+                                onChange={(e) => setTime(e.target.value)}
+                                placeholder="Duration"
+                                className={AddRecipeStyles.input}
+                            />
+                        </label>
+
+                        <label className={AddRecipeStyles.labelServings}>
+                            Servings
+                            <input
+                                type="number"
+                                value={servings}
+                                onChange={(e) => setServings(e.target.value)}
+                                placeholder="Servings"
+                                className={AddRecipeStyles.input}
+                            />
+                        </label>
+                    </div>
                 </div>
 
                 <label className={AddRecipeStyles.imageUpload}>
@@ -195,7 +216,11 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                     <input type="file" accept="image/*" onChange={handleFileChange} />
                     <div className={`${AddRecipeStyles.image} ${!uploaded && AddRecipeStyles.showUpload}`}>
                         <Image 
-                            src={ imageUrl === "/recipe.jpg" ? "/recipe.jpg" : `${API_URL}/uploads/recipe-images/${imageUrl}`} 
+                            src={
+                                imageUrl === "/recipe.jpg" || imageUrl.startsWith("blob:")
+                                    ? imageUrl 
+                                    : `${API_URL}/uploads/recipe-images/${imageUrl}`
+                            } 
                             width={500} 
                             height={300} 
                             alt="Recipe image" 
@@ -232,10 +257,24 @@ export default function RecipeForm({ initialValues, onSubmit, submitLabel = "Sav
                             ))}
                         </select>
                     </label>
+
+                    <label className={AddRecipeStyles.label}>
+                        DishType
+                        <select
+                            value={dishTypeId ?? ""}
+                            className={AddRecipeStyles.select}
+                            onChange={(e) => setDishTypeId(e.target.value === "" ? undefined : Number(e.target.value))}
+                        >
+                            <option value="">Select dish type</option>
+                            {dishTypes.map((dishType) => (
+                                <option key={dishType.id} value={dishType.id}>{dishType.name}</option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
 
                 <div className={AddRecipeStyles.buttons}>
-                    <Link className={ButtonStyles.button} href={'/'}>Cancel</Link>
+                    <Link className={ButtonStyles.secondaryButton} href={'/'}>Cancel</Link>
                     <button className={ButtonStyles.button} onClick={() => setStep(2)}>Next</button>
                 </div>
             </>

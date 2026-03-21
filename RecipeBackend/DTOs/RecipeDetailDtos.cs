@@ -6,9 +6,12 @@ public class RecipeDetailDto
     public string? Title { get; set; }
     public string? ImageUrl { get; set; }
     public int? Time { get; set; }
+    public int? Servings { get; set; }
 
     public DietDto? Diet { get; set; }
     public CuisineDto? Cuisine { get; set; }
+    public DishTypeDto? DishType { get; set; }
+
     public UserSummaryDto? User { get; set; }
 
     public List<StepDto> Steps { get; set; } = new();
@@ -16,6 +19,8 @@ public class RecipeDetailDto
 
     public int LikeCount { get; set; }
     public double? AverageRating { get; set; }
+    public bool IsLikedByCurrentUser { get; set; }
+
 }
 
 public class StepDto
