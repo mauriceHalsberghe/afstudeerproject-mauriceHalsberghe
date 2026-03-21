@@ -146,7 +146,15 @@ export default function RegisterPreferences() {
                 {step === 2 && (
                     <div className={PrefStyles.pageStep}>
                         <h3 className={PrefStyles.subtitle}>Select your allergies</h3>
-                        <AllergySelector allergies={allergies} selectedAllergies={selectedAllergies} onToggle={toggleAllergy} disabled={false} />
+                        <AllergySelector 
+                            allergies={allergies} 
+                            selectedAllergies={selectedAllergies} 
+                            onToggle={toggleAllergy} 
+                            disabled={false}
+                            customAllergies={[]}
+                            onAddCustomAllergy={() => {}}
+                            onRemoveCustomAllergy={() => {}}
+                        />
                         <div className={PrefStyles.buttons}>
                             <button className={ButtonStyles.button} onClick={() => setStep(1)}>Back</button>
                             <button className={ButtonStyles.button} onClick={() => setStep(3)}>
