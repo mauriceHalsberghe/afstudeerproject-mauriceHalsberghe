@@ -39,8 +39,8 @@ export default function RecipeDetail() {
   const [showShoppingListModal, setShowShoppingListModal] = useState(false);
   const [showCompleteRecipeModal, setShowCompleteRecipeModal] = useState(false);
 
-  const [likeCount, setLikeCount] = useState(recipe?.likeCount ?? 0);
-  const [liked, setLiked] = useState(recipe?.isLikedByCurrentUser ?? false);
+  const [displayLiked, setDisplayLiked] = useState(false);
+  const [displayLikeCount, setDisplayLikeCount] = useState(0);
 
   const params = useParams();
   const recipeId = Number(params.id);
@@ -69,15 +69,16 @@ export default function RecipeDetail() {
   };
 
   useEffect(() => {
+    if (auth?.loading) return;
     fetchRecipe();
   }, [recipeId, loggedUserId]);
 
   useEffect(() => {
-  if (recipe) {
-    setLikeCount(recipe.likeCount);
-    setLiked(recipe.isLikedByCurrentUser ?? false);
-  }
-}, [recipe]);
+    if (recipe) {
+      setDisplayLiked(recipe.isLikedByCurrentUser ?? false);
+      setDisplayLikeCount(recipe.likeCount);
+    }
+  }, [recipe]);
 
   const hasMissingIngredients = recipe?.ingredients.some(
     (ingredient) =>
@@ -245,13 +246,14 @@ export default function RecipeDetail() {
         />
 
         <LikeButton
+          key={`${recipe.id}-${auth?.user?.id ?? "guest"}`}
           recipeId={recipe.id}
-          initialLiked={recipe.isLikedByCurrentUser}
+          initialLiked={recipe.isLikedByCurrentUser ?? false}
           initialLikeCount={recipe.likeCount}
           userId={auth?.user?.id}
           onUnlike={() => {}}
-          onLikeCountChange={setLikeCount}
-          onLikedChange={setLiked}
+          onLikeCountChange={setDisplayLikeCount}
+          onLikedChange={setDisplayLiked}
         />
 
         <div className={DetailStyles.tags}>
@@ -281,8 +283,8 @@ export default function RecipeDetail() {
           <p className={DetailStyles.servings}>{recipe.servings}<span>servings</span></p>
 
           <p className={DetailStyles.likeCount}>
-            {liked ? <LikeFilledIcon /> : <LikeUnfilledIcon />}
-            {likeCount}
+            {displayLiked ? <LikeFilledIcon /> : <LikeUnfilledIcon />}
+            {displayLikeCount}
           </p>
         </div>
 
