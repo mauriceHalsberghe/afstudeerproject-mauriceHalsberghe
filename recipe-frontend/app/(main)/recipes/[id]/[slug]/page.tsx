@@ -386,26 +386,30 @@ export default function RecipeDetail() {
             </div>
           )}
         </div>
+        
+        <div className={DetailStyles.instructions}>
 
-        <h2 className={DetailStyles.subtitle}>Instructions</h2>
-        <ul className={DetailStyles.steps}>
-          {recipe.steps.map((step) => (
-            <li className={DetailStyles.step} key={step.id}>
-              <p className={DetailStyles.stepNumber}>{step.stepNumber}</p>
-              <p className={DetailStyles.stepDescription}>{step.description}</p>
-            </li>
-          ))}
-        </ul>
+          <h2 className={DetailStyles.subtitle}>Instructions</h2>
+          <ul className={DetailStyles.steps}>
+            {recipe.steps.map((step) => (
+              <li className={DetailStyles.step} key={step.id}>
+                <p className={DetailStyles.stepNumber}>{step.stepNumber}</p>
+                <p className={DetailStyles.stepDescription}>{step.description}</p>
+              </li>
+            ))}
+          </ul>
 
-        {hasAllIngredients && (
-          <button
-            className={ButtonStyles.smallButton}
-            onClick={() => setShowCompleteRecipeModal(true)}
-            disabled={!loggedUserId}
-          >
-            Remove used ingredients
-          </button>
-        )}
+          {hasAllIngredients && (
+            <button
+              className={ButtonStyles.smallButton}
+              onClick={() => setShowCompleteRecipeModal(true)}
+              disabled={!loggedUserId}
+            >
+              Remove used ingredients
+            </button>
+          )}
+
+        </div>
 
         {showCompleteRecipeModal && (
           <div

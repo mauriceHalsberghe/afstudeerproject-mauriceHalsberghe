@@ -203,6 +203,12 @@
   margin-bottom: 1rem;
 }
 
+.instructions {
+  button {
+    margin: 2rem auto;
+  }
+}
+
 .step {
   display: flex;
   gap: 1rem;
