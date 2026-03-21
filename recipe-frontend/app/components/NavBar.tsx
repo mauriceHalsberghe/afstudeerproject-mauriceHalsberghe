@@ -2,6 +2,7 @@
 
 import NavBarStyles from '@/app/styles/components/navbar.module.css';
 import ButtonStyles from '@/app/styles/components/button.module.css';
+import ProfileStyles from '@/app/styles/pages/profile.module.css';
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,20 +13,27 @@ import AppleIcon from '@/public/apple.svg'
 import HeartIcon from '@/public/heart.svg'
 import CartIcon from '@/public/cart.svg'
 import ProfileIcon from '@/public/profile.svg'
+import InstallIcon from "@/public/install.svg"
 
 import LogoutButton from './LogoutButton';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import Image from 'next/image';
 import { API_URL } from '@/lib/api';
+import { InstallAppModal } from './InstallAppModal';
 
 function NavBar() {
+    const [showInstallModal, setShowInstallModal] = useState(false);
+
     const pathname = usePathname();
 
     const isActive = (path: string) =>
         pathname.replaceAll('/', '') === path.replaceAll('/', '');    
 
     const auth = useContext(AuthContext);
+
+    const isInPWA = typeof window !== 'undefined' && 
+        window.matchMedia('(display-mode: standalone)').matches;
 
     return (
         <nav className={NavBarStyles.navbar}>
@@ -94,7 +102,21 @@ function NavBar() {
                     <LogoutButton type="secondaryButton" /> :
                     <Link className={ButtonStyles.button} href={'/login'}>Log in</Link>
                 }
+
+                
+                {!isInPWA && !auth?.user && (
+                    <button className={ProfileStyles.installApp} onClick={() => setShowInstallModal(true)}>
+                        <InstallIcon />
+                        Install App
+                    </button>
+                )}
+                
             </div>
+
+            <InstallAppModal
+                isOpen={showInstallModal}
+                onClose={() => setShowInstallModal(false)}
+            />
         </nav>
     );
 }

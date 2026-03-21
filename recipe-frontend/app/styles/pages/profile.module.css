@@ -115,4 +115,8 @@
   svg {
     width: 1.5rem;
   }
+
+  &:active {
+    background-color: var(--green-100);
+  }
 }
