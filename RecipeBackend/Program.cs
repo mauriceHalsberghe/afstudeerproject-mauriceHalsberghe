@@ -19,8 +19,9 @@ var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={password}";
 
-builder.Services.AddDbContext<ApiDbContext>(options =>
-    options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<ApiDbContext>((serviceProvider, options) =>
+    options.UseNpgsql(connectionString)
+           .AddInterceptors(serviceProvider.GetRequiredService<RlsInterceptor>()));
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -52,6 +53,9 @@ builder.Services.AddCors(options =>
 builder.Configuration["Jwt:Secret"]   = Environment.GetEnvironmentVariable("JWT_SECRET");
 builder.Configuration["Jwt:Issuer"]   = Environment.GetEnvironmentVariable("JWT_ISSUER");
 builder.Configuration["Jwt:Audience"] = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<RlsInterceptor>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -85,7 +89,6 @@ app.UseStaticFiles();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<RecipeBackend.Middleware.RlsMiddleware>();
 app.MapControllers();
 
 app.Run();
