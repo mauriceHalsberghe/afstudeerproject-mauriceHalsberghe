@@ -17,7 +17,7 @@ var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
 //builder
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={password}";
+var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={password};Pooling=false";
 
 builder.Services.AddDbContext<ApiDbContext>((serviceProvider, options) =>
     options.UseNpgsql(connectionString)
