@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function AvatarUpload({ userId, username, size, onUploadSuccess }: Props) {
-    const { user, setUser } = useContext(AuthContext)!;
+    const { user, setUser, token } = useContext(AuthContext)!;
     const [avatarUrl, setAvatarUrl] = useState<string>("/avatar.svg");
     const [uploaded, setUploaded] = useState(false);
 
@@ -34,7 +34,7 @@ export default function AvatarUpload({ userId, username, size, onUploadSuccess }
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (!file) return;
+        if (!file || !token) return;
 
         const formData = new FormData();
         formData.append("file", file);
@@ -43,6 +43,9 @@ export default function AvatarUpload({ userId, username, size, onUploadSuccess }
             `${API_URL}/api/users/${userId}/avatar`,
             {
                 method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
                 body: formData,
             }
         );

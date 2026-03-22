@@ -14,6 +14,7 @@ import ButtonStyles from '@/app/styles/components/button.module.css';
 import AvatarUpload from '@/app/components/AvatarUpload';
 import { Allergy, AllergyType, Diet } from "@/types/RecipeTypes";
 import Image from "next/image";
+import { IngredientOption } from "@/app/components/IngredientSearch";
 
 export default function RegisterPreferences() {
     const [step, setStep] = useState(1);
@@ -25,6 +26,8 @@ export default function RegisterPreferences() {
 
     const [selectedDiet, setSelectedDiet] = useState<number | null>(null);
     const [selectedAllergies, setSelectedAllergies] = useState<number[]>([]);
+
+    const [customAllergies, setCustomAllergies] = useState<IngredientOption[]>([]);
 
     const auth = useContext(AuthContext);
     const router = useRouter();
@@ -73,13 +76,22 @@ export default function RegisterPreferences() {
         );
     };
 
+    function handleAddCustomAllergy(ingredient: IngredientOption) {
+        setCustomAllergies(prev =>
+            prev.some(i => i.value === ingredient.value) ? prev : [...prev, ingredient]
+        );
+    }
+
     const handleComplete = async () => {
         if (!auth?.token) return;
         setError(null);
 
-        const ingredientAllergyIds = allergies
-            .filter(a => selectedAllergies.includes(a.id) && a.type === AllergyType.ingredient)
-            .map(a => a.typeId);
+        const ingredientAllergyIds = [
+            ...allergies
+                .filter(a => selectedAllergies.includes(a.id) && a.type === AllergyType.ingredient)
+                .map(a => a.typeId),
+            ...customAllergies.map(i => i.value),
+        ];
 
         const ingredientTypeAllergyIds = allergies
             .filter(a => selectedAllergies.includes(a.id) && a.type === AllergyType.ingredientType)
@@ -151,9 +163,11 @@ export default function RegisterPreferences() {
                             selectedAllergies={selectedAllergies} 
                             onToggle={toggleAllergy} 
                             disabled={false}
-                            customAllergies={[]}
-                            onAddCustomAllergy={() => {}}
-                            onRemoveCustomAllergy={() => {}}
+                            customAllergies={customAllergies}
+                            onAddCustomAllergy={handleAddCustomAllergy}
+                            onRemoveCustomAllergy={(id) =>
+                                setCustomAllergies(prev => prev.filter(i => i.value !== id))
+                            }
                         />
                         <div className={PrefStyles.buttons}>
                             <button className={ButtonStyles.button} onClick={() => setStep(1)}>Back</button>
