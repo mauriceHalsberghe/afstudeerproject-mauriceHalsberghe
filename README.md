@@ -1,4 +1,4 @@
-# Mealio - a Smart Recipe PWA
+# <img src="https://github.com/user-attachments/assets/95984dec-815f-4faf-93f9-cc0d4378a3af" width="25" /> Mealio - a Smart Recipe PWA
 
 An interactive recipe app that determines what you can cook based on your own ingredients.
 
@@ -8,11 +8,14 @@ An interactive recipe app that determines what you can cook based on your own in
 Many people don't know what to cook with the ingredients they already have at home, leading to unnecessary grocery runs. Mealio solves this by letting you enter the ingredients in your kitchen and instantly see which recipes you can make with them. Missing something? Add it to your shopping list in one click.
 
 Create and share your own recipes, follow specific diets, set personal allergies, and engage with other users by liking, rating, and commenting on their recipes.
+
+<img max-width="830" height="auto" alt="App screenshots" src="https://github.com/user-attachments/assets/c4c653ae-be72-40e2-b553-2151a4bff3bf" />
+
 ## Tech Stack
 
 **Frontend:** React, TypeScript, Next.js
 
-**Backend:** ASP.net, C#, PostGreSQL
+**Backend:** ASP.net, C#, PostgreSQL
 ## Features
 
 - Login or create account
@@ -42,7 +45,7 @@ Create and share your own recipes, follow specific diets, set personal allergies
 
 ## Demo
 
-https://mealio.mauriceh.be
+[![mealio.mauriceh.be](https://img.shields.io/badge/mealio.mauriceh.be-3a8756?style=for-the-badge&logoColor=white)](https://mealio.mauriceh.be/)
 
 
 ## Run Locally
@@ -112,3 +115,6 @@ See the Backend API documentation on: http://localhost:5041/swagger
 [![portfolio](https://img.shields.io/badge/portfolio-000?style=for-the-badge&logoColor=white)](https://mauriceh.be/)
 
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logoColor=white)](https://www.linkedin.com/in/maurice-halsberghe)
+
+## License
+Developed as a graduation project at Arteveldehogeschool for educational purposes
