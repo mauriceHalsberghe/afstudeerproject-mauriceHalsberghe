@@ -167,9 +167,9 @@ export default function CommentPage({ recipeId, loggedUserId }: Props) {
                                 </div>
                                 <p className={CommentStyles.comment}>{comment.message}</p>
                             </div>
-                            <button >
+                            {/* <button >
                                 <DotsIcon className={CommentStyles.dots} />
-                            </button>
+                            </button> */}
                         </div>
 
                         {getReplies(comment.id).map((reply) => (
