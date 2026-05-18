@@ -40,4 +40,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+const pwaConfig = withPWA(nextConfig);
+export default { ...pwaConfig, images: nextConfig.images };
