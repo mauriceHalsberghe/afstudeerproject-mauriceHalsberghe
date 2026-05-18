@@ -47,6 +47,7 @@ Create and share your own recipes, follow specific diets, set personal allergies
 
 [![mealio.mauriceh.be](https://img.shields.io/badge/mealio.mauriceh.be-3a8756?style=for-the-badge&logoColor=white)](https://mealio.mauriceh.be/)
 
+( ^ Currently broke, WIP )
 
 ## Run Locally
 
