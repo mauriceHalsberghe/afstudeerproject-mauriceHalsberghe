@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "recipebackend-api.azurewebsites.net",
+        hostname: "recipe-backend-st1o.onrender.com",
         pathname: "/uploads/**",
       },
       {
@@ -40,4 +40,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+const pwaConfig = withPWA(nextConfig);
+export default { ...pwaConfig, images: nextConfig.images };
